@@ -158,15 +158,15 @@ function stringInText(strings, text, forceWord) {
             if (window.location.pathname !== '/lobby') {
                 // find room
                 for (var o in tt) {
-                    if (tt[o] !== null && tt[0].creatorId) {
-                        room = tt[0];
+                    if (tt[o] !== null && tt[o].creatorId) {
+                        room = tt[o];
                         break;
                     }
                 }
 
                 // find room manager
                 if (room) {
-                    for (o in room) {
+                    for (var o in room) {
                         if (room[o] !== null && room[o].myuserid) {
                             // we have a room manager
                             roomman = room[o];
