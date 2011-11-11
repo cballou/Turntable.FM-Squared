@@ -162,16 +162,20 @@ window.getRoomManager = function() {
     function watchForChatMentions(e) {
         // handle alerting when mentioned
         if (stringInText(nameAliases, e.text)) {
+			console.log('Name alias mentioned.');
             playAlertSound();
         } else {
             if (!stringInText(generalNameAliases, e.text)) {
                 return;
             }
+			console.log('General name alias mentioned.');
         }
 
         if (!stringInText(idleAliases, e.text) || e.text.length > 128) {
             return;
         }
+
+		console.log('Idle alias mentioned.');
 
         // check if we responded to an idle request recently
         var now = new Date().getTime();
