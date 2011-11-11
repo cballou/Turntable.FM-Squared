@@ -208,7 +208,7 @@ window.getRoomManager = function() {
         console.log('Possible idle check: ' + e.text);
 
         // create a response
-        var response = randomResponse(idleResponses);
+        var response = randomChoice(idleResponses);
 
         // handle response
         var responseTimeout = setTimeout(function() {
