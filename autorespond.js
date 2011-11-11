@@ -4,13 +4,13 @@
  */
 
 // turntable object
-window.tt = turntable;
+//window.tt = turntable;
 
 // room instance
-window.room = null; //getRoom();
+//window.room = null; //getRoom();
 
 // room manager
-window.roomman = null; //getRoomManager();
+//window.roomman = null; //getRoomManager();
 
 // get room reference
 /*
@@ -38,14 +38,13 @@ window.getRoomManager = function() {
 }
 */
 
-
-
 /**
  * Where the magic happens.
  */
 (function(){
 
     // TT.FM objects
+	var _tt = turntable;
 	var _room = null;
 	var _manager = null;
 
@@ -123,10 +122,10 @@ window.getRoomManager = function() {
         var resolveWhenReady = function() {
             if (window.location.pathname !== '/lobby') {
                 // find room
-                for (var o in tt) {
-                    if (tt[o] !== null && tt[o].creatorId) {
+                for (var o in _tt) {
+                    if (_tt[o] !== null && _tt[o].creatorId) {
 						console.log('Room found.');
-                        _room = tt[o];
+                        _room = _tt[o];
                         break;
                     }
                 }
@@ -222,7 +221,7 @@ window.getRoomManager = function() {
     $.when(getTurntableObjects()).then(function() {
         // watch for chat mentions
         console.log('Found turntable objects, initiating the event listener.');
-        tt.addEventListener('message', watchForChatMentions);
+        _tt.addEventListener('message', watchForChatMentions);
     });
 
 
