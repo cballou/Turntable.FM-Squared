@@ -167,6 +167,11 @@ window.getRoomManager = function() {
 			return;
 		}
 
+		// skip over undefined cases
+		if (!e.userid) {
+			return;
+		}
+
 		// we have other gems like the userid and name
 		console.log('Message Userid: ' + e.userid);
 		console.log('Message Name: ' + e.name);
@@ -259,17 +264,10 @@ window.getRoomManager = function() {
 		return options[idx];
 	}
 
-	function stringInText(strings, text, forceWord) {
-		if (forceWord == null) {
-			forceWord = true;
-		}
-
+	function stringInText(strings, text) {
 		text = text.toLowerCase()
-		for (var string in strings) {
-			string = string.toLowerCase();
-			if (forceWord) {
-				string = new RegExp("\\b#{string}\\b");
-			}
+		for (var s in strings) {
+			var string = strings[s].toLowerCase();
 			if (text.search(string) > -1) {
 				return true
 			}
