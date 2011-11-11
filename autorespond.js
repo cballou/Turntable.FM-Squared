@@ -67,7 +67,8 @@ window.getRoomManager = function() {
         'everbody',
         'you all',
         'ya\'ll',
-        'you guys'
+        'you guys',
+		'you'
     ];
 
     // idle aliases
@@ -126,6 +127,7 @@ window.getRoomManager = function() {
                     if (_tt[o] !== null && _tt[o].creatorId) {
 						console.log('Room found.');
                         _room = _tt[o];
+						console.log(_room.nodes);
                         break;
                     }
                 }
@@ -160,6 +162,16 @@ window.getRoomManager = function() {
      * Periodically check if you get mentioned in the chat room.
      */
     function watchForChatMentions(e) {
+		// TT.fm does this, so shouldn't we
+		if (e.hasOwnProperty('msgid')) {
+			return;
+		}
+
+		// we have other gems like the userid and name
+		console.log('Message Userid: ' + e.userid);
+		console.log('Message Name: ' + e.name);
+		console.log('Message Text: ' + e.text);
+
         // handle alerting when mentioned
         if (stringInText(nameAliases, e.text)) {
 			console.log('Name alias mentioned.');
@@ -216,6 +228,8 @@ window.getRoomManager = function() {
 
 	// send a message
 	function say(msg) {
+		console.log('Chat form:');
+		console.log(_room.nodes.chatForm);
 		var $chatForm = $(room.nodes.chatForm)
 		$chatForm.find('input').val(msg)
 		$chatForm.submit()
@@ -224,7 +238,7 @@ window.getRoomManager = function() {
     // ensure we get a valid user object before handling auto-responder
     $.when(getTurntableObjects()).then(function() {
         // watch for chat mentions
-        console.log('Found turntable objects, initiating the event listener.');
+        console.log('Initiating the chat message listener.');
         _tt.addEventListener('message', watchForChatMentions);
     });
 
