@@ -235,7 +235,7 @@ window.getRoomManager = function() {
 	function say(msg) {
 		console.log('Chat form:');
 		console.log(_room.nodes.chatForm);
-		var $chatForm = $(room.nodes.chatForm)
+		var $chatForm = $(_room.nodes.chatForm)
 		$chatForm.find('input').val(msg)
 		$chatForm.submit()
 	}
