@@ -12,13 +12,6 @@ window.room = null; //getRoom();
 // room manager
 window.roomman = null; //getRoomManager();
 
-// send a message
-window.say = function(msg) {
-	var $chatForm = $(room.nodes.chatForm)
-	$chatForm.find('input').val(msg)
-	$chatForm.submit()
-}
-
 // get room reference
 /*
 window.getRoom = function() {
@@ -45,35 +38,7 @@ window.getRoomManager = function() {
 }
 */
 
-// generate a random number within a range.
-function randomDelay(min, max) {
-    min = min || 2;
-    max = max || 70;
-	return (Math.random() * max + min) * 1000;
-}
 
-function randomChoice(options) {
-    var idx = Math.floor(Math.random() * options.length);
-    return options[idx];
-}
-
-function stringInText(strings, text, forceWord) {
-    if (forceWord == null) {
-        forceWord = true;
-    }
-
-    text = text.toLowerCase()
-	for (var string in strings) {
-		string = string.toLowerCase();
-        if (forceWord) {
-            string = new RegExp("\\b#{string}\\b");
-        }
-		if (text.search(string) > -1) {
-			return true
-		}
-    }
-	return false
-}
 
 /**
  * Where the magic happens.
@@ -81,8 +46,8 @@ function stringInText(strings, text, forceWord) {
 (function(){
 
     // TT.FM objects
-    var ttObj = null;
-    var roomInfo = null;
+	var _room = null;
+	var _manager = null;
 
     // whether to alert on mute
     var muteAlert = false;
@@ -115,7 +80,8 @@ function stringInText(strings, text, forceWord) {
         'here',
         'idle',
         'there',
-        'respond'
+        'respond',
+		'status'
     ];
 
     // array of idle responses
@@ -151,7 +117,7 @@ function stringInText(strings, text, forceWord) {
      */
     function getTurntableObjects() {
         // reset room
-        room = null;
+        _room = null;
 
         var dfd = $.Deferred();
         var resolveWhenReady = function() {
@@ -159,17 +125,19 @@ function stringInText(strings, text, forceWord) {
                 // find room
                 for (var o in tt) {
                     if (tt[o] !== null && tt[o].creatorId) {
-                        room = tt[o];
+						console.log('Room found.');
+                        _room = tt[o];
                         break;
                     }
                 }
 
                 // find room manager
-                if (room) {
-                    for (var o in room) {
-                        if (room[o] !== null && room[o].myuserid) {
+                if (_room) {
+                    for (var o in _room) {
+                        if (_room[o] !== null && _room[o].myuserid) {
                             // we have a room manager
-                            roomman = room[o];
+							console.log('Room manager found.');
+                            _manager = _room[o];
                         }
                     }
                     dfd.resolve();
@@ -202,7 +170,7 @@ function stringInText(strings, text, forceWord) {
             }
         }
 
-        if (!stringInText(idleAliases, e.text) || e.text.length > 35) {
+        if (!stringInText(idleAliases, e.text) || e.text.length > 128) {
             return;
         }
 
@@ -227,9 +195,6 @@ function stringInText(strings, text, forceWord) {
             console.log('Responding with: ' + response);
             say(response);
         }, randomDelay(2, 8));
-
-        // wait to check for additional mentions
-        // setTimeout(watchForChatMentions, 5000);
     }
 
     /**
@@ -238,12 +203,20 @@ function stringInText(strings, text, forceWord) {
     function playAlertSound() {
         if (muteAlert) return;
         for (i = 0; i < 5; i++) {
-            setTimeout(
-                turntablePlayer.playEphemeral(UI_SOUND_CHAT, true),
-                i*700
-            );
+            setTimeout(function() {
+				if (turntablePlayer) {
+					turntablePlayer.playEphemeral(UI_SOUND_CHAT, true);
+				}
+			}, i*700);
         }
     }
+
+	// send a message
+	function say(msg) {
+		var $chatForm = $(room.nodes.chatForm)
+		$chatForm.find('input').val(msg)
+		$chatForm.submit()
+	}
 
     // ensure we get a valid user object before handling auto-responder
     $.when(getTurntableObjects()).then(function() {
@@ -251,4 +224,40 @@ function stringInText(strings, text, forceWord) {
         console.log('Found turntable objects, initiating the event listener.');
         tt.addEventListener('message', watchForChatMentions);
     });
+
+
+	//==========================================================================
+	// HELPER FUNCTIONS
+	//==========================================================================
+
+	// generate a random number within a range.
+	function randomDelay(min, max) {
+		min = min || 2;
+		max = max || 70;
+		return (Math.random() * max + min) * 1000;
+	}
+
+	function randomChoice(options) {
+		var idx = Math.floor(Math.random() * options.length);
+		return options[idx];
+	}
+
+	function stringInText(strings, text, forceWord) {
+		if (forceWord == null) {
+			forceWord = true;
+		}
+
+		text = text.toLowerCase()
+		for (var string in strings) {
+			string = string.toLowerCase();
+			if (forceWord) {
+				string = new RegExp("\\b#{string}\\b");
+			}
+			if (text.search(string) > -1) {
+				return true
+			}
+		}
+		return false
+	}
+
 })();
