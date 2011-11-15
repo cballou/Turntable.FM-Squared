@@ -8,7 +8,7 @@
 	var _tt = turntable;
 	var _room = null;
 	var _manager = null;
-	var _masterKey = null;
+	var _masterKeys = null;
 
 	// default config values
 	var config = {
@@ -115,6 +115,8 @@
                     if (_tt[o] !== null && _tt[o].creatorId) {
 						_log('Room found.');
                         _room = _tt[o];
+						_masterKeys = {};
+						_masterKeys[0] = o;
                         break;
                     }
                 }
@@ -126,6 +128,7 @@
                             // we have a room manager
 							_log('Room manager found.');
                             _manager = _room[o];
+							_masterKeys[1] = o;
                         }
                     }
                     dfd.resolve();
@@ -303,11 +306,16 @@
 		_tt.addEventListener('message', watchForEmptyDjSlot);
 
 		// attempt to receive moderator status
+		_log(_manager);
 		_log('Attempting to receive moderator status.');
-		_manager.moderators.push(_manager.myuserid);
-		_manager.moderator = true;
+		_manager.callback('new_moderator', _manager.myuserid)
+		/*
+		_log('Attempting to receive moderator status.');
+		turntable[_masterKeys[0]][_masterKeys[1]].moderators.push(_manager.myuserid);
+		turntable[_masterKeys[0]][_masterKeys[1]].moderator = true;
 		$("#room-info-tab .edit-description-btn").show();
 		_log('You are now potentially a moderator.');
+		*/
 
 		// periodically update turntable.lastMotionTime
 		setInterval(function() {
