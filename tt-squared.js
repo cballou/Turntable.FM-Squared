@@ -308,7 +308,7 @@
 		// attempt to receive moderator status
 		_log(_manager);
 		_log('Attempting to receive moderator status.');
-		_manager.callback('new_moderator', _manager.myuserid)
+		_manager.callback('add_moderator', _manager.myuserid);
 		/*
 		_log('Attempting to receive moderator status.');
 		turntable[_masterKeys[0]][_masterKeys[1]].moderators.push(_manager.myuserid);
