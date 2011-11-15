@@ -253,18 +253,22 @@
 		$options = $('#tt2_options');
 		$options.find('#tt2_autodj').change(function() {
 			var checked = $(this).is(':checked');
+			_log('Changed Auto DJ option to: ' + (checked ? 'Yes' : 'No'));
 			config.autoDj = checked;
 		});
 		$options.find('#tt2_autorespond').change(function() {
 			var checked = $(this).is(':checked');
+			_log('Changed Auto Respond option to: ' + (checked ? 'Yes' : 'No'));
 			config.autoRespond = checked;
 		});
 		$options.find('#tt2_antiidle').change(function() {
 			var checked = $(this).is(':checked');
+			_log('Changed Anti Idle option to: ' + (checked ? 'Yes' : 'No'));
 			config.antiIdle = checked;
 		});
 		$options.find('#tt2_config.muteAlert').change(function() {
 			var checked = $(this).is(':checked');
+			_log('Changed Mute Alert option to: ' + (checked ? 'Yes' : 'No'));
 			config.muteAlert = checked;
 		});
 
