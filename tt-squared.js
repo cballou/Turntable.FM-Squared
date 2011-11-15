@@ -93,8 +93,8 @@
 		''
 	];
 
-    // the maximum idle response frequency
-    var maxIdleResponseFreq = 10 * 1000;
+    // the maximum idle response frequency (milliseconds)
+    var maxIdleResponseFreq = 10 * 60 * 1000;
 
     // the last idle response time
     var lastIdleResponse = 0;
@@ -305,10 +305,6 @@
             _log('Already responded to idle request recently.');
             return true;
         }
-
-		_log('Now: ' + now);
-		_log('Last Idle Response: ' + lastIdleResponse);
-		_log('Max Frequency: ' + maxIdleResponseFreq);
 
 		// update the last idle response
         lastIdleResponse  = new Date().getTime();
