@@ -232,7 +232,7 @@
 
 	function _log(msg) {
 		if (window.console) {
-			_log(msg);
+			console.log(msg);
 		}
 	}
 
