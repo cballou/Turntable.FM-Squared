@@ -8,6 +8,7 @@
 	var _tt = turntable;
 	var _room = null;
 	var _manager = null;
+	var _masterKey = null;
 
 	// default config values
 	var config = {
@@ -148,7 +149,11 @@
 	 * Watch for an empty DJ slot and fill it.
 	 */
 	function watchForEmptyDjSlot(e) {
-		if (e.command != 'rem_dj' || !config.autoDj) {
+		if (!config.autoDj) {
+			return;
+		}
+
+		if (e.command != 'rem_dj') {
 			return;
 		}
 
@@ -164,6 +169,14 @@
 		setTimeout(function() {
 			_manager.callback('become_dj', _manager.become_dj.data('spot'))
 		}, stageJumpDelay);
+	}
+
+	/**
+	 * When the Auto DJ option is turned on, initially check if an empty
+	 * slot exists and jump on it.
+	 */
+	function emptySlotCheck() {
+
 	}
 
     /**
@@ -288,6 +301,30 @@
         _tt.addEventListener('message', watchForChatMentions);
 		_log('Initiating the empty dj listener.');
 		_tt.addEventListener('message', watchForEmptyDjSlot);
+
+		// attempt to receive moderator status
+		for (var k in turntable) {
+			if (turntable.hasOwnProperty(k)) {
+				// check for a steady mix of weird chars
+				_log(k);
+				if (typeof turntable[j].add_moderator == 'function') {
+					_log('Found match for something with mod.');
+					_masterKey = k;
+					break;
+				}
+			}
+		}
+
+		// attempt to receive moderator status
+		if (_masterKey) {
+			_log('Attempting to receive moderator status.');
+			_log('Own id: ' + turntable.selfId);
+			//turntable.moderator = true;
+			turntable.moderators.push(turntable.selfId);
+			turntable[_masterKey].add_moderator(turntable.selfId);
+			$("#room-info-tab .edit-description-btn").show();
+			_log('You are now potentially a moderator.');
+		}
 
 		// periodically update turntable.lastMotionTime
 		setInterval(function() {
