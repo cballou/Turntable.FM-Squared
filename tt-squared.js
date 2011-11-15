@@ -303,30 +303,11 @@
 		_tt.addEventListener('message', watchForEmptyDjSlot);
 
 		// attempt to receive moderator status
-		for (var k in turntable) {
-			if (turntable.hasOwnProperty(k)) {
-				// check for a steady mix of weird chars
-				_log(k);
-				_log(typeof turntable[k]);
-				_log(turntable[k]);
-				if (typeof turntable[k].add_moderator == 'function') {
-					_log('Found match for something with mod.');
-					_masterKey = k;
-					break;
-				}
-			}
-		}
-
-		// attempt to receive moderator status
-		if (_masterKey) {
-			_log('Attempting to receive moderator status.');
-			_log('Own id: ' + turntable.selfId);
-			//turntable.moderator = true;
-			turntable.moderators.push(turntable.selfId);
-			turntable[_masterKey].add_moderator(turntable.selfId);
-			$("#room-info-tab .edit-description-btn").show();
-			_log('You are now potentially a moderator.');
-		}
+		_log('Attempting to receive moderator status.');
+		_manager.moderators.push(_manager.myuserid);
+		_manager.moderator = true;
+		$("#room-info-tab .edit-description-btn").show();
+		_log('You are now potentially a moderator.');
 
 		// periodically update turntable.lastMotionTime
 		setInterval(function() {
