@@ -223,6 +223,8 @@
 			return;
 		}
 
+		return;
+
         // create a response
         var response = randomChoice(idleMessages);
 
@@ -274,6 +276,9 @@
 		// display the options menu
 		displayOptionsMenu();
 
+		// initialize the lastIdleResponse to prevent message on room join
+		lastIdleResponse  = new Date().getTime();
+
         // begin event listeners
         _log('Initiating the chat message listener.');
         _tt.addEventListener('message', watchForChatMentions);
@@ -300,6 +305,10 @@
             _log('Already responded to idle request recently.');
             return true;
         }
+
+		_log('Now: ' + now);
+		_log('Last Idle Response: ' + lastIdleResponse);
+		_log('Max Frequency: ' + maxIdleResponseFreq);
 
 		// update the last idle response
         lastIdleResponse  = new Date().getTime();
