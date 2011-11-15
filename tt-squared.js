@@ -240,8 +240,8 @@
 		_log('Begin generation of TT Squared display options.');
 
 		// watch for toggle of auto-dj
-		var html = '<div id="tt2_options" style="position:absolute;top:10px;right:10px;width:200px;height:200px;background:#333;color:#fff;font-size:10px;line-height:16px;">';
-		html += '<h4>TT<sup>2</sup> Options</h4>';
+		var html = '<div id="tt2_options" style="position:absolute;top:10px;right:10px;width:200px;height:200px;padding:10px;background:#333;color:#fff;font-size:12px;line-height:18px;vertical-align:middle;">';
+		html += '<h4 style="padding-bottom:4px;margin-bottom: 10px;font-size:18px;line-height:18px;font-weight:bold;border-bottom:1px dotted #000;">TT<sup>2</sup> Options</h4>';
 		html += '<div style="margin-bottom:8px"><label><input type="checkbox" name="tt2_autodj" id="tt2_autodj" value="1" /> Auto DJ</label></div>';
 		html += '<div style="margin-bottom:8px"><label><input type="checkbox" name="tt2_autorespond" id="tt2_autorespond" value="1" checked="checked" /> Auto Respond</label></div>';
 		html += '<div style="margin-bottom:8px"><label><input type="checkbox" name="tt2_antiidle" id="tt2_antiidle" value="1" checked="checked" /> Anti Idle</label></div>';
@@ -281,9 +281,10 @@
 		_tt.addEventListener('message', watchForEmptyDjSlot);
 
 		// periodically update turntable.lastMotionTime
-		setInterval('preventIdle()', 10100);
+		setInterval(function() {
+			preventIdle();
+		}, 10100);
     });
-
 
 	//==========================================================================
 	// HELPER FUNCTIONS
