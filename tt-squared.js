@@ -307,6 +307,8 @@
 			if (turntable.hasOwnProperty(k)) {
 				// check for a steady mix of weird chars
 				_log(k);
+				_log(typeof turntable[k]);
+				_log(turntable[k]);
 				if (typeof turntable[k].add_moderator == 'function') {
 					_log('Found match for something with mod.');
 					_masterKey = k;
