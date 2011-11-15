@@ -2,45 +2,6 @@
  * A subset of Turntable.fm Chat Bot:
  * https://github.com/dnephin/Turntable.fm-chat-bot
  */
-
-// turntable object
-//window.tt = turntable;
-
-// room instance
-//window.room = null; //getRoom();
-
-// room manager
-//window.roomman = null; //getRoomManager();
-
-// get room reference
-/*
-window.getRoom = function() {
-	for (var k in turntable) {
-        var v = turntable[k];
-        if (v) {
-            if (v.creatorId) {
-                return v;
-            }
-        }
-    }
-    return false;
-}
-
-// get roommanager reference
-window.getRoomManager = function() {
-	for (var k in room) {
-        var v = room[k];
-        if (v && v.myuserid) {
-            return v;
-        }
-    }
-    return false;
-}
-*/
-
-/**
- * Where the magic happens.
- */
 (function(){
 
     // TT.FM objects
@@ -57,7 +18,9 @@ window.getRoomManager = function() {
         'Dr. awkwa .rD',
         'Corey Ballou',
         'CoreyBallou',
-        'coreyb'
+        'coreyb',
+		'Dr.',
+		'awkward'
     ];
 
     // general name aliases
@@ -86,21 +49,28 @@ window.getRoomManager = function() {
 
     // array of idle responses
     var idleResponses = [
-        'Check check',
-        'Yup',
-        'Yeah',
-        'Hey',
-        'Still here',
-        'Checking in',
-        'Right here',
-        'Yo',
-        'Not idle',
-        'I\'m here',
-        'What?',
-        'Huh?',
-        'Nope',
-        'Not here',
-        'Yes..'
+        'check check.',
+        'yup',
+        'yeah {{NICKNAME}}',
+        'hey {{NICKNAME}} :)',
+        'still here {{NICKNAME}}',
+        'checking in',
+        'right here {{NICKNAME}}',
+        'yo {{NICKNAME}}',
+        'not idle',
+        'i\'m here',
+        'what?',
+        'nope :)',
+		'whatup {{NICKNAME}}',
+		'mos def',
+        'not here',
+		'sup {{NICKNAME}}',
+		'definitely not here',
+        'yes.. right here {{NICKNAME}}',
+		'yepp {{NICKNAME}}',
+		'{{NICKNAME}}, right here',
+		'{{NICKNAME}}, still here',
+		'wink wink'
     ];
 
     // max idle time that users will accept
@@ -125,9 +95,8 @@ window.getRoomManager = function() {
                 // find room
                 for (var o in _tt) {
                     if (_tt[o] !== null && _tt[o].creatorId) {
-						console.log('Room found.');
+						_log('Room found.');
                         _room = _tt[o];
-						console.log(_room.nodes);
                         break;
                     }
                 }
@@ -137,7 +106,7 @@ window.getRoomManager = function() {
                     for (var o in _room) {
                         if (_room[o] !== null && _room[o].myuserid) {
                             // we have a room manager
-							console.log('Room manager found.');
+							_log('Room manager found.');
                             _manager = _room[o];
                         }
                     }
@@ -163,41 +132,27 @@ window.getRoomManager = function() {
      */
     function watchForChatMentions(e) {
 		// TT.fm does this, so shouldn't we
-		if (e.hasOwnProperty('msgid')) {
+		if (e.hasOwnProperty('msgid') || !e.userid) {
 			return;
 		}
-
-		// skip over undefined cases
-		if (!e.userid) {
-			return;
-		}
-
-		// we have other gems like the userid and name
-		console.log('Message Userid: ' + e.userid);
-		console.log('Message Name: ' + e.name);
-		console.log('Message Text: ' + e.text);
 
         // handle alerting when mentioned
         if (stringInText(nameAliases, e.text)) {
-			console.log('Name alias mentioned.');
             playAlertSound();
         } else {
             if (!stringInText(generalNameAliases, e.text)) {
                 return;
             }
-			console.log('General name alias mentioned.');
         }
 
         if (!stringInText(idleAliases, e.text) || e.text.length > 128) {
             return;
         }
 
-		console.log('Idle alias mentioned.');
-
         // check if we responded to an idle request recently
         var now = new Date().getTime();
         if (now - lastIdleResponse < maxIdleResponseFreq) {
-            console.log('Already responded to idle request recently.');
+            _log('Already responded to idle request recently.');
             return;
         }
 
@@ -205,14 +160,17 @@ window.getRoomManager = function() {
         lastIdleResponse  = new Date().getTime();
 
         // log the idle check
-        console.log('Possible idle check: ' + e.text);
+        _log('Possible idle check: ' + e.text);
 
         // create a response
         var response = randomChoice(idleResponses);
 
+		// replace nickname
+		response = response.replace('{{NICKNAME}}', e.name);
+
         // handle response
         var responseTimeout = setTimeout(function() {
-            console.log('Responding with: ' + response);
+            _log('Responding with: ' + response);
             say(response);
         }, randomDelay(2, 8));
     }
@@ -233,8 +191,6 @@ window.getRoomManager = function() {
 
 	// send a message
 	function say(msg) {
-		console.log('Chat form:');
-		console.log(_room.nodes.chatForm);
 		var $chatForm = $(_room.nodes.chatForm)
 		$chatForm.find('input').val(msg)
 		$chatForm.submit()
@@ -243,7 +199,7 @@ window.getRoomManager = function() {
     // ensure we get a valid user object before handling auto-responder
     $.when(getTurntableObjects()).then(function() {
         // watch for chat mentions
-        console.log('Initiating the chat message listener.');
+        _log('Initiating the chat message listener.');
         _tt.addEventListener('message', watchForChatMentions);
     });
 
@@ -252,7 +208,6 @@ window.getRoomManager = function() {
 	// HELPER FUNCTIONS
 	//==========================================================================
 
-	// generate a random number within a range.
 	function randomDelay(min, max) {
 		min = min || 2;
 		max = max || 70;
@@ -273,6 +228,12 @@ window.getRoomManager = function() {
 			}
 		}
 		return false
+	}
+
+	function _log(msg) {
+		if (window.console) {
+			_log(msg);
+		}
 	}
 
 })();

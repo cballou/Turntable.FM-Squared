@@ -212,6 +212,7 @@
 	 * Prevent user from becoming idle if no recent chat messaging.
 	 */
 	function preventIdle() {
+		// set the last motion time
 		turntable.lastMotionTime = new Date().getTime();
 
 		if (!config.antiIdle) {
@@ -232,8 +233,43 @@
         }, randomDelay(2, 8));
 	}
 
+	/**
+	 * Display the options menu.
+	 */
+	function displayOptionsMenu() {
+		// watch for toggle of auto-dj
+		var html = '<div id="autodj" style="position:absolute;top:10px;right:10px;width:200px;height:200px;background:#333;color:#fff;font-size:10px;line-height:16px;">';
+		html += '<h4>TT<sup>2</sup> Options</h4>';
+		html += '<div style="margin-bottom:8px"><label><input type="checkbox" name="tt2_autodj" id="tt2_autodj" value="1" /> Auto DJ</label</div>';
+		html += '<div style="margin-bottom:8px"><label><input type="checkbox" name="tt2_autorespond" id="tt2_autorespond" value="1" checked="checked" /> Auto Respond</label</div>';
+		html += '<div style="margin-bottom:8px"><label><input type="checkbox" name="tt2_antiidle" id="tt2_antiidle" value="1" checked="checked" /> Anti Idle</label</div>';
+		html += '<div style="margin-bottom:8px"><label><input type="checkbox" name="tt2_config.muteAlert" id="tt2_config.muteAlert" value="1" /> Mute Ping Alert</label</div>';
+		html += '</div>';
+		var $autodj = $(html);
+		$autodj.appendTo('body');
+		$autodj.find('#tt2_autodj').change(function() {
+			var checked = $(this).is(':checked');
+			config.autoDj = checked;
+		});
+		$autodj.find('#tt2_autorespond').change(function() {
+			var checked = $(this).is(':checked');
+			config.autoRespond = checked;
+		});
+		$autodj.find('#tt2_antiidle').change(function() {
+			var checked = $(this).is(':checked');
+			config.antiIdle = checked;
+		});
+		$autodj.find('#tt2_config.muteAlert').change(function() {
+			var checked = $(this).is(':checked');
+			config.muteAlert = checked;
+		});
+	}
+
     // ensure we get a valid user object before handling auto-responder
     $.when(getTurntableObjects()).then(function() {
+		// display the options menu
+		displayOptionsMenu();
+
         // begin event listeners
         _log('Initiating the chat message listener.');
         _tt.addEventListener('message', watchForChatMentions);
@@ -243,38 +279,6 @@
 		// periodically update turntable.lastMotionTime
 		setInterval('preventIdle()', 10100);
     });
-
-	// watch for toggle of auto-dj
-	var html = '<div id="autodj" style="position:absolute;top:10px;right:10px;width:200px;height:200px;background:#333;color:#fff;font-size:10px;line-height:16px;">';
-	html += '<h4>TT<sup>2</sup> Options</h4>';
-	html += '<div style="margin-bottom:8px"><label><input type="checkbox" name="tt2_autodj" id="tt2_autodj" value="1" /> Auto DJ</label</div>';
-	html += '<div style="margin-bottom:8px"><label><input type="checkbox" name="tt2_autorespond" id="tt2_autorespond" value="1" checked="checked" /> Auto Respond</label</div>';
-	html += '<div style="margin-bottom:8px"><label><input type="checkbox" name="tt2_antiidle" id="tt2_antiidle" value="1" checked="checked" /> Anti Idle</label</div>';
-	html += '<div style="margin-bottom:8px"><label><input type="checkbox" name="tt2_config.muteAlert" id="tt2_config.muteAlert" value="1" /> Mute Ping Alert</label</div>';
-	html += '</div>';
-	var $autodj = $(html);
-	$autodj.appendTo('body');
-	$autodj.find('#tt2_autodj').change(function() {
-		var checked = $(this).is(':checked');
-		config.autoDj = checked;
-		alert(checked);
-	});
-	$autodj.find('#tt2_autorespond').change(function() {
-		var checked = $(this).is(':checked');
-		config.autoRespond = checked;
-		alert(checked);
-	});
-	$autodj.find('#tt2_antiidle').change(function() {
-		var checked = $(this).is(':checked');
-		config.antiIdle = checked;
-		alert(checked);
-	});
-	$autodj.find('#tt2_config.muteAlert').change(function() {
-		var checked = $(this).is(':checked');
-		config.config.muteAlert = checked;
-		config.muteAlert = checked;
-		alert(checked);
-	});
 
 
 	//==========================================================================
