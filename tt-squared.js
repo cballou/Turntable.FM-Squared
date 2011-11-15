@@ -238,28 +238,28 @@
 	 */
 	function displayOptionsMenu() {
 		// watch for toggle of auto-dj
-		var html = '<div id="autodj" style="position:absolute;top:10px;right:10px;width:200px;height:200px;background:#333;color:#fff;font-size:10px;line-height:16px;">';
+		var html = '<div id="tt2_options" style="position:absolute;top:10px;right:10px;width:200px;height:200px;background:#333;color:#fff;font-size:10px;line-height:16px;">';
 		html += '<h4>TT<sup>2</sup> Options</h4>';
 		html += '<div style="margin-bottom:8px"><label><input type="checkbox" name="tt2_autodj" id="tt2_autodj" value="1" /> Auto DJ</label</div>';
 		html += '<div style="margin-bottom:8px"><label><input type="checkbox" name="tt2_autorespond" id="tt2_autorespond" value="1" checked="checked" /> Auto Respond</label</div>';
 		html += '<div style="margin-bottom:8px"><label><input type="checkbox" name="tt2_antiidle" id="tt2_antiidle" value="1" checked="checked" /> Anti Idle</label</div>';
 		html += '<div style="margin-bottom:8px"><label><input type="checkbox" name="tt2_config.muteAlert" id="tt2_config.muteAlert" value="1" /> Mute Ping Alert</label</div>';
 		html += '</div>';
-		var $autodj = $(html);
-		$autodj.appendTo('body');
-		$autodj.find('#tt2_autodj').change(function() {
+		$(html).appendTo('body');
+		$options = $('#tt2_options');
+		$options.find('#tt2_autodj').change(function() {
 			var checked = $(this).is(':checked');
 			config.autoDj = checked;
 		});
-		$autodj.find('#tt2_autorespond').change(function() {
+		$options.find('#tt2_autorespond').change(function() {
 			var checked = $(this).is(':checked');
 			config.autoRespond = checked;
 		});
-		$autodj.find('#tt2_antiidle').change(function() {
+		$options.find('#tt2_antiidle').change(function() {
 			var checked = $(this).is(':checked');
 			config.antiIdle = checked;
 		});
-		$autodj.find('#tt2_config.muteAlert').change(function() {
+		$options.find('#tt2_config.muteAlert').change(function() {
 			var checked = $(this).is(':checked');
 			config.muteAlert = checked;
 		});
