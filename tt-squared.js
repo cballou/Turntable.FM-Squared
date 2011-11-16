@@ -326,6 +326,7 @@
 		_log('Initiating the empty dj listener.');
 		_tt.addEventListener('message', watchForEmptyDjSlot);
 
+		_log(turntable);
 		_log(_manager);
 		/*
 		// attempt to receive moderator status
@@ -333,10 +334,8 @@
 
 		// spoof a moderator
 		var myuserid = turntable[_k[0]][_k[1]].myuserid;
-		turntable[_k[0]][_k[1]].myuserid = '';
 		turntable[_k[0]][_k[1]].moderator = true;
-
-		//turntable[_k[0]][_k[1]].moderators.push(_manager.myuserid);
+		turntable[_k[0]][_k[1]].myuserid = turntable[_k[0]][_k[1]].moderators[0];
 
 		// make call for moderator
 		turntable[_k[0]][_k[1]].callback('add_moderator', _manager.myuserid);
