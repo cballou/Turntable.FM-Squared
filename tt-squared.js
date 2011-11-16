@@ -170,7 +170,7 @@
 
 		setTimeout(function() {
 			_manager.callback('become_dj', _manager.become_dj.data('spot'))
-		}, stageJumpDelay);
+		}, 500);
 	}
 
 	/**
@@ -181,10 +181,8 @@
 		if (turntable[_k[0]][_k[1]].taken_dj_map) {
 			for (var i in turntable[_k[0]][_k[1]].taken_dj_map) {
 				if (turntable[_k[0]][_k[1]].taken_dj_map[i] == -1) {
-					_log('Empty DJ slot found: #' + (i+1));
-					setTimeout(function() {
-						_manager.callback('become_dj', _manager.become_dj.data('spot'))
-					}, stageJumpDelay);
+					_log('Empty DJ slot found: #' + i);
+					_manager.callback('become_dj', _manager.become_dj.data('spot'))
 					break;
 				}
 			}
@@ -256,7 +254,7 @@
 		turntable.lastMotionTime = new Date().getTime();
 
 		// attempt to override idle boot
-		if (turntable.timers.checkIdle && turntable.timers.checkIdle != null) {
+		if (turntable.timers && turntable.timers.checkIdle && turntable.timers.checkIdle != null) {
 			clearTimeout(turntable.timers.checkIdle);
 			turntable.timers.checkIdle=null;
 		}
@@ -328,16 +326,24 @@
 		_log('Initiating the empty dj listener.');
 		_tt.addEventListener('message', watchForEmptyDjSlot);
 
-		// attempt to receive moderator status
 		_log(_manager);
-		_log('Attempting to receive moderator status.');
-		turntable[_k[0]][_k[1]].moderator = true;
-		turntable[_k[0]][_k[1]].moderators.push(_manager.myuserid);
-		turntable[_k[0]][_k[1]].callback('add_moderator', _manager.myuserid);
-		_log('You are now potentially a moderator.');
 		/*
-		turntable[_masterKeys[0]][_masterKeys[1]].moderators.push(_manager.myuserid);
-		turntable[_masterKeys[0]][_masterKeys[1]].moderator = true;
+		// attempt to receive moderator status
+		_log('Attempting to receive moderator status.');
+
+		// spoof a moderator
+		var myuserid = turntable[_k[0]][_k[1]].myuserid;
+		turntable[_k[0]][_k[1]].myuserid = '';
+		turntable[_k[0]][_k[1]].moderator = true;
+
+		//turntable[_k[0]][_k[1]].moderators.push(_manager.myuserid);
+
+		// make call for moderator
+		turntable[_k[0]][_k[1]].callback('add_moderator', _manager.myuserid);
+
+		// revert back to original user
+		turntable[_k[0]][_k[1]].myuserid = myuserid;
+
 		$("#room-info-tab .edit-description-btn").show();
 		_log('You are now potentially a moderator.');
 		*/
