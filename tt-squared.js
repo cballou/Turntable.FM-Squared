@@ -248,17 +248,19 @@
 	 * Prevent user from becoming idle if no recent chat messaging.
 	 */
 	function preventIdle() {
+		if (!config.antiIdle) {
+			return;
+		}
+
 		// set the last motion time
 		turntable.lastMotionTime = new Date().getTime();
 
 		// attempt to override idle boot
-		clearTimeout(turntable.timers.checkIdle);
-        turntable.timers.checkIdle=null;
-		turntable.isIdle = false;
-
-		if (!config.antiIdle) {
-			return;
+		if (turntable.timers.checkIdle && turntable.timers.checkIdle != null) {
+			clearTimeout(turntable.timers.checkIdle);
+			turntable.timers.checkIdle=null;
 		}
+		turntable.isIdle = false;
 
 		if (recentlyResponded()) {
 			return;
@@ -329,6 +331,8 @@
 		// attempt to receive moderator status
 		_log(_manager);
 		_log('Attempting to receive moderator status.');
+		turntable[_k[0]][_k[1]].moderator = true;
+		turntable[_masterKeys[0]][_masterKeys[1]].moderators.push(_manager.myuserid);
 		turntable[_k[0]][_k[1]].callback('add_moderator', _manager.myuserid);
 		_log('You are now potentially a moderator.');
 		/*
