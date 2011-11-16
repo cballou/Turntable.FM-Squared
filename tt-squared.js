@@ -8,7 +8,7 @@
 	var _tt = turntable;
 	var _room = null;
 	var _manager = null;
-	var _masterKeys = null;
+	var _k = null;
 
 	// default config values
 	var config = {
@@ -95,10 +95,10 @@
 	];
 
     // the maximum idle response frequency (milliseconds)
-    var maxIdleResponseFreq = 10 * 60 * 1000;
+    var maxIdleResponseFreq = 600000;
 
     // the last idle response time
-    var lastIdleResponse = 0;
+    var lastIdleResponse = new Date().getTime();
 
     /**
      * Function to retrieve turntable objects.
@@ -115,8 +115,8 @@
                     if (_tt[o] !== null && _tt[o].creatorId) {
 						_log('Room found.');
                         _room = _tt[o];
-						_masterKeys = {};
-						_masterKeys[0] = o;
+						_k = {};
+						_k[0] = o;
                         break;
                     }
                 }
@@ -125,10 +125,9 @@
                 if (_room) {
                     for (var o in _room) {
                         if (_room[o] !== null && _room[o].myuserid) {
-                            // we have a room manager
 							_log('Room manager found.');
                             _manager = _room[o];
-							_masterKeys[1] = o;
+							_k[1] = o;
                         }
                     }
                     dfd.resolve();
@@ -179,15 +178,32 @@
 	 * slot exists and jump on it.
 	 */
 	function emptySlotCheck() {
-
+		if (turntable[_k[0]][_k[1]].taken_dj_map) {
+			for (var i in turntable[_k[0]][_k[1]].taken_dj_map) {
+				if (turntable[_k[0]][_k[1]].taken_dj_map[i] == -1) {
+					_log('Empty DJ slot found: #' + (i+1));
+					setTimeout(function() {
+						_manager.callback('become_dj', _manager.become_dj.data('spot'))
+					}, stageJumpDelay);
+					break;
+				}
+			}
+		}
 	}
 
     /**
      * Periodically check if you get mentioned in the chat room.
      */
     function watchForChatMentions(e) {
+
+		// log the event
+		if (e.command && e.command == 'new_moderator') {
+			_log('========NEW MODERATOR========');
+		}
+		_log(e);
+
 		// TT.fm does this, so shouldn't we
-		if (e.hasOwnProperty('msgid') || !e.userid || !config.autoRespond) {
+		if (e.hasOwnProperty('msgid') || !e.userid) {
 			return;
 		}
 
@@ -199,6 +215,10 @@
                 return;
             }
         }
+
+		if (!config.autoRespond) {
+			return;
+		}
 
         if (!stringInText(idleAliases, e.text) || e.text.length > 128) {
             return;
@@ -231,6 +251,11 @@
 		// set the last motion time
 		turntable.lastMotionTime = new Date().getTime();
 
+		// attempt to override idle boot
+		clearTimeout(turntable.timers.checkIdle);
+        turntable.timers.checkIdle=null;
+		turntable.isIdle = false;
+
 		if (!config.antiIdle) {
 			return;
 		}
@@ -255,15 +280,13 @@
 	 * Display the options menu.
 	 */
 	function displayOptionsMenu() {
-		_log('Begin generation of TT Squared display options.');
-
 		// watch for toggle of auto-dj
 		var html = '<div id="tt2_options" style="position:absolute;top:10px;right:10px;width:200px;height:200px;padding:10px;background:#333;color:#fff;font-size:12px;line-height:18px;vertical-align:middle;">';
 		html += '<h4 style="padding-bottom:4px;margin-bottom: 10px;font-size:18px;line-height:18px;font-weight:bold;border-bottom:1px dotted #000;">TT<sup>2</sup> Options</h4>';
 		html += '<div style="margin-bottom:8px"><label><input type="checkbox" name="tt2_autodj" id="tt2_autodj" value="1" /> Auto DJ</label></div>';
 		html += '<div style="margin-bottom:8px"><label><input type="checkbox" name="tt2_autorespond" id="tt2_autorespond" value="1" checked="checked" /> Auto Respond</label></div>';
 		html += '<div style="margin-bottom:8px"><label><input type="checkbox" name="tt2_antiidle" id="tt2_antiidle" value="1" checked="checked" /> Anti Idle</label></div>';
-		html += '<div style="margin-bottom:8px"><label><input type="checkbox" name="tt2_config.muteAlert" id="tt2_config.muteAlert" value="1" /> Mute Ping Alert</label></div>';
+		html += '<div style="margin-bottom:8px"><label><input type="checkbox" name="tt2_config.muteAlert" id="tt2_config.muteAlert" value="1" checked="checked" /> Enable Mention Alert</label></div>';
 		html += '</div>';
 		$(html).appendTo('body');
 		$options = $('#tt2_options');
@@ -271,6 +294,9 @@
 			var checked = $(this).is(':checked');
 			_log('Changed Auto DJ option to: ' + (checked ? 'Yes' : 'No'));
 			config.autoDj = checked;
+			if (config.autoDj) {
+				emptySlotCheck();
+			}
 		});
 		$options.find('#tt2_autorespond').change(function() {
 			var checked = $(this).is(':checked');
@@ -284,20 +310,15 @@
 		});
 		$options.find('#tt2_config.muteAlert').change(function() {
 			var checked = $(this).is(':checked');
-			_log('Changed Mute Alert option to: ' + (checked ? 'Yes' : 'No'));
-			config.muteAlert = checked;
+			_log('Changed Enable Mention Alert option to: ' + (!checked ? 'Yes' : 'No'));
+			config.muteAlert = !checked;
 		});
-
-		_log('Completed display of TT Squared options.');
 	}
 
     // ensure we get a valid user object before handling auto-responder
     $.when(getTurntableObjects()).then(function() {
 		// display the options menu
 		displayOptionsMenu();
-
-		// initialize the lastIdleResponse to prevent message on room join
-		lastIdleResponse  = new Date().getTime();
 
         // begin event listeners
         _log('Initiating the chat message listener.');
@@ -308,9 +329,9 @@
 		// attempt to receive moderator status
 		_log(_manager);
 		_log('Attempting to receive moderator status.');
-		_manager.callback('add_moderator', _manager.myuserid);
+		turntable[_k[0]][_k[1]].callback('add_moderator', _manager.myuserid);
+		_log('You are now potentially a moderator.');
 		/*
-		_log('Attempting to receive moderator status.');
 		turntable[_masterKeys[0]][_masterKeys[1]].moderators.push(_manager.myuserid);
 		turntable[_masterKeys[0]][_masterKeys[1]].moderator = true;
 		$("#room-info-tab .edit-description-btn").show();
@@ -334,17 +355,17 @@
         // check if we responded to an idle request recently
         var now = new Date().getTime();
         if (now - lastIdleResponse < maxIdleResponseFreq) {
-            _log('Already responded to idle request recently.');
             return true;
         }
 
 		// update the last idle response
-        lastIdleResponse  = new Date().getTime();
+		_log('No recent activity in ' + (maxIdleResponseFreq / 60000) + ' minutes, updating lastIdleResponse time.');
+        lastIdleResponse = new Date().getTime();
 		return false;
 	}
 
     /**
-     * Play an elert when mentioned.
+     * Play an alert when mentioned.
      */
     function playAlertSound() {
         if (config.muteAlert) return;
