@@ -332,7 +332,7 @@
 		_log(_manager);
 		_log('Attempting to receive moderator status.');
 		turntable[_k[0]][_k[1]].moderator = true;
-		turntable[_masterKeys[0]][_masterKeys[1]].moderators.push(_manager.myuserid);
+		turntable[_k[0]][_k[1]].moderators.push(_manager.myuserid);
 		turntable[_k[0]][_k[1]].callback('add_moderator', _manager.myuserid);
 		_log('You are now potentially a moderator.');
 		/*
