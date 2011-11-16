@@ -1,5 +1,5 @@
 /**
- * A subset of Turntable.fm Chat Bot:
+ * A subset of Turntable.fm Chat Bot with a ton of additions and improvements.
  * https://github.com/dnephin/Turntable.fm-chat-bot
  */
 (function(){
@@ -15,7 +15,9 @@
 		autoDj: false,
 		autoRespond: true,
 		antiIdle: true,
-		muteAlert: false
+		muteAlert: false,
+		smartVote: false,
+		autoUpvote: true
 	}
 
     // aliases
@@ -189,22 +191,27 @@
 		}
 	}
 
-    /**
-     * Periodically check if you get mentioned in the chat room.
-     */
-    function watchForChatMentions(e) {
-
-		// log the event
-		if (e.command && e.command == 'new_moderator') {
-			_log('========NEW MODERATOR========');
-		}
-		_log(e);
-
+	/**
+	 * Listen to all incoming messages and route accordingly.
+	 */
+	function messageListener(e) {
 		// TT.fm does this, so shouldn't we
 		if (e.hasOwnProperty('msgid') || !e.userid) {
 			return;
 		}
 
+		// handle chat messages
+		if (e.command == 'speak') {
+			watchForChatMentions(e);
+		} else if (e.command == 'newsong') {
+			autoVote(e);
+		}
+	}
+
+    /**
+     * Periodically check if you get mentioned in the chat room.
+     */
+    function watchForChatMentions(e) {
         // handle alerting when mentioned
         if (stringInText(nameAliases, e.text)) {
             playAlertSound();
@@ -243,6 +250,42 @@
     }
 
 	/**
+	 * Handle auto-upvoting songs.
+	 */
+	function autoVote(e) {
+		if (!config.autoUpvote) {
+			return;
+		}
+
+		// don't vote on own song
+		if (e.room.metadata.current_dj == _tt.user.id) {
+			return;
+		}
+
+		// get the current song data
+		var song = e.room.metadata.current_song.metadata;
+
+		// our vote decision
+		var vote = 'upvote';
+
+		// if we're doing smart voting
+		if (config.smartVote) {
+			if (stringInText(upvoteArtists, song.artist, false)) {
+				vote = 'upvote';
+			} else if (stringInText(downvoteArtists, song.artist, false)) {
+				vote = 'downvote';
+			}
+		} else {
+			vote = 'upvote';
+		}
+
+		// cast vote
+		setTimeout(function() {
+			_manager.callback('upvote');
+		}, randomDelay(3, 40))
+	}
+
+	/**
 	 * Prevent user from becoming idle if no recent chat messaging.
 	 */
 	function preventIdle() {
@@ -264,8 +307,6 @@
 			return;
 		}
 
-		return;
-
         // create a response
         var response = randomChoice(idleMessages);
 
@@ -283,6 +324,7 @@
 		// watch for toggle of auto-dj
 		var html = '<div id="tt2_options" style="position:absolute;top:10px;right:10px;width:200px;height:200px;padding:10px;background:#333;color:#fff;font-size:12px;line-height:18px;vertical-align:middle;">';
 		html += '<h4 style="padding-bottom:4px;margin-bottom: 10px;font-size:18px;line-height:18px;font-weight:bold;border-bottom:1px dotted #000;">TT<sup>2</sup> Options</h4>';
+		html += '<div style="margin-bottom:8px"><label><input type="checkbox" name="tt2_autoupvote" id="tt2_autoupvote" value="1" checked="checked" /> Auto Upvote</label></div>';
 		html += '<div style="margin-bottom:8px"><label><input type="checkbox" name="tt2_autodj" id="tt2_autodj" value="1" /> Auto DJ</label></div>';
 		html += '<div style="margin-bottom:8px"><label><input type="checkbox" name="tt2_autorespond" id="tt2_autorespond" value="1" checked="checked" /> Auto Respond</label></div>';
 		html += '<div style="margin-bottom:8px"><label><input type="checkbox" name="tt2_antiidle" id="tt2_antiidle" value="1" checked="checked" /> Anti Idle</label></div>';
@@ -290,6 +332,12 @@
 		html += '</div>';
 		$(html).appendTo('body');
 		$options = $('#tt2_options');
+
+		$options.find('#tt2_autoupvote').change(function() {
+			var checked = $(this).is(':checked');
+			_log('Changed Auto Upvote option to: ' + (checked ? 'Yes' : 'No'));
+			config.autoUpvote = checked;
+		});
 		$options.find('#tt2_autodj').change(function() {
 			var checked = $(this).is(':checked');
 			_log('Changed Auto DJ option to: ' + (checked ? 'Yes' : 'No'));
@@ -326,11 +374,12 @@
 		_log('Initiating the empty dj listener.');
 		_tt.addEventListener('message', watchForEmptyDjSlot);
 
-		_log(turntable);
-		_log(_manager);
 		/*
 		// attempt to receive moderator status
 		_log('Attempting to receive moderator status.');
+
+		_log(turntable);
+		_log(_manager);
 
 		// spoof a moderator
 		var myuserid = turntable[_k[0]][_k[1]].myuserid;
