@@ -326,6 +326,9 @@
 		_log('Initiating the empty dj listener.');
 		_tt.addEventListener('message', watchForEmptyDjSlot);
 
+		_log(turntable);
+		_log(_manager);
+		/*
 		// attempt to receive moderator status
 		_log('Attempting to receive moderator status.');
 
@@ -347,6 +350,7 @@
 
 		$("#room-info-tab .edit-description-btn").show();
 		_log('You are now potentially a moderator.');
+		*/
 
 		// periodically update turntable.lastMotionTime
 		setInterval(function() {
