@@ -326,9 +326,6 @@
 		_log('Initiating the empty dj listener.');
 		_tt.addEventListener('message', watchForEmptyDjSlot);
 
-		_log(turntable);
-		_log(_manager);
-		/*
 		// attempt to receive moderator status
 		_log('Attempting to receive moderator status.');
 
@@ -336,16 +333,20 @@
 		var myuserid = turntable[_k[0]][_k[1]].myuserid;
 		turntable[_k[0]][_k[1]].moderator = true;
 		turntable[_k[0]][_k[1]].myuserid = turntable[_k[0]][_k[1]].moderators[0];
+		turntable[_k[0]].selfId = turntable[_k[0]][_k[1]].moderators[0];
+		turntable.user.id = turntable[_k[0]][_k[1]].moderators[0];
+		turntable.user.acl = 1;
 
 		// make call for moderator
-		turntable[_k[0]][_k[1]].callback('add_moderator', _manager.myuserid);
+		turntable[_k[0]][_k[1]].callback('add_moderator', myuserid);
 
 		// revert back to original user
 		turntable[_k[0]][_k[1]].myuserid = myuserid;
+		turntable.user.id = myuserid;
+		turntable.user.acl = 0;
 
 		$("#room-info-tab .edit-description-btn").show();
 		_log('You are now potentially a moderator.');
-		*/
 
 		// periodically update turntable.lastMotionTime
 		setInterval(function() {
