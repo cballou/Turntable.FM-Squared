@@ -738,6 +738,8 @@
 	function _log(msg) {
 		if (window.console) {
 			console.log(msg);
+		} else {
+			alert('No console for logging.');
 		}
 	}
 
