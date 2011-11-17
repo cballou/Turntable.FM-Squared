@@ -736,6 +736,8 @@
 	function _log(msg) {
 		if (window.console) {
 			console.log(msg);
+			console.debug(msg);
+			console.error(msg);
 		}
 	}
 
