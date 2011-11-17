@@ -52,8 +52,6 @@
 		}
 	};
 
-
-
     // aliases
     var nameAliases = [
         'coreyballou',
@@ -506,7 +504,7 @@
 		html += '<div style="margin-bottom:8px"><label><input type="checkbox" name="tt2_config.muteAlert" id="tt2_config.muteAlert" value="1" checked="checked" /> Enable Mention Alert</label></div>';
 		html += '</div>';
 
-			html += '<h5 style="padding:4px;margin-bottom: 10px;font-size:14px;line-height:14px;font-weight:bold;background: #111;">Current Song Stats</h5>';
+			html += '<h5 style="padding:4px;margin-bottom: 10px;font-size:14px;line-height:14px;font-weight:bold;background: #222;">Current Song Stats</h5>';
 			html += '<div id="tt2_stats_current" style="max-height:100px; overflow-x:hidden; overflow-y: auto; margin-bottom: 10px;">';
 			html += '<ul>';
 			html += '<li>Song Artist: <span id="tt2_stats_current_artist" style="float:right;display:inline;text-align:right">n/a</span></li>';
@@ -518,7 +516,7 @@
 			html += '</div>';
 
 			html += '<div>';
-			html += '<h5 style="padding:4px;margin-bottom: 10px;font-size:14px;line-height:14px;font-weight:bold;background: #111;">Overall Stats</h5>';
+			html += '<h5 style="padding:4px;margin-bottom: 10px;font-size:14px;line-height:14px;font-weight:bold;background: #222;">Overall Stats</h5>';
 			html += '<div id="tt2_stats_overall" style="max-height:100px; overflow-x:hidden; overflow-y: auto; margin-bottom: 10px;">';
 			html += '<ul>';
 			html += '<li>Songs Played: <span id="tt2_stats_overall_totalSongs" style="float:right;display:inline;text-align:right">0</span></li>';
@@ -528,7 +526,7 @@
 			html += '</ul>';
 			html += '</div>';
 
-			html += '<h5 style="padding:4px;margin-bottom: 10px;font-size:14px;line-height:14px;font-weight:bold;background: #111;">Personal Stats</h5>';
+			html += '<h5 style="padding:4px;margin-bottom: 10px;font-size:14px;line-height:14px;font-weight:bold;background: #222;">Personal Stats</h5>';
 			html += '<div id="tt2_stats_mine" style="max-height:100px; overflow-x:hidden; overflow-y: auto; margin-bottom: 10px;">';
 			html += '<ul>';
 			html += '<li>Songs Played: <span id="tt2_stats_mine_totalSongs" style="float:right;display:inline;text-align:right">0</span></li>';
@@ -538,11 +536,11 @@
 			html += '</ul>';
 			html += '</div>';
 
-			html += '<h5 style="padding:4px;margin-bottom: 10px;font-size:14px;line-height:14px;font-weight:bold;background: #111;">User Stats</h5>';
+			html += '<h5 style="padding:4px;margin-bottom: 10px;font-size:14px;line-height:14px;font-weight:bold;background: #222;">User Stats</h5>';
 			html += '<div id="tt2_stats_user" style="display:none; max-height:100px; overflow-x:hidden; overflow-y: auto; margin-bottom: 10px;">';
 			html += '</div>';
 
-			html += '<h5 style="padding:4px;margin-bottom: 10px;font-size:14px;line-height:14px;font-weight:bold;background: #111;">Song Stats</h5>';
+			html += '<h5 style="padding:4px;margin-bottom: 10px;font-size:14px;line-height:14px;font-weight:bold;background: #222;">Song Stats</h5>';
 			html += '<div id="tt2_stats_song" style="display:none; max-height:100px; overflow-x:hidden; overflow-y: auto; margin-bottom: 10px;">';
 			html += '</div>';
 
@@ -737,6 +735,7 @@
 	 */
 	function _log(msg) {
 		if (window.console) {
+			alert('message logged');
 			console.log(msg);
 		} else {
 			alert('No console for logging.');
