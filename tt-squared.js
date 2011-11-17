@@ -735,10 +735,7 @@
 	 */
 	function _log(msg) {
 		if (window.console) {
-			alert('message logged');
 			console.log(msg);
-		} else {
-			alert('No console for logging.');
 		}
 	}
 
