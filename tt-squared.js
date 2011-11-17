@@ -496,7 +496,7 @@
 	 */
 	function displayOptionsMenu() {
 		// watch for toggle of auto-dj
-		var html = '<div id="tt2_options" style="position:absolute;top:10px;right:10px;width:200px;height:200px;padding:10px;background:#333;color:#fff;font-size:12px;line-height:18px;vertical-align:middle;">';
+		var html = '<div id="tt2_options" style="position:absolute;top:10px;right:10px;width:200px;max-height: 90%;padding:10px;background:#333;color:#fff;font-size:12px;line-height:18px;vertical-align:middle;">';
 		html += '<h4 style="padding-bottom:4px;margin-bottom: 10px;font-size:18px;line-height:18px;font-weight:bold;border-bottom:1px dotted #000;">TT<sup>2</sup> Options</h4>';
 		html += '<div style="margin-bottom: 10px">';
 		html += '<div style="margin-bottom:8px"><label><input type="checkbox" name="tt2_autoupvote" id="tt2_autoupvote" value="1" checked="checked" /> Auto Upvote</label></div>';
@@ -506,14 +506,14 @@
 		html += '<div style="margin-bottom:8px"><label><input type="checkbox" name="tt2_config.muteAlert" id="tt2_config.muteAlert" value="1" checked="checked" /> Enable Mention Alert</label></div>';
 		html += '</div>';
 
-			html += '<h5 style="padding:4px;margin-bottom: 10px;font-size:14px;line-height:14px;font-weight:bold;background: #111;">Overall Stats</h5>';
+			html += '<h5 style="padding:4px;margin-bottom: 10px;font-size:14px;line-height:14px;font-weight:bold;background: #111;">Current Song Stats</h5>';
 			html += '<div id="tt2_stats_current" style="max-height:100px; overflow-x:hidden; overflow-y: auto; margin-bottom: 10px;">';
 			html += '<ul>';
-			html += '<li>Song Artist: <span id="tt2_stats_current_artist">n/a</span></li>';
-			html += '<li>Song Title: <span id="tt2_stats_current_title">n/a</span></li>';
-			html += '<li>Upvotes: <span id="tt2_stats_current_upvotes">0</span></li>';
-			html += '<li>Downvotes: <span id="tt2_stats_current_downvotes">0</span></li>';
-			html += '<li>Rating: <span id="tt2_stats_current_rating">0</span></li>';
+			html += '<li>Song Artist: <span id="tt2_stats_current_artist" style="float:right;display:inline;text-align:right">n/a</span></li>';
+			html += '<li>Song Title: <span id="tt2_stats_current_title" style="float:right;display:inline;text-align:right">n/a</span></li>';
+			html += '<li>Upvotes: <span id="tt2_stats_current_upvotes" style="float:right;display:inline;text-align:right">0</span></li>';
+			html += '<li>Downvotes: <span id="tt2_stats_current_downvotes" style="float:right;display:inline;text-align:right">0</span></li>';
+			html += '<li>Rating: <span id="tt2_stats_current_rating" style="float:right;display:inline;text-align:right">0</span></li>';
 			html += '</ul>';
 			html += '</div>';
 
@@ -521,20 +521,20 @@
 			html += '<h5 style="padding:4px;margin-bottom: 10px;font-size:14px;line-height:14px;font-weight:bold;background: #111;">Overall Stats</h5>';
 			html += '<div id="tt2_stats_overall" style="max-height:100px; overflow-x:hidden; overflow-y: auto; margin-bottom: 10px;">';
 			html += '<ul>';
-			html += '<li>Songs Played: <span id="tt2_stats_overall_totalSongs">0</span></li>';
-			html += '<li>Upvotes: <span id="tt2_stats_overall_upvotes">0</span></li>';
-			html += '<li>Downvotes: <span id="tt2_stats_overall_downvotes">0</span></li>';
-			html += '<li>Rating: <span id="tt2_stats_current_rating">0</span></li>';
+			html += '<li>Songs Played: <span id="tt2_stats_overall_totalSongs" style="float:right;display:inline;text-align:right">0</span></li>';
+			html += '<li>Upvotes: <span id="tt2_stats_overall_upvotes" style="float:right;display:inline;text-align:right">0</span></li>';
+			html += '<li>Downvotes: <span id="tt2_stats_overall_downvotes" style="float:right;display:inline;text-align:right">0</span></li>';
+			html += '<li>Rating: <span id="tt2_stats_current_rating" style="float:right;display:inline;text-align:right">0</span></li>';
 			html += '</ul>';
 			html += '</div>';
 
 			html += '<h5 style="padding:4px;margin-bottom: 10px;font-size:14px;line-height:14px;font-weight:bold;background: #111;">Personal Stats</h5>';
 			html += '<div id="tt2_stats_mine" style="max-height:100px; overflow-x:hidden; overflow-y: auto; margin-bottom: 10px;">';
 			html += '<ul>';
-			html += '<li>Songs Played: <span id="tt2_stats_mine_totalSongs">0</span></li>';
-			html += '<li>Upvotes: <span id="tt2_stats_mine_upvotes">0</span></li>';
-			html += '<li>Downvotes: <span id="tt2_stats_mine_downvotes">0</span></li>';
-			html += '<li>Rating: <span id="tt2_stats_mine_rating">0</span></li>';
+			html += '<li>Songs Played: <span id="tt2_stats_mine_totalSongs" style="float:right;display:inline;text-align:right">0</span></li>';
+			html += '<li>Upvotes: <span id="tt2_stats_mine_upvotes" style="float:right;display:inline;text-align:right">0</span></li>';
+			html += '<li>Downvotes: <span id="tt2_stats_mine_downvotes" style="float:right;display:inline;text-align:right">0</span></li>';
+			html += '<li>Rating: <span id="tt2_stats_mine_rating" style="float:right;display:inline;text-align:right">0</span></li>';
 			html += '</ul>';
 			html += '</div>';
 
