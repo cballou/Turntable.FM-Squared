@@ -592,8 +592,8 @@
 		if (e.command) {
 			if (e.command == 'newsong') {
 				_log('Song change.');
+				_log(e);
 			}
-			_log(e);
 		}
 
 		// handle chat messages
