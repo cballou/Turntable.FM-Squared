@@ -20,6 +20,44 @@
 		autoUpvote: true
 	}
 
+	// vote monitoring
+	var votes = {
+		// total songs played
+		totalSongs: 0,
+
+		// for the current song
+		current: {
+			score: 0,
+			voters: 0,
+			upvoters: [],
+			downvoters: []
+		},
+
+		// for each song
+		songs: {
+
+		},
+
+		// by each user
+		user: {
+
+		},
+
+		// for my songs
+		mine: {
+			totalSongs: 0,
+			songs: {
+				score: 0,
+				voters: 0,
+				upvoters: [],
+				downvoters: [],
+				song: []
+			}
+		}
+	};
+
+
+
     // aliases
     var nameAliases = [
         'coreyballou',
@@ -191,23 +229,6 @@
 		}
 	}
 
-	/**
-	 * Listen to all incoming messages and route accordingly.
-	 */
-	function messageListener(e) {
-		// TT.fm does this, so shouldn't we
-		if (e.hasOwnProperty('msgid') || !e.userid) {
-			return;
-		}
-
-		// handle chat messages
-		if (e.command == 'speak') {
-			watchForChatMentions(e);
-		} else if (e.command == 'newsong') {
-			autoVote(e);
-		}
-	}
-
     /**
      * Periodically check if you get mentioned in the chat room.
      */
@@ -281,8 +302,11 @@
 
 		// cast vote
 		setTimeout(function() {
-			_manager.callback('upvote');
-		}, randomDelay(3, 40))
+			// if you're djing
+			if (!isDj() || !isCurrentDj()) {
+				_manager.callback('upvote');
+			}
+		}, randomDelay(3, 30))
 	}
 
 	/**
@@ -315,6 +339,160 @@
             _log('Preventing idle: ' + response);
             say(response);
         }, randomDelay(2, 8));
+	}
+
+	/**
+	 * Reset vote counters on a new song.
+	 */
+	function resetVotes(e) {
+		// reset current vote counter
+		votes.current.score = votes.current.voters = 0;
+		votes.current.upvoters = [];
+		votes.current.downvoters = [];
+
+		// increment total songs played
+		votes.totalSongs += 1;
+
+		// initialize the new song array for voting
+		var song = e.room.metadata.current_song.metadata;
+
+		/*
+		if (!votes.songs[blah]) {
+			votes.songs[blah] = {
+				artist: song.artist,
+				title: song.title,
+				plays: 1,
+				score: 0,
+				voters: 0,
+				upvoters: [],
+				downvoters: []
+			}
+		} else {
+			// add to the play counter
+			votes.songs[blah].plays += 1;
+		}
+
+		// track song votes
+		if (!votes.songs.song[blah]) {
+			votes.songs.song[blah] = {
+				artist: song.artist,
+				title: song.title,
+				plays: 1,
+				score: 0,
+				voters: 0,
+				upvoters: [],
+				downvoters: []
+			};
+		} else {
+			// add to the play counter
+			votes.songs.song[blah].plays += 1;
+		}
+
+		// if im djing, track votes
+		if (isCurrentDj()) {
+			// add to total songs played
+			votes.mine.totalSongs += 1;
+
+			// handle individual song tracking
+			if (!votes.mine.songs.song[blah]) {
+				votes.mine.songs.song[blah] = {
+					artist: song.artist,
+					title: song.title,
+					plays: 1,
+					score: 0,
+					voters: 0,
+					upvoters: [],
+					downvoters: []
+				};
+			} else {
+				// add to the play counter
+				votes.mine.songs[blah].plays += 1;
+			}
+		}
+		*/
+	}
+
+	/**
+	 * Keeps internal track of voting for each new song played.
+	 */
+	function updateVotes(e) {
+		// initialize the new song array for voting
+		var song = e.room.metadata.current_song.metadata;
+		_log('===============CURRENT SONG=================');
+		_log(song);
+
+
+		/*
+		// update the counters
+		this.updateCounters = function(data) {
+			votes.current.score = data.upvotes / (data.downvotes + data.upvotes);
+			votes.current.voters = data.upvotes + data.downvotes;
+		};
+
+		// update the window title
+		this.updateTitle = function(data) {
+			document.title = data.upvotes - data.downvotes;
+		};
+
+		// record a vote
+		this.recordVote = function(data, song) {
+			var users = _room.users;
+			var uid = data[0];
+
+			// ensure we have an object to track user voting
+			if (!votes.user[uid]) {
+				votes.user[uid] = {
+					songs: 0,
+					score: 0,
+					upvotes: 0,
+					downvotes: 0
+				};
+			}
+
+			// if an upvote was cast
+			if (data[1] == 'up') {
+				// add to current upvoters
+				votes.current.upvoters[uid] = u[uid].name;
+
+				// add to the user
+				votes.user[uid].songs += 1;
+				votes.user[uid].upvotes += 1;
+				votes.user[uid].score = votes.user[uid].upvotes / (votes.user[uid].downvotes + votes.user[uid].upvotes);
+
+				// if im djing
+				if (isCurrentDj()) {
+					votes.mine.songs.song[song.id].upvoters[uid] = u[uid].name;
+				}
+			} else {
+				// add to current downvoters
+				votes.current.downvoters[uid] = u[uid].name;
+
+				// add to the user
+				votes.user[uid].songs += 1;
+				votes.user[uid].downvotes += 1;
+				votes.user[uid].score = votes.user[uid].upvotes / (votes.user[uid].downvotes + votes.user[uid].upvotes);
+
+				// if im djing
+				if (isCurrentDj()) {
+					votes.mine.songs.song[song.id].downvoters[uid] = u[uid].name;
+				}
+			}
+		}
+
+		// retrieve voters
+		this.getVoters = function() {
+			_log('Upvoters: ' + votes.current.upvoters.join(', '));
+			_log('Downvoters: ' + votes.current.downvoters.join(', '));
+		}
+
+		// initialize the new song array for voting
+		var song = e.room.metadata.current_song.metadata;
+
+		// perform actions
+		updateCounters(e.room.metadata);
+		updateTitle(e.room.metadata);
+		recordVote(e.room.metadata.votelog[0], song);
+		*/
 	}
 
 	/**
@@ -363,43 +541,45 @@
 		});
 	}
 
+	/**
+	 * Listen to all incoming messages and route accordingly.
+	 */
+	function messageListener(e) {
+		// TT.fm does this, so shouldn't we
+		if (e.hasOwnProperty('msgid') || !e.userid) {
+			return;
+		}
+
+		// record any commands
+		if (e.command) {
+			if (e.command == 'newsong') {
+				_log('Song change.');
+			}
+			_log(e);
+		}
+
+		// handle chat messages
+		if (e.command == 'speak') {
+			watchForChatMentions(e);
+		} else if (e.command == 'newsong') {
+			autoVote(e);
+			resetVotes(e);
+		} else if (e.command == 'update_votes') {
+			updateVotes(e);
+		}
+	}
+
     // ensure we get a valid user object before handling auto-responder
     $.when(getTurntableObjects()).then(function() {
 		// display the options menu
 		displayOptionsMenu();
 
         // begin event listeners
-        _log('Initiating the chat message listener.');
-        _tt.addEventListener('message', watchForChatMentions);
-		_log('Initiating the empty dj listener.');
-		_tt.addEventListener('message', watchForEmptyDjSlot);
-
-		/*
-		// attempt to receive moderator status
-		_log('Attempting to receive moderator status.');
-
-		_log(turntable);
-		_log(_manager);
-
-		// spoof a moderator
-		var myuserid = turntable[_k[0]][_k[1]].myuserid;
-		turntable[_k[0]][_k[1]].moderator = true;
-		turntable[_k[0]][_k[1]].myuserid = turntable[_k[0]][_k[1]].moderators[0];
-		turntable[_k[0]].selfId = turntable[_k[0]][_k[1]].moderators[0];
-		turntable.user.id = turntable[_k[0]][_k[1]].moderators[0];
-		turntable.user.acl = 1;
-
-		// make call for moderator
-		turntable[_k[0]][_k[1]].callback('add_moderator', myuserid);
-
-		// revert back to original user
-		turntable[_k[0]][_k[1]].myuserid = myuserid;
-		turntable.user.id = myuserid;
-		turntable.user.acl = 0;
-
-		$("#room-info-tab .edit-description-btn").show();
-		_log('You are now potentially a moderator.');
-		*/
+        _log('Initiating the event listener.');
+		_tt.addEventListener('message', messageListener);
+        //_tt.addEventListener('message', watchForChatMentions);
+		//_log('Initiating the empty dj listener.');
+		//_tt.addEventListener('message', watchForEmptyDjSlot);
 
 		// periodically update turntable.lastMotionTime
 		setInterval(function() {
@@ -410,6 +590,29 @@
 	//==========================================================================
 	// HELPER FUNCTIONS
 	//==========================================================================
+
+	/**
+	 * Check if currently DJing.
+	 */
+	function isDj() {
+		if (typeof _manager.djs != 'undefined') {
+			for (var i in _manager.djs) {
+				if (typeof _manager.djs[i] != 'undefined') {
+					if (_manager[djs][i][0] == _room.selfId) {
+						return true;
+					}
+				}
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Check if currently playing a song.
+	 */
+	function isCurrentDj() {
+		return _manager.current_dj && _manager.current_dj[0] != _manager.myuserid;
+	}
 
 	/**
 	 * Check if we recently responded to a message or idle check.
@@ -432,13 +635,11 @@
      */
     function playAlertSound() {
         if (config.muteAlert) return;
-        for (i = 0; i < 5; i++) {
-            setTimeout(function() {
-				if (turntablePlayer) {
-					turntablePlayer.playEphemeral(UI_SOUND_CHAT, true);
-				}
-			}, i*700);
-        }
+		if (turntablePlayer) {
+			setTimeout(function() {
+				turntablePlayer.playEphemeral(UI_SOUND_CHAT, true);
+			}, 500);
+		}
     }
 
 	// send a message
