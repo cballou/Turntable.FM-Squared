@@ -348,13 +348,16 @@
 		votes.totalSongs += 1;
 
 		// initialize the new song array for voting
+		var song_id = e.room.metadata.current_song._id;
 		var song = e.room.metadata.current_song.metadata;
 
-		/*
-		if (!votes.songs[blah]) {
-			votes.songs[blah] = {
+		// if this is the first time the song has been played
+		if (!votes.songs[song_id]) {
+			votes.songs[song_id] = {
 				artist: song.artist,
-				title: song.title,
+				title: song.song,
+				album: song.album,
+				coverart: song.coverart,
 				plays: 1,
 				score: 0,
 				voters: 0,
@@ -363,14 +366,16 @@
 			}
 		} else {
 			// add to the play counter
-			votes.songs[blah].plays += 1;
+			votes.songs[song_id].plays += 1;
 		}
 
 		// track song votes
-		if (!votes.songs.song[blah]) {
-			votes.songs.song[blah] = {
+		if (!votes.songs.song[song_id]) {
+			votes.songs.song[song_id] = {
 				artist: song.artist,
-				title: song.title,
+				title: song.song,
+				album: song.album,
+				coverart: song.coverart,
 				plays: 1,
 				score: 0,
 				voters: 0,
@@ -379,7 +384,7 @@
 			};
 		} else {
 			// add to the play counter
-			votes.songs.song[blah].plays += 1;
+			votes.songs.song[song_id].plays += 1;
 		}
 
 		// if im djing, track votes
@@ -388,10 +393,12 @@
 			votes.mine.totalSongs += 1;
 
 			// handle individual song tracking
-			if (!votes.mine.songs.song[blah]) {
-				votes.mine.songs.song[blah] = {
+			if (!votes.mine.songs.song[song_id]) {
+				votes.mine.songs.song[song_id] = {
 					artist: song.artist,
-					title: song.title,
+					title: song.song,
+					album: song.album,
+					coverart: song.coverart,
 					plays: 1,
 					score: 0,
 					voters: 0,
@@ -400,23 +407,19 @@
 				};
 			} else {
 				// add to the play counter
-				votes.mine.songs[blah].plays += 1;
+				votes.mine.songs[song_id].plays += 1;
 			}
 		}
-		*/
 	}
 
 	/**
 	 * Keeps internal track of voting for each new song played.
 	 */
 	function updateVotes(e) {
-		// initialize the new song array for voting
+		// retrieve song data
+		var song_id = e.room.metadata.current_song._id;
 		var song = e.room.metadata.current_song.metadata;
-		_log('===============CURRENT SONG=================');
-		_log(song);
 
-
-		/*
 		// update the counters
 		this.updateCounters = function(data) {
 			votes.current.score = data.upvotes / (data.downvotes + data.upvotes);
@@ -429,8 +432,11 @@
 		};
 
 		// record a vote
-		this.recordVote = function(data, song) {
+		this.recordVote = function(data) {
+			// the room users
 			var users = _room.users;
+
+			// the voting user
 			var uid = data[0];
 
 			// ensure we have an object to track user voting
@@ -455,7 +461,7 @@
 
 				// if im djing
 				if (isCurrentDj()) {
-					votes.mine.songs.song[song.id].upvoters[uid] = u[uid].name;
+					votes.mine.songs.song[song_id].upvoters[uid] = u[uid].name;
 				}
 			} else {
 				// add to current downvoters
@@ -468,7 +474,7 @@
 
 				// if im djing
 				if (isCurrentDj()) {
-					votes.mine.songs.song[song.id].downvoters[uid] = u[uid].name;
+					votes.mine.songs.song[song_id].downvoters[uid] = u[uid].name;
 				}
 			}
 		}
@@ -479,14 +485,10 @@
 			_log('Downvoters: ' + votes.current.downvoters.join(', '));
 		}
 
-		// initialize the new song array for voting
-		var song = e.room.metadata.current_song.metadata;
-
 		// perform actions
 		updateCounters(e.room.metadata);
 		updateTitle(e.room.metadata);
-		recordVote(e.room.metadata.votelog[0], song);
-		*/
+		recordVote(e.room.metadata.votelog[0]);
 	}
 
 	/**
@@ -637,10 +639,10 @@
 	 * Check if currently DJing.
 	 */
 	function isDj() {
-		if (typeof _manager.djs != 'undefined') {
-			for (var i in _manager.djs) {
-				if (typeof _manager.djs[i] != 'undefined') {
-					if (_manager[djs][i][0] == _room.selfId) {
+		if (typeof e.room.metadata.djs != 'undefined') {
+			for (var i in e.room.metadata.djs) {
+				if (typeof e.room.metadata.djs[i] != 'undefined') {
+					if (e.room.metadata.djs[i][0] == _room.selfId) {
 						return true;
 					}
 				}
