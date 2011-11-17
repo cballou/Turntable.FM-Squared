@@ -607,6 +607,11 @@
 		}
 	}
 
+	function trackstartListener(e) {
+		_log('Track start');
+		_log(e);
+	}
+
     // ensure we get a valid user object before handling auto-responder
     $.when(getTurntableObjects()).then(function() {
 		// display the options menu
@@ -616,6 +621,10 @@
         // begin event listeners
         _log('Initiating the event listener.');
 		_tt.addEventListener('message', messageListener);
+
+		_log('Initiating the trackstart listener');
+		_tt.addEventListener('trackstart', trackstartListener);
+
         //_tt.addEventListener('message', watchForChatMentions);
 		//_log('Initiating the empty dj listener.');
 		//_tt.addEventListener('message', watchForEmptyDjSlot);
