@@ -435,6 +435,10 @@
 	 * Keeps internal track of voting for each new song played.
 	 */
 	function updateVotes(e) {
+		
+		_log('Update the mfin votes');
+		_log(e);
+		
 		// retrieve song data
 		var song_id = e.room.metadata.current_song._id;
 		var song = e.room.metadata.current_song.metadata;
