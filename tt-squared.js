@@ -354,9 +354,9 @@
 		votes.totalSongs += 1;
 		$('#tt2_stats_overall_totalSongs').text(votes.totalSongs);
 
-		// initialize the new song array for voting
-		var song_id = e.room.metadata.current_song._id;
-		var song = e.room.metadata.current_song.metadata;
+		// retrieve song data
+		var song_id = _room.currentSong._id;
+		var song = _room.currentSong.metadata;
 
 		// if this is the first time the song has been played
 		if (!votes.songs[song_id]) {
@@ -440,8 +440,8 @@
 		_log(e);
 		
 		// retrieve song data
-		var song_id = e.room.metadata.current_song._id;
-		var song = e.room.metadata.current_song.metadata;
+		var song_id = _room.currentSong._id;
+		var song = _room.currentSong.metadata;
 
 		_log('Update vote, prior to functions.');
 
@@ -483,7 +483,7 @@
 			// if an upvote was cast
 			if (data[1] == 'up') {
 				// add to current upvoters
-				votes.current.upvoters[uid] = u[uid].name;
+				votes.current.upvoters[uid] = users[uid].name;
 
 				// add to the user
 				votes.user[uid].songs += 1;
@@ -502,11 +502,11 @@
 					$('#tt2_stats_mine_rating').text(votes.mine.score);
 					
 					// add upvoter to my song
-					votes.mine.songs.song[song_id].upvoters[uid] = u[uid].name;
+					votes.mine.songs.song[song_id].upvoters[uid] = users[uid].name;
 				}
 			} else {
 				// add to current downvoters
-				votes.current.downvoters[uid] = u[uid].name;
+				votes.current.downvoters[uid] = users[uid].name;
 
 				// add to the user
 				votes.user[uid].songs += 1;
@@ -525,7 +525,7 @@
 					$('#tt2_stats_mine_rating').text(votes.mine.score);
 					
 					// add downvoter to my song
-					votes.mine.songs.song[song_id].downvoters[uid] = u[uid].name;
+					votes.mine.songs.song[song_id].downvoters[uid] = users[uid].name;
 				}
 			}
 		}
@@ -544,7 +544,7 @@
 
 		// perform actions
 		updateCounters(e.room.metadata);
-		updateTitle(e.room.metadata);
+		//updateTitle(e.room.metadata);
 		recordVote(e.room.metadata.votelog[0]);
 		
 		// update list of voters
