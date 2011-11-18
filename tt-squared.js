@@ -24,27 +24,27 @@
 	var votes = {
 		// total songs played
 		totalSongs: 0,
-
 		// for the current song
 		current: {
 			score: 0,
-			voters: 0,
+			votes: 0,
 			upvoters: [],
 			downvoters: []
 		},
-
 		// for each song
 		songs: {},
-
 		// by each user
 		user: {},
-
 		// for my songs
 		mine: {
 			totalSongs: 0,
+			score: 0,
+			votes: 0,
+			upvotes: 0,
+			downvotes: 0,
 			songs: {
 				score: 0,
-				voters: 0,
+				votes: 0,
 				upvoters: [],
 				downvoters: [],
 				song: []
@@ -340,12 +340,19 @@
 	 */
 	function resetVotes(e) {
 		// reset current vote counter
-		votes.current.score = votes.current.voters = 0;
+		votes.current.score = votes.current.votes = 0;
 		votes.current.upvoters = [];
 		votes.current.downvoters = [];
+		
+		// display stat updates
+		$('#tt2_stats_current_upvotes').text(0);
+		$('#tt2_stats_current_downvotes').text(0);
+		$('#tt2_stats_current_rating').text(0);
+		$('#tt2_stats_current_votes').text(0);
 
 		// increment total songs played
 		votes.totalSongs += 1;
+		$('#tt2_stats_overall_totalSongs').text(votes.totalSongs);
 
 		// initialize the new song array for voting
 		var song_id = e.room.metadata.current_song._id;
@@ -360,13 +367,23 @@
 				coverart: song.coverart,
 				plays: 1,
 				score: 0,
-				voters: 0,
+				votes: 0,
 				upvoters: [],
 				downvoters: []
 			}
 		} else {
 			// add to the play counter
 			votes.songs[song_id].plays += 1;
+		}
+		
+		// update current song
+		$('#tt2_stats_current_artist').text(song.artist);
+		$('#tt2_stats_current_title').text(song.song);
+		$('#tt2_stats_current_album').text(song.album || 'n/a');
+		if (song.coverart) {
+			$('#tt2_stats_current_coverart').html('<img src="' + song.coverart + '" alt="Cover Art" />');
+		} else {
+			$('#tt2_stats_current_coverart').empty();
 		}
 
 		// track song votes
@@ -378,7 +395,7 @@
 				coverart: song.coverart,
 				plays: 1,
 				score: 0,
-				voters: 0,
+				votes: 0,
 				upvoters: [],
 				downvoters: []
 			};
@@ -391,6 +408,7 @@
 		if (isCurrentDj()) {
 			// add to total songs played
 			votes.mine.totalSongs += 1;
+			$('#tt2_stats_mine_totalSongs').text(votes.mine.totalSongs);
 
 			// handle individual song tracking
 			if (!votes.mine.songs.song[song_id]) {
@@ -401,13 +419,14 @@
 					coverart: song.coverart,
 					plays: 1,
 					score: 0,
-					voters: 0,
+					votes: 0,
 					upvoters: [],
 					downvoters: []
 				};
 			} else {
 				// add to the play counter
 				votes.mine.songs[song_id].plays += 1;
+				
 			}
 		}
 	}
@@ -423,7 +442,13 @@
 		// update the counters
 		this.updateCounters = function(data) {
 			votes.current.score = data.upvotes / (data.downvotes + data.upvotes);
-			votes.current.voters = data.upvotes + data.downvotes;
+			votes.current.votes = data.upvotes + data.downvotes;
+			
+			// display stat updates
+			$('#tt2_stats_current_upvotes').text(data.upvotes);
+			$('#tt2_stats_current_downvotes').text(data.downvotes);
+			$('#tt2_stats_current_rating').text(votes.current.score);
+			$('#tt2_stats_current_votes').text(votes.current.votes);
 		};
 
 		// update the window title
@@ -461,6 +486,16 @@
 
 				// if im djing
 				if (isCurrentDj()) {
+					// increment my total upvotes
+					votes.mine.votes += 1;
+					votes.mine.upvotes += 1;
+					votes.mine.score = votes.mine.upvotes / (votes.mine.downvotes + votes.mine.upvotes);
+					
+					$('#tt2_stats_mine_votes').text(votes.mine.votes);
+					$('#tt2_stats_mine_upvotes').text(votes.mine.upvotes);
+					$('#tt2_stats_mine_rating').text(votes.mine.score);
+					
+					// add upvoter to my song
 					votes.mine.songs.song[song_id].upvoters[uid] = u[uid].name;
 				}
 			} else {
@@ -474,21 +509,38 @@
 
 				// if im djing
 				if (isCurrentDj()) {
+					// increment my total downvotes
+					votes.mine.votes += 1;
+					votes.mine.downvotes += 1;
+					votes.mine.score = votes.mine.upvotes / (votes.mine.downvotes + votes.mine.upvotes);
+					
+					$('#tt2_stats_mine_votes').text(votes.mine.votes);
+					$('#tt2_stats_mine_downvotes').text(votes.mine.downvotes);
+					$('#tt2_stats_mine_rating').text(votes.mine.score);
+					
+					// add downvoter to my song
 					votes.mine.songs.song[song_id].downvoters[uid] = u[uid].name;
 				}
 			}
 		}
 
 		// retrieve voters
-		this.getVoters = function() {
-			_log('Upvoters: ' + votes.current.upvoters.join(', '));
-			_log('Downvoters: ' + votes.current.downvoters.join(', '));
+		this.updateVotersList = function() {
+			if (votes.current.upvoters.length) {
+				$('#tt2_stats_current_upvoters').html('<li>' + votes.current.upvoters.join('</li><li>') + '</li>');
+			}
+			if (votes.current.downvoters.length) {
+				$('#tt2_stats_current_downvoters').html('<li>' + votes.current.downvoters.join('</li><li>') + '</li>');
+			}
 		}
 
 		// perform actions
 		updateCounters(e.room.metadata);
 		updateTitle(e.room.metadata);
 		recordVote(e.room.metadata.votelog[0]);
+		
+		// update list of voters
+		updateVotersList();
 	}
 
 	/**
@@ -496,61 +548,71 @@
 	 */
 	function displayOptionsMenu() {
 		// watch for toggle of auto-dj
-		var html = '<div id="tt2_options" style="position:absolute;top:10px;right:10px;width:200px;max-height: 90%;padding:10px;background:#333;color:#fff;font-size:12px;line-height:18px;vertical-align:middle;">';
+		var html = '<div id="tt2_options" style="position:absolute;top:10px;right:10px;width:200px;max-height: 90%;padding:10px;background:#333;color:#fff;font-size:12px;line-height:18px;vertical-align:middle;overflow-x:hidden;overflow-y:scroll;">';
 		html += '<h4 style="padding-bottom:4px;margin-bottom: 10px;font-size:18px;line-height:18px;font-weight:bold;border-bottom:1px dotted #000;">TT<sup>2</sup> Options</h4>';
-		html += '<div style="margin-bottom: 10px">';
+		html += '<div>';
 		html += '<div style="margin-bottom:8px"><label><input type="checkbox" name="tt2_autoupvote" id="tt2_autoupvote" value="1" checked="checked" /> Auto Upvote</label></div>';
 		html += '<div style="margin-bottom:8px"><label><input type="checkbox" name="tt2_autodj" id="tt2_autodj" value="1" /> Auto DJ</label></div>';
 		html += '<div style="margin-bottom:8px"><label><input type="checkbox" name="tt2_autorespond" id="tt2_autorespond" value="1" checked="checked" /> Auto Respond</label></div>';
 		html += '<div style="margin-bottom:8px"><label><input type="checkbox" name="tt2_antiidle" id="tt2_antiidle" value="1" checked="checked" /> Anti Idle</label></div>';
-		html += '<div style="margin-bottom:8px"><label><input type="checkbox" name="tt2_config.muteAlert" id="tt2_config.muteAlert" value="1" checked="checked" /> Enable Mention Alert</label></div>';
-		html += '</div>';
-
-			html += '<h5 style="padding:4px;margin-bottom: 10px;font-size:14px;line-height:14px;font-weight:bold;background: #222;">Current Song Stats</h5>';
-			html += '<div id="tt2_stats_current" style="max-height:100px; overflow-x:hidden; overflow-y: auto; margin-bottom: 10px;">';
-			html += '<ul>';
-			html += '<li>Song Artist: <span id="tt2_stats_current_artist" style="float:right;display:inline;text-align:right">n/a</span></li>';
-			html += '<li>Song Title: <span id="tt2_stats_current_title" style="float:right;display:inline;text-align:right">n/a</span></li>';
-			html += '<li>Upvotes: <span id="tt2_stats_current_upvotes" style="float:right;display:inline;text-align:right">0</span></li>';
-			html += '<li>Downvotes: <span id="tt2_stats_current_downvotes" style="float:right;display:inline;text-align:right">0</span></li>';
-			html += '<li>Rating: <span id="tt2_stats_current_rating" style="float:right;display:inline;text-align:right">0</span></li>';
-			html += '</ul>';
-			html += '</div>';
-
-			html += '<div>';
-			html += '<h5 style="padding:4px;margin-bottom: 10px;font-size:14px;line-height:14px;font-weight:bold;background: #222;">Overall Stats</h5>';
-			html += '<div id="tt2_stats_overall" style="max-height:100px; overflow-x:hidden; overflow-y: auto; margin-bottom: 10px;">';
-			html += '<ul>';
-			html += '<li>Songs Played: <span id="tt2_stats_overall_totalSongs" style="float:right;display:inline;text-align:right">0</span></li>';
-			html += '<li>Upvotes: <span id="tt2_stats_overall_upvotes" style="float:right;display:inline;text-align:right">0</span></li>';
-			html += '<li>Downvotes: <span id="tt2_stats_overall_downvotes" style="float:right;display:inline;text-align:right">0</span></li>';
-			html += '<li>Rating: <span id="tt2_stats_current_rating" style="float:right;display:inline;text-align:right">0</span></li>';
-			html += '</ul>';
-			html += '</div>';
-
-			html += '<h5 style="padding:4px;margin-bottom: 10px;font-size:14px;line-height:14px;font-weight:bold;background: #222;">Personal Stats</h5>';
-			html += '<div id="tt2_stats_mine" style="max-height:100px; overflow-x:hidden; overflow-y: auto; margin-bottom: 10px;">';
-			html += '<ul>';
-			html += '<li>Songs Played: <span id="tt2_stats_mine_totalSongs" style="float:right;display:inline;text-align:right">0</span></li>';
-			html += '<li>Upvotes: <span id="tt2_stats_mine_upvotes" style="float:right;display:inline;text-align:right">0</span></li>';
-			html += '<li>Downvotes: <span id="tt2_stats_mine_downvotes" style="float:right;display:inline;text-align:right">0</span></li>';
-			html += '<li>Rating: <span id="tt2_stats_mine_rating" style="float:right;display:inline;text-align:right">0</span></li>';
-			html += '</ul>';
-			html += '</div>';
-
-			html += '<h5 style="padding:4px;margin-bottom: 10px;font-size:14px;line-height:14px;font-weight:bold;background: #222;">User Stats</h5>';
-			html += '<div id="tt2_stats_user" style="display:none; max-height:100px; overflow-x:hidden; overflow-y: auto; margin-bottom: 10px;">';
-			html += '</div>';
-
-			html += '<h5 style="padding:4px;margin-bottom: 10px;font-size:14px;line-height:14px;font-weight:bold;background: #222;">Song Stats</h5>';
-			html += '<div id="tt2_stats_song" style="display:none; max-height:100px; overflow-x:hidden; overflow-y: auto; margin-bottom: 10px;">';
-			html += '</div>';
-
+		html += '<div style="margin-bottom:8px"><label><input type="checkbox" name="tt2_muteAlert" id="tt2_muteAlert" value="1" checked="checked" /> Enable Mention Alert</label></div>';
 		html += '</div>';
 		html += '</div>';
+		
+		// stats container
+		var html = '<div id="tt2_stats" style="position:absolute;top:10px;left:10px;width:200px;max-height: 90%;padding:10px;background:#333;color:#fff;font-size:12px;line-height:18px;vertical-align:middle;overflow-x:hidden;overflow-y:scroll;">';
+		// current track stats
+		html += '<h4 style="padding-bottom:4px;margin-bottom: 10px;font-size:18px;line-height:18px;font-weight:bold;border-bottom:1px dotted #000;">TT<sup>2</sup> Stats</h4>';
+		html += '<div>';
+		html += '<h5 style="padding:4px;margin-bottom: 10px;font-size:14px;line-height:14px;font-weight:bold;background: #222;">Current Track Stats</h5>';
+		html += '<div id="tt2_stats_current" style="max-height:500px; overflow-x:hidden; overflow-y: auto; margin-bottom: 10px;">';
+		html += '<ul>';
+		html += '<li>Song Artist: <span id="tt2_stats_current_artist" style="float:right;display:inline;text-align:right">n/a</span></li>';
+		html += '<li>Song Title: <span id="tt2_stats_current_title" style="float:right;display:inline;text-align:right">n/a</span></li>';
+		html += '<li>Votes: <span id="tt2_stats_current_votes" style="float:right;display:inline;text-align:right">0</span></li>';
+		html += '<li>Rating: <span id="tt2_stats_current_rating" style="float:right;display:inline;text-align:right">0</span></li>';
+		html += '<li>Upvotes: <span id="tt2_stats_current_upvotes" style="float:right;display:inline;text-align:right">0</span><ul id="tt2_stats_current_upvoters" style="max-height: 200px;overflow-x:hidden;overflow-y:auto"></ul></li>';
+		html += '<li>Downvotes: <span id="tt2_stats_current_downvotes" style="float:right;display:inline;text-align:right">0</span><ul id="tt2_stats_current_downvoters" style="max-height: 200px;overflow-x:hidden;overflow-y:auto"></ul></li>';
+		html += '</ul>';
+		html += '</div>';
+		// overall stats
+		html += '<div>';
+		html += '<h5 style="padding:4px;margin-bottom: 10px;font-size:14px;line-height:14px;font-weight:bold;background: #222;">Overall Track Stats</h5>';
+		html += '<div id="tt2_stats_overall" style="max-height:100px; overflow-x:hidden; overflow-y: auto; margin-bottom: 10px;">';
+		html += '<ul>';
+		html += '<li>Songs Played: <span id="tt2_stats_overall_totalSongs" style="float:right;display:inline;text-align:right">0</span></li>';
+		html += '<li>Upvotes: <span id="tt2_stats_overall_upvotes" style="float:right;display:inline;text-align:right">0</span></li>';
+		html += '<li>Downvotes: <span id="tt2_stats_overall_downvotes" style="float:right;display:inline;text-align:right">0</span></li>';
+		html += '<li>Rating: <span id="tt2_stats_current_rating" style="float:right;display:inline;text-align:right">0</span></li>';
+		html += '</ul>';
+		html += '</div>';
+		// personal stats
+		html += '<h5 style="padding:4px;margin-bottom: 10px;font-size:14px;line-height:14px;font-weight:bold;background: #222;">My Stats</h5>';
+		html += '<div id="tt2_stats_mine" style="max-height:100px; overflow-x:hidden; overflow-y: auto; margin-bottom: 10px;">';
+		html += '<ul>';
+		html += '<li>Songs Played: <span id="tt2_stats_mine_totalSongs" style="float:right;display:inline;text-align:right">0</span></li>';
+		html += '<li>Votes: <span id="tt2_stats_mine_votes" style="float:right;display:inline;text-align:right">0</span></li>';
+		html += '<li>Upvotes: <span id="tt2_stats_mine_upvotes" style="float:right;display:inline;text-align:right">0</span></li>';
+		html += '<li>Downvotes: <span id="tt2_stats_mine_downvotes" style="float:right;display:inline;text-align:right">0</span></li>';
+		html += '<li>Rating: <span id="tt2_stats_mine_rating" style="float:right;display:inline;text-align:right">0</span></li>';
+		html += '</ul>';
+		html += '</div>';
+		// user stats
+		html += '<h5 style="padding:4px;margin-bottom: 10px;font-size:14px;line-height:14px;font-weight:bold;background: #222;">User Stats</h5>';
+		html += '<div id="tt2_stats_user" style="display:none; max-height:100px; overflow-x:hidden; overflow-y: auto; margin-bottom: 10px;">';
+		html += '<ul></ul>';
+		html += '</div>';
+		// song stats
+		/*
+		html += '<h5 style="padding:4px;margin-bottom: 10px;font-size:14px;line-height:14px;font-weight:bold;background: #222;">Song Stats</h5>';
+		html += '<div id="tt2_stats_song" style="display:none; max-height:100px; overflow-x:hidden; overflow-y: auto; margin-bottom: 10px;">';
+		html += '<ul></ul>';
+		html += '</div>';
+		html += '</div>';
+		*/
+		
 		$(html).appendTo('body');
 		$options = $('#tt2_options');
-
 		$options.find('#tt2_autoupvote').change(function() {
 			var checked = $(this).is(':checked');
 			_log('Changed Auto Upvote option to: ' + (checked ? 'Yes' : 'No'));
@@ -574,7 +636,7 @@
 			_log('Changed Anti Idle option to: ' + (checked ? 'Yes' : 'No'));
 			config.antiIdle = checked;
 		});
-		$options.find('#tt2_config.muteAlert').change(function() {
+		$options.find('#tt2_muteAlert').change(function() {
 			var checked = $(this).is(':checked');
 			_log('Changed Enable Mention Alert option to: ' + (!checked ? 'Yes' : 'No'));
 			config.muteAlert = !checked;
@@ -585,12 +647,9 @@
 	 * Listen to all incoming messages and route accordingly.
 	 */
 	function messageListener(e) {
-		// TT.fm does this, so shouldn't we
-		/*
-		if (e.hasOwnProperty('msgid') || !e.userid) {
+		if (e.hasOwnProperty('msgid')) {
 			return;
 		}
-		*/
 
 		// record any commands
 		if (e.command) {
@@ -601,7 +660,7 @@
 		}
 
 		// handle chat messages
-		if (e.command == 'speak') {
+		if (e.command == 'speak' && e.userid) {
 			watchForChatMentions(e);
 		} else if (e.command == 'newsong') {
 			autoVote(e);
@@ -620,10 +679,6 @@
         // begin event listeners
         _log('Initiating the event listener.');
 		_tt.addEventListener('message', messageListener);
-
-        //_tt.addEventListener('message', watchForChatMentions);
-		//_log('Initiating the empty dj listener.');
-		//_tt.addEventListener('message', watchForEmptyDjSlot);
 
 		// periodically update turntable.lastMotionTime
 		setInterval(function() {
