@@ -652,9 +652,9 @@
 		html += '<h5 class="stat_heading" style="padding:4px 10px;font-size:14px;line-height:14px;font-weight:bold;background: #222;cursor:pointer;">Current Track</h5>';
 		html += '<div id="tt2_stats_current" style="max-height:500px; overflow-x:hidden; overflow-y: auto; margin-bottom: 10px;">';
 		html += '<ul style="padding:10px 10px 0">';
-		html += '<li id="tt2_stats_current_coverart" style="display:none;">';
+		html += '<li id="tt2_stats_current_coverart">';
 		html += '<p class="songinfo" style="text-align:center;margin:0 0 4px;"></p>';
-		html += '<div id="tt2_stats_current_coverart_wrapper" style="position:relative;display:block;text-align:center;width:150px;height:150px;margin:0 auto;"></div>';
+		html += '<div id="tt2_stats_current_coverart_wrapper" style="position:relative;display:block;text-align:center;margin:0 auto;"></div>';
 		html += '</li>';
 		//html += '<li>Song Artist: <span id="tt2_stats_current_artist" style="float:right;display:inline;text-align:right">n/a</span></li>';
 		//html += '<li>Song Title: <span id="tt2_stats_current_title" style="float:right;display:inline;text-align:right">n/a</span></li>';
