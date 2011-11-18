@@ -28,7 +28,7 @@
 		votes: 0,
 		upvotes: 0,
 		downvotes: 0,
-		
+
 		// for the current song
 		current: {
 			score: 0,
@@ -348,7 +348,7 @@
 		votes.current.score = votes.current.votes = 0;
 		votes.current.upvoters = [];
 		votes.current.downvoters = [];
-		
+
 		// display stat updates
 		$('#tt2_stats_current_upvotes').text(0);
 		$('#tt2_stats_current_downvotes').text(0);
@@ -362,6 +362,9 @@
 		// retrieve song data
 		var song_id = _room.currentSong._id;
 		var song = _room.currentSong.metadata;
+
+		// update the window title
+		document.title = 'TT.FM Playing: ' + song.artist + ' - "' + song.song + '" (' + song.album + ')';
 
 		// if this is the first time the song has been played
 		if (!votes.songs[song_id]) {
@@ -380,7 +383,7 @@
 			// add to the play counter
 			votes.songs[song_id].plays += 1;
 		}
-		
+
 		// update current song
 		$('#tt2_stats_current_artist').text(song.artist);
 		$('#tt2_stats_current_title').text(song.song);
@@ -431,7 +434,7 @@
 			} else {
 				// add to the play counter
 				votes.mine.songs[song_id].plays += 1;
-				
+
 			}
 		}
 	}
@@ -440,10 +443,10 @@
 	 * Keeps internal track of voting for each new song played.
 	 */
 	function updateVotes(e) {
-		
+
 		_log('Update the mfin votes');
 		_log(e);
-		
+
 		// retrieve song data
 		var song_id = _room.currentSong._id;
 		var song = _room.currentSong.metadata;
@@ -452,25 +455,23 @@
 
 		// update the counters
 		var updateCounters = function(data) {
-			votes.current.score = data.upvotes / (data.downvotes + data.upvotes);
+			votes.current.score = 100 * (data.upvotes / (data.downvotes + data.upvotes));
 			votes.current.votes = data.upvotes + data.downvotes;
-			
+
 			// display stat updates
 			$('#tt2_stats_current_upvotes').text(data.upvotes);
 			$('#tt2_stats_current_downvotes').text(data.downvotes);
-			$('#tt2_stats_current_rating').text(votes.current.score);
+			$('#tt2_stats_current_rating').text(votes.current.score + '%');
 			$('#tt2_stats_current_votes').text(votes.current.votes);
-		};
-
-		// update the window title
-		var updateTitle = function(data) {
-			document.title = data.upvotes - data.downvotes;
 		};
 
 		// record a vote
 		var recordVote = function(data) {
 			// the room users
 			var users = _room.users;
+
+			// update the number of users in the room
+			$('#tt2_stats_overall_users').text(users.length);
 
 			// the voting user
 			var uid = data[0];
@@ -501,7 +502,7 @@
 				// add to overall
 				votes.upvotes += 1;
 				votes.score = 100 * (votes.upvotes / votes.votes);
-				
+
 				$('#tt2_stats_overall_upvotes').text(votes.upvotes);
 				$('#tt2_stats_overall_rating').text(votes.score);
 
@@ -510,12 +511,12 @@
 					// increment my total upvotes
 					votes.mine.votes += 1;
 					votes.mine.upvotes += 1;
-					votes.mine.score = votes.mine.upvotes / (votes.mine.downvotes + votes.mine.upvotes);
-					
+					votes.mine.score = 100 * (votes.mine.upvotes / (votes.mine.downvotes + votes.mine.upvotes));
+
 					$('#tt2_stats_mine_votes').text(votes.mine.votes);
 					$('#tt2_stats_mine_upvotes').text(votes.mine.upvotes);
 					$('#tt2_stats_mine_rating').text(votes.mine.score + '%');
-					
+
 					// add upvoter to my song
 					votes.mine.songs.song[song_id].upvoters[uid] = users[uid].name;
 				}
@@ -531,23 +532,23 @@
 				// add to overall
 				votes.downvotes += 1;
 				votes.score = 100 * (votes.upvotes / votes.votes);
-				
+
 				$('#tt2_stats_overall_downvotes').text(votes.downvotes);
 				$('#tt2_stats_overall_rating').text(votes.score);
 
 				// if im djing
 				if (isCurrentDj()) {
 					_log('I must be djing...');
-					
+
 					// increment my total downvotes
 					votes.mine.votes += 1;
 					votes.mine.downvotes += 1;
 					votes.mine.score = votes.mine.upvotes / (votes.mine.downvotes + votes.mine.upvotes);
-					
+
 					$('#tt2_stats_mine_votes').text(votes.mine.votes);
 					$('#tt2_stats_mine_downvotes').text(votes.mine.downvotes);
 					$('#tt2_stats_mine_rating').text(votes.mine.score + '%');
-					
+
 					// add downvoter to my song
 					votes.mine.songs.song[song_id].downvoters[uid] = users[uid].name;
 				}
@@ -570,7 +571,7 @@
 		updateCounters(e.room.metadata);
 		//updateTitle(e.room.metadata);
 		recordVote(e.room.metadata.votelog[0]);
-		
+
 		// update list of voters
 		updateVotersList();
 	}
@@ -633,7 +634,7 @@
 		html += '<div style="margin-bottom:8px"><label><input type="checkbox" name="tt2_muteAlert" id="tt2_muteAlert" value="1" checked="checked" /> Enable Mention Alert</label></div>';
 		html += '</div>';
 		html += '</div>';
-		
+
 		// stats container
 		html += '<div id="tt2_stats" style="position:fixed;top:10px;left:10px;width:200px;max-height:90%;background:#333;color:#FFF;font-size:12px;line-height:18px;vertical-align:middle;overflow-x:hidden;overflow-y:auto;">';
 		// current track stats
@@ -664,9 +665,10 @@
 		html += '</div>';
 		// overall stats
 		html += '<div>';
-		html += '<h5 class="stat_heading" style="padding:4px 10px;font-size:14px;line-height:14px;font-weight:bold;background: #222;cursor:pointer;">Overall Track Stats</h5>';
+		html += '<h5 class="stat_heading" style="padding:4px 10px;font-size:14px;line-height:14px;font-weight:bold;background: #222;cursor:pointer;">Overall Room Stats</h5>';
 		html += '<div id="tt2_stats_overall" style="max-height:100px; overflow-x:hidden; overflow-y: auto; margin-bottom: 10px;">';
 		html += '<ul style="padding:10px 10px 0">';
+		html += '<li>Songs Played: <span id="tt2_stats_overall_users" style="float:right;display:inline;text-align:right">0</span></li>';
 		html += '<li>Songs Played: <span id="tt2_stats_overall_totalSongs" style="float:right;display:inline;text-align:right">0</span></li>';
 		html += '<li>Upvotes: <span id="tt2_stats_overall_upvotes" style="float:right;display:inline;text-align:right">0</span></li>';
 		html += '<li>Downvotes: <span id="tt2_stats_overall_downvotes" style="float:right;display:inline;text-align:right">0</span></li>';
@@ -686,7 +688,7 @@
 		html += '</div>';
 		html += '</div>';
 		*/
-		
+
 		$(html).appendTo('body');
 		$options = $('#tt2_options');
 		$options.find('#tt2_autoupvote').change(function() {
@@ -742,7 +744,7 @@
 	 * Check if currently playing a song.
 	 */
 	function isCurrentDj() {
-		return _manager.current_dj && _manager.current_dj[0] != _manager.myuserid;
+		return _manager.current_dj && _manager.current_dj[0] == _manager.myuserid;
 	}
 
 	/**
