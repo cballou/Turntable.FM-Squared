@@ -391,7 +391,7 @@
 		//$('#tt2_stats_current_album').text(song.album || 'n/a');
 
 		// handle purchase cover art
-		var details = '<p style="text-align:center;margin:0 0 4px;">' + song.artist + ' - "' + song.song + (song.album?'" on the album '+song.album:'"') + '</p>';
+		var details = song.artist + ' - "' + song.song + (song.album?'" on the album '+song.album:'"');
 		var albumArt = '';
 		if (song.coverart) {
 			var alt = song.artist + ' - "' + song.song + '" (' + song.album + ')';
@@ -400,9 +400,8 @@
 		} else {
 			$('#tt2_stats_current_coverart_wrapper').css({ height: 100, width: 100 });
 		}
-		$('#tt2_stats_current_coverart').html(details);
+		$('#tt2_stats_current_coverart').find('.songinfo').html(details);
 		$('#tt2_stats_current_coverart_wrapper').html(albumArt);
-		$('#tt2_stats_current').show();
 
 		// track song votes
 		if (!votes.songs.song[song_id]) {
@@ -654,6 +653,7 @@
 		html += '<div id="tt2_stats_current" style="max-height:500px; overflow-x:hidden; overflow-y: auto; margin-bottom: 10px;">';
 		html += '<ul style="padding:10px 10px 0">';
 		html += '<li id="tt2_stats_current_coverart" style="display:none;">';
+		html += '<p class="songinfo" style="text-align:center;margin:0 0 4px;"></p>';
 		html += '<div id="tt2_stats_current_coverart_wrapper" style="position:relative;display:block;text-align:center;width:150px;height:150px;margin:0 auto;"></div>';
 		html += '</li>';
 		//html += '<li>Song Artist: <span id="tt2_stats_current_artist" style="float:right;display:inline;text-align:right">n/a</span></li>';
@@ -935,7 +935,6 @@ function handleItunesResults(arg) {
 
 		// display
 		$('#tt2_stats_current_coverart_wrapper').append(html);
-		$caholder.show();
 	}
 
 	// clean up the JS from HEAD
