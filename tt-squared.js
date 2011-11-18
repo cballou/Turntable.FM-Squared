@@ -386,9 +386,9 @@
 
 		// update current song
 		performSearch(song.artist, song.song, song.album || '');
-		$('#tt2_stats_current_artist').text(song.artist);
-		$('#tt2_stats_current_title').text(song.song);
-		$('#tt2_stats_current_album').text(song.album || 'n/a');
+		//$('#tt2_stats_current_artist').text(song.artist);
+		//$('#tt2_stats_current_title').text(song.song);
+		//$('#tt2_stats_current_album').text(song.album || 'n/a');
 
 		// handle purchase cover art
 		var purchase = '<p style="text-align:center;margin:0 0 4px;font-weight:bold;">' + song.artist + ' - "' + song.song + (song.album?'" on the album '+song.album:'"') + '</p>';
@@ -648,9 +648,9 @@
 		html += '<div id="tt2_stats_current" style="max-height:500px; overflow-x:hidden; overflow-y: auto; margin-bottom: 10px;">';
 		html += '<ul style="padding:10px 10px 0">';
 		html += '<li id="tt2_stats_current_coverart" style="display:none;text-align:center"></li>';
-		html += '<li>Song Artist: <span id="tt2_stats_current_artist" style="float:right;display:inline;text-align:right">n/a</span></li>';
-		html += '<li>Song Title: <span id="tt2_stats_current_title" style="float:right;display:inline;text-align:right">n/a</span></li>';
-		html += '<li>Votes: <span id="tt2_stats_current_votes" style="float:right;display:inline;text-align:right">0</span></li>';
+		//html += '<li>Song Artist: <span id="tt2_stats_current_artist" style="float:right;display:inline;text-align:right">n/a</span></li>';
+		//html += '<li>Song Title: <span id="tt2_stats_current_title" style="float:right;display:inline;text-align:right">n/a</span></li>';
+		//html += '<li>Votes: <span id="tt2_stats_current_votes" style="float:right;display:inline;text-align:right">0</span></li>';
 		html += '<li>Rating: <span id="tt2_stats_current_rating" style="float:right;display:inline;text-align:right">0</span></li>';
 		html += '<li>Upvotes: <span id="tt2_stats_current_upvotes" style="float:right;display:inline;text-align:right">0</span><ul id="tt2_stats_current_upvoters" style="max-height: 200px;overflow-x:hidden;overflow-y:auto"></ul></li>';
 		html += '<li>Downvotes: <span id="tt2_stats_current_downvotes" style="float:right;display:inline;text-align:right">0</span><ul id="tt2_stats_current_downvoters" style="max-height: 200px;overflow-x:hidden;overflow-y:auto"></ul></li>';
@@ -873,6 +873,15 @@
 	}
 
 })();
+
+/**
+ * Safely log a message.
+ */
+function _log(msg) {
+	if (window.console) {
+		console.log(msg);
+	}
+}
 
 /**
  * Given a set of itunes search results, display them.
