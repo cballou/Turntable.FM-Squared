@@ -24,6 +24,11 @@
 	var votes = {
 		// total songs played
 		totalSongs: 0,
+		score: 0,
+		votes: 0,
+		upvotes: 0,
+		downvotes: 0,
+		
 		// for the current song
 		current: {
 			score: 0,
@@ -470,6 +475,9 @@
 			// the voting user
 			var uid = data[0];
 
+			// add to overall votes
+			votes.votes += 1;
+
 			// ensure we have an object to track user voting
 			if (!votes.user[uid]) {
 				votes.user[uid] = {
@@ -488,7 +496,14 @@
 				// add to the user
 				votes.user[uid].songs += 1;
 				votes.user[uid].upvotes += 1;
-				votes.user[uid].score = votes.user[uid].upvotes / (votes.user[uid].downvotes + votes.user[uid].upvotes);
+				votes.user[uid].score = 100 * (votes.user[uid].upvotes / (votes.user[uid].downvotes + votes.user[uid].upvotes));
+
+				// add to overall
+				votes.upvotes += 1;
+				votes.score = 100 * (votes.upvotes / votes.votes);
+				
+				$('#tt2_stats_overall_upvotes').text(votes.upvotes);
+				$('#tt2_stats_overall_rating').text(votes.score);
 
 				// if im djing
 				if (isCurrentDj()) {
@@ -499,7 +514,7 @@
 					
 					$('#tt2_stats_mine_votes').text(votes.mine.votes);
 					$('#tt2_stats_mine_upvotes').text(votes.mine.upvotes);
-					$('#tt2_stats_mine_rating').text(votes.mine.score);
+					$('#tt2_stats_mine_rating').text(votes.mine.score + '%');
 					
 					// add upvoter to my song
 					votes.mine.songs.song[song_id].upvoters[uid] = users[uid].name;
@@ -511,7 +526,14 @@
 				// add to the user
 				votes.user[uid].songs += 1;
 				votes.user[uid].downvotes += 1;
-				votes.user[uid].score = votes.user[uid].upvotes / (votes.user[uid].downvotes + votes.user[uid].upvotes);
+				votes.user[uid].score = 100 * (votes.user[uid].upvotes / (votes.user[uid].downvotes + votes.user[uid].upvotes));
+
+				// add to overall
+				votes.downvotes += 1;
+				votes.score = 100 * (votes.upvotes / votes.votes);
+				
+				$('#tt2_stats_overall_downvotes').text(votes.downvotes);
+				$('#tt2_stats_overall_rating').text(votes.score);
 
 				// if im djing
 				if (isCurrentDj()) {
@@ -522,7 +544,7 @@
 					
 					$('#tt2_stats_mine_votes').text(votes.mine.votes);
 					$('#tt2_stats_mine_downvotes').text(votes.mine.downvotes);
-					$('#tt2_stats_mine_rating').text(votes.mine.score);
+					$('#tt2_stats_mine_rating').text(votes.mine.score + '%');
 					
 					// add downvoter to my song
 					votes.mine.songs.song[song_id].downvoters[uid] = users[uid].name;
