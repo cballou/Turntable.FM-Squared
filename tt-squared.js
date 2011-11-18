@@ -265,6 +265,38 @@
     }
 
 	/**
+	 * Prevent user from becoming idle if no recent chat messaging.
+	 */
+	function preventIdle() {
+		if (!config.antiIdle) {
+			return;
+		}
+
+		// set the last motion time
+		turntable.lastMotionTime = new Date().getTime();
+
+		// attempt to override idle boot
+		if (turntable.timers && turntable.timers.checkIdle && turntable.timers.checkIdle != null) {
+			clearTimeout(turntable.timers.checkIdle);
+			turntable.timers.checkIdle=null;
+		}
+		turntable.isIdle = false;
+
+		if (recentlyResponded()) {
+			return;
+		}
+
+        // create a response
+        var response = randomChoice(idleMessages);
+
+        // handle response
+        var responseTimeout = setTimeout(function() {
+            _log('Preventing idle: ' + response);
+            say(response);
+        }, randomDelay(2, 8));
+	}
+
+	/**
 	 * Handle auto-upvoting songs.
 	 */
 	function autoVote(e) {
@@ -301,38 +333,6 @@
 				_manager.callback('upvote');
 			}
 		}, randomDelay(3, 30))
-	}
-
-	/**
-	 * Prevent user from becoming idle if no recent chat messaging.
-	 */
-	function preventIdle() {
-		if (!config.antiIdle) {
-			return;
-		}
-
-		// set the last motion time
-		turntable.lastMotionTime = new Date().getTime();
-
-		// attempt to override idle boot
-		if (turntable.timers && turntable.timers.checkIdle && turntable.timers.checkIdle != null) {
-			clearTimeout(turntable.timers.checkIdle);
-			turntable.timers.checkIdle=null;
-		}
-		turntable.isIdle = false;
-
-		if (recentlyResponded()) {
-			return;
-		}
-
-        // create a response
-        var response = randomChoice(idleMessages);
-
-        // handle response
-        var responseTimeout = setTimeout(function() {
-            _log('Preventing idle: ' + response);
-            say(response);
-        }, randomDelay(2, 8));
 	}
 
 	/**
@@ -439,8 +439,10 @@
 		var song_id = e.room.metadata.current_song._id;
 		var song = e.room.metadata.current_song.metadata;
 
+		_log('Update vote, prior to functions.');
+
 		// update the counters
-		this.updateCounters = function(data) {
+		var updateCounters = function(data) {
 			votes.current.score = data.upvotes / (data.downvotes + data.upvotes);
 			votes.current.votes = data.upvotes + data.downvotes;
 			
@@ -452,12 +454,12 @@
 		};
 
 		// update the window title
-		this.updateTitle = function(data) {
+		var updateTitle = function(data) {
 			document.title = data.upvotes - data.downvotes;
 		};
 
 		// record a vote
-		this.recordVote = function(data) {
+		var recordVote = function(data) {
 			// the room users
 			var users = _room.users;
 
@@ -525,7 +527,7 @@
 		}
 
 		// retrieve voters
-		this.updateVotersList = function() {
+		var updateVotersList = function() {
 			if (votes.current.upvoters.length) {
 				$('#tt2_stats_current_upvoters').html('<li>' + votes.current.upvoters.join('</li><li>') + '</li>');
 			}
@@ -544,6 +546,51 @@
 		// update list of voters
 		updateVotersList();
 	}
+
+	/**
+	 * Listen to all incoming messages and route accordingly.
+	 */
+	function messageListener(e) {
+		if (e.hasOwnProperty('msgid')) {
+			return;
+		}
+
+		// record any commands
+		if (e.command) {
+			_log('Command: ' + e.command);
+			_log(e);
+		}
+
+		// handle chat messages
+		if (e.command == 'speak' && e.userid) {
+			watchForChatMentions(e);
+		} else if (e.command == 'newsong') {
+			resetVotes(e);
+			autoVote(e);
+		} else if (e.command == 'update_votes') {
+			updateVotes(e);
+		}
+	}
+
+    // ensure we get a valid user object before handling auto-responder
+    $.when(getTurntableObjects()).then(function() {
+		// display the options menu
+		_log('Displaying the options menu.');
+		displayOptionsMenu();
+
+        // begin event listeners
+        _log('Initiating the event listener.');
+		_tt.addEventListener('message', messageListener);
+
+		// periodically update turntable.lastMotionTime
+		setInterval(function() {
+			preventIdle();
+		}, 10100);
+    });
+
+	//==========================================================================
+	// HELPER FUNCTIONS
+	//==========================================================================
 
 	/**
 	 * Display the options menu.
@@ -648,53 +695,6 @@
 			$(this).next('div').stop().slideToggle();
 		});
 	}
-
-	/**
-	 * Listen to all incoming messages and route accordingly.
-	 */
-	function messageListener(e) {
-		if (e.hasOwnProperty('msgid')) {
-			return;
-		}
-
-		// record any commands
-		if (e.command) {
-			_log('Command: ' + e.command);
-			_log(e);
-		}
-
-		// handle chat messages
-		if (e.command == 'speak' && e.userid) {
-			watchForChatMentions(e);
-		} else if (e.command == 'newsong') {
-			_log('New song');
-			autoVote(e);
-			resetVotes(e);
-		} else if (e.command == 'update_votes') {
-			_log('Update votes');
-			updateVotes(e);
-		}
-	}
-
-    // ensure we get a valid user object before handling auto-responder
-    $.when(getTurntableObjects()).then(function() {
-		// display the options menu
-		_log('Displaying the options menu.');
-		displayOptionsMenu();
-
-        // begin event listeners
-        _log('Initiating the event listener.');
-		_tt.addEventListener('message', messageListener);
-
-		// periodically update turntable.lastMotionTime
-		setInterval(function() {
-			preventIdle();
-		}, 10100);
-    });
-
-	//==========================================================================
-	// HELPER FUNCTIONS
-	//==========================================================================
 
 	/**
 	 * Check if currently DJing.
