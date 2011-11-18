@@ -647,7 +647,9 @@
 		html += '<h5 class="stat_heading" style="padding:4px 10px;font-size:14px;line-height:14px;font-weight:bold;background: #222;cursor:pointer;">Current Track</h5>';
 		html += '<div id="tt2_stats_current" style="max-height:500px; overflow-x:hidden; overflow-y: auto; margin-bottom: 10px;">';
 		html += '<ul style="padding:10px 10px 0">';
-		html += '<li id="tt2_stats_current_coverart" style="display:none;text-align:center"></li>';
+		html += '<li id="tt2_stats_current_coverart" style="display:none;">';
+		html += '<div id="tt2_stats_current_coverart_wrapper" style="position:relative;display:block;text-align:center;width:150px;height:150px;margin:0 auto;"></div>';
+		html += '</li>';
 		//html += '<li>Song Artist: <span id="tt2_stats_current_artist" style="float:right;display:inline;text-align:right">n/a</span></li>';
 		//html += '<li>Song Title: <span id="tt2_stats_current_title" style="float:right;display:inline;text-align:right">n/a</span></li>';
 		//html += '<li>Votes: <span id="tt2_stats_current_votes" style="float:right;display:inline;text-align:right">0</span></li>';
@@ -903,7 +905,7 @@ function handleItunesResults(arg) {
 			// check if we need album art
 			if ($caholder.find('img').length == 0 && results[i].artworkUrl100) {
 				var alt = results[i].artistName + ' - "' + results[i].trackName + '" (' + results[i].collectionName + ')';
-				$caholder.append('<img src="' + results[i].artworkUrl100 + '" width="100" height="100" alt="' + alt + '" style="text-align:center;border:4px solid #222;" />');
+				$caholder.find('#tt2_stats_current_coverart_wrapper').append('<img src="' + results[i].artworkUrl100 + '" width="100" height="100" alt="' + alt + '" style="text-align:center;border:4px solid #222;" />');
 				width = 100;
 				height = 100;
 			}
@@ -917,16 +919,17 @@ function handleItunesResults(arg) {
 			var albumUrl = baseurl + encodeURI(encodeURI(results[i].collectionViewUrl + '&partnerId=30'));
 
 			// create html
-			html += '<div style="position:relative;width:' + width + 'px;height:' + height + 'px;background:;width:16px;height:16px;">';
+			html += '<div style="position:absolute;top:50%;left:50%;margin-left:-' + Math.round(width/2) + 'px;margin-top:-' + Math.round(height/2) + 'px;width:' + width + 'px;height:' + height + 'px;background:;width:16px;height:16px;">';
 			//html += '<a href="#" target="_blank" style="display:block;width:' + width + 'px;height:' + height + 'px;background:;width:16px;height:16px;"></a>';
-			html += '<a href="' + artistUrl + '" target="_blank">View Artist</a>';
-			html += '<a href="' + trackUrl + '" target="_blank">Buy Track $' + results[i].trackPrice + '</a>';
-			html += '<a href="' + albumUrl + '" target="_blank">Buy Album $' + results[i].collectionPrice + '</a>';
+			html += '<a href="' + artistUrl + '" target="_blank" style="display:block;padding:4px 10px;color:#000;background:#222;text-decoration:none">View Artist</a>';
+			html += '<a href="' + trackUrl + '" target="_blank" style="display:block;padding:4px 10px;color:#000;background:#222;text-decoration:none">Buy Track $' + results[i].trackPrice + '</a>';
+			html += '<a href="' + albumUrl + '" target="_blank" style="display:block;padding:4px 10px;color:#000;background:#222;text-decoration:none">Buy Album $' + results[i].collectionPrice + '</a>';
 			html += '</div>';
 		}
 
 		// display
-		$caholder.append(html);
+		$('#tt2_stats_current_coverart_wrapper').append(html);
+		$caholder.show();
 	}
 
 	// clean up the JS from HEAD
