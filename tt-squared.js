@@ -385,14 +385,18 @@
 		}
 
 		// update current song
+		performSearch(song.artist, song.song, song.album || '');
 		$('#tt2_stats_current_artist').text(song.artist);
 		$('#tt2_stats_current_title').text(song.song);
 		$('#tt2_stats_current_album').text(song.album || 'n/a');
+
+		// handle purchase cover art
+		var purchase = '<p style="text-align:center;margin:0 0 4px;font-weight:bold;">' + song.artist + ' - "' + song.song + (song.album?'" on the album '+song.album:'"') + '</p>';
 		if (song.coverart) {
-			$('#tt2_stats_current_coverart').html('<img src="' + song.coverart + '" alt="Cover Art" />').show();
-		} else {
-			$('#tt2_stats_current_coverart').empty().hide();
+			var alt = song.artist + ' - "' + song.song + '" (' + song.album + ')';
+			purchase += '<img src="' + song.coverart + '" width="150" height="150" alt="' + alt + '" style="text-align:center;border:4px solid #222;" />';
 		}
+		$('#tt2_stats_current_coverart').html(purchase).show();
 
 		// track song votes
 		if (!votes.songs.song[song_id]) {
@@ -497,11 +501,11 @@
 				// add to the user
 				votes.user[uid].songs += 1;
 				votes.user[uid].upvotes += 1;
-				votes.user[uid].score = 100 * (votes.user[uid].upvotes / (votes.user[uid].downvotes + votes.user[uid].upvotes));
+				votes.user[uid].score = Math.round(10000 * (votes.user[uid].upvotes / (votes.user[uid].downvotes + votes.user[uid].upvotes))) / 100;
 
 				// add to overall
 				votes.upvotes += 1;
-				votes.score = 100 * (votes.upvotes / votes.votes);
+				votes.score = Math.round(10000 * (votes.upvotes / votes.votes)) / 100;
 
 				$('#tt2_stats_overall_upvotes').text(votes.upvotes);
 				$('#tt2_stats_overall_rating').text(votes.score);
@@ -511,7 +515,7 @@
 					// increment my total upvotes
 					votes.mine.votes += 1;
 					votes.mine.upvotes += 1;
-					votes.mine.score = 100 * (votes.mine.upvotes / (votes.mine.downvotes + votes.mine.upvotes));
+					votes.mine.score = Math.round(10000 * (votes.mine.upvotes / (votes.mine.downvotes + votes.mine.upvotes))) / 100;
 
 					$('#tt2_stats_mine_votes').text(votes.mine.votes);
 					$('#tt2_stats_mine_upvotes').text(votes.mine.upvotes);
@@ -527,11 +531,11 @@
 				// add to the user
 				votes.user[uid].songs += 1;
 				votes.user[uid].downvotes += 1;
-				votes.user[uid].score = 100 * (votes.user[uid].upvotes / (votes.user[uid].downvotes + votes.user[uid].upvotes));
+				votes.user[uid].score = Math.round(10000 * (votes.user[uid].upvotes / (votes.user[uid].downvotes + votes.user[uid].upvotes))) / 100;
 
 				// add to overall
 				votes.downvotes += 1;
-				votes.score = 100 * (votes.upvotes / votes.votes);
+				votes.score = Math.round(10000 * (votes.upvotes / votes.votes)) / 100;
 
 				$('#tt2_stats_overall_downvotes').text(votes.downvotes);
 				$('#tt2_stats_overall_rating').text(votes.score);
@@ -640,10 +644,10 @@
 		// current track stats
 		html += '<h4 style="padding:0 10px 4px;margin-bottom: 0;font-size:18px;line-height:18px;font-weight:bold;border-bottom:1px dotted #000;background:#44D2E5;color:#000;">TT<sup>2</sup> Stats</h4>';
 		html += '<div>';
-		html += '<h5 class="stat_heading" style="padding:4px 10px;font-size:14px;line-height:14px;font-weight:bold;background: #222;cursor:pointer;">Current Track Stats</h5>';
+		html += '<h5 class="stat_heading" style="padding:4px 10px;font-size:14px;line-height:14px;font-weight:bold;background: #222;cursor:pointer;">Current Track</h5>';
 		html += '<div id="tt2_stats_current" style="max-height:500px; overflow-x:hidden; overflow-y: auto; margin-bottom: 10px;">';
 		html += '<ul style="padding:10px 10px 0">';
-		html += '<li id="tt2_stats_current_coverart" style="display:none"></li>';
+		html += '<li id="tt2_stats_current_coverart" style="display:none;text-align:center"></li>';
 		html += '<li>Song Artist: <span id="tt2_stats_current_artist" style="float:right;display:inline;text-align:right">n/a</span></li>';
 		html += '<li>Song Title: <span id="tt2_stats_current_title" style="float:right;display:inline;text-align:right">n/a</span></li>';
 		html += '<li>Votes: <span id="tt2_stats_current_votes" style="float:right;display:inline;text-align:right">0</span></li>';
@@ -722,6 +726,83 @@
 		$('#tt2_stats').find('.stat_heading').click(function() {
 			$(this).next('div').stop().slideToggle();
 		});
+	}
+
+	/**
+	 * Perform an iTunes song search. Valid return entities include
+	 * musicArtist, musicTrack, album, musicVideo, mix, and song.
+	 *
+	 * Please note that "musicTrack" can include both songs and music videos in
+	 * the results.
+	 */
+	function performSearch(artist, song, album) {
+		// remove previously appended searches
+		$('head').find('script[src^="http://ax.itunes.apple.com"]').remove();
+		// create new search
+		var params = {
+			term: artist + ' ' + song,
+			country: 'US',
+			media: 'music',
+			entity: 'musicTrack',
+			// mixTerm, genreIndex, artistTerm, composerTerm, albumTerm, ratingIndex, songTerm, musicTrackTerm
+			//attribute: 'artistTerm,albumTerm,songTerm,musicTrackTerm',
+			limit: 5,
+			callback: 'handleItunesResults'
+		};
+		var url = 'http://ax.itunes.apple.com/WebObjects/MZStoreServices.woa/wa/wsSearch?' + urlencode(params);
+		var html = '<script src="' + url + '"><\/script>';
+		$('head').append(html);
+	}
+
+	/**
+	 * Given a set of itunes search results, display them.
+	 * http://www.apple.com/itunes/affiliates/resources/documentation/itunes-store-web-service-search-api.html#lookup
+	 */
+	function handleItunesResults(arg) {
+		var results = arg.results;
+		_log(results);
+		var html = '';
+		for (var i = 0; i < results.length; i++) {
+			/*
+			var item = results[i];
+			var obj = {
+				source: 0,
+				track_id: item.trackId,
+				track_name: item.trackCensoredName,
+				track_url: item.trackViewUrl,
+				artist_name: item.artistName,
+				artist_url: item.artistViewUrl,
+				collection_name: item.collectionCensoredName,
+				collection_url: item.collectionViewUrl,
+				genre: item.primaryGenreName
+			};
+			results[i] = obj;
+
+			html += '<div class="songs-search-result">';
+			html += '<span class="label">Track:</span>{0}&nbsp;&nbsp;'.replace("{0}", obj.track_name);
+			html += '<a href="{0}" target="_blank">Preview</a>&nbsp;&nbsp;'.replace("{0}", item.previewUrl);
+			html += '<a href="{0}" target="_blank">Full Song</a>&nbsp;&nbsp;'.replace("{0}", obj.track_url);
+			html += '<span class="label">Track Price:</span>{0} {1}<br />'.replace("{0}", item.trackPrice).replace("{1}", item.currency);
+			html += '<span class="label">Artist:</span><a href="{0}" target="_blank">{1}</a><br />'.replace("{0}", obj.artist_url).replace("{1}", obj.artist_name);
+			html += '<span class="label">Collection:</span><a href="{0}" target="_blank">{1}</a><br />'.replace("{0}", obj.collection_url).replace("{1}", obj.collection_name);
+			html += '<span class="label">Collection Price:</span>{0} {1}<br />'.replace("{0}", item.collectionPrice).replace("{1}", item.currency);
+			html += '<span class="label">Primary Genre:</span>{0}<br />'.replace("{0}", obj.genre);
+			html += '</div>';
+			*/
+		}
+
+		//$('#itunes-results').html(html);
+	}
+
+	/**
+	 * Urlencode a flat JSON object.
+	 */
+	function urlencode(params) {
+		var tail = [];
+		var (var k in params) {
+			tail.push(k + '=' + encodeURIComponent(params[k]));
+		}
+		return tail.join('&');
 	}
 
 	/**
