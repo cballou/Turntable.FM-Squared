@@ -537,6 +537,8 @@
 
 				// if im djing
 				if (isCurrentDj()) {
+					_log('I must be djing...');
+					
 					// increment my total downvotes
 					votes.mine.votes += 1;
 					votes.mine.downvotes += 1;
