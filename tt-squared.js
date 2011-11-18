@@ -736,8 +736,6 @@
 	 * the results.
 	 */
 	function performSearch(artist, song, album) {
-		// remove previously appended searches
-		$('head').find('script[src^="http://ax.itunes.apple.com"]').remove();
 		// create new search
 		var params = {
 			term: artist + ' ' + song,
@@ -792,17 +790,20 @@
 		}
 
 		//$('#itunes-results').html(html);
+
+		// clean up the JS from HEAD
+		$('head').find('script[src^="http://ax.itunes.apple.com"]').remove();
 	}
 
 	/**
 	 * Urlencode a flat JSON object.
 	 */
 	function urlencode(params) {
-		var tail = [];
-		var (var k in params) {
-			tail.push(k + '=' + encodeURIComponent(params[k]));
+		var combined = [];
+		for (var k in params) {
+			combined.push(k + '=' + encodeURIComponent(params[k]));
 		}
-		return tail.join('&');
+		return combined.join('&');
 	}
 
 	/**
