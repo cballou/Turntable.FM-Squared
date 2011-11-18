@@ -396,7 +396,8 @@
 			var alt = song.artist + ' - "' + song.song + '" (' + song.album + ')';
 			purchase += '<img src="' + song.coverart + '" width="150" height="150" alt="' + alt + '" style="text-align:center;border:4px solid #222;" />';
 		}
-		$('#tt2_stats_current_coverart').html(purchase).show();
+		$('#tt2_stats_current_coverart_wrapper').html(purchase);
+		$('#tt2_stats_current_coverart').show();
 
 		// track song votes
 		if (!votes.songs.song[song_id]) {
@@ -919,7 +920,7 @@ function handleItunesResults(arg) {
 			var albumUrl = baseurl + encodeURI(encodeURI(results[i].collectionViewUrl + '&partnerId=30'));
 
 			// create html
-			html += '<div style="position:absolute;top:50%;left:50%;margin-left:-' + Math.round(width/2) + 'px;margin-top:-' + Math.round(height/2) + 'px;width:' + width + 'px;height:' + height + 'px;background:;width:16px;height:16px;">';
+			html += '<div style="position:absolute;z-index:1;top:50%;left:50%;margin-left:-' + Math.round(width/2) + 'px;margin-top:-' + Math.round(height/2) + 'px;width:' + width + 'px;height:' + height + 'px;background:;width:16px;height:16px;">';
 			//html += '<a href="#" target="_blank" style="display:block;width:' + width + 'px;height:' + height + 'px;background:;width:16px;height:16px;"></a>';
 			html += '<a href="' + artistUrl + '" target="_blank" style="display:block;padding:4px 10px;color:#000;background:#222;text-decoration:none">View Artist</a>';
 			html += '<a href="' + trackUrl + '" target="_blank" style="display:block;padding:4px 10px;color:#000;background:#222;text-decoration:none">Buy Track $' + results[i].trackPrice + '</a>';
