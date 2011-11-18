@@ -694,10 +694,13 @@
 	 * Check if currently DJing.
 	 */
 	function isDj() {
-		if (typeof e.room.metadata.djs != 'undefined') {
-			for (var i in e.room.metadata.djs) {
-				if (typeof e.room.metadata.djs[i] != 'undefined') {
-					if (e.room.metadata.djs[i][0] == _room.selfId) {
+		_log('MANAGER AND ROOM (look for metadata.djs)');
+		_log(_manager);
+		_log(_room);
+		if (typeof _room.metadata.djs != 'undefined') {
+			for (var i in _room.metadata.djs) {
+				if (typeof _room.metadata.djs[i] != 'undefined') {
+					if (_room.metadata.djs[i][0] == _room.selfId) {
 						return true;
 					}
 				}
