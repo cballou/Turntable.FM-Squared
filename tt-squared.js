@@ -672,7 +672,7 @@
 		html += '<h5 class="stat_heading" style="padding:4px 10px;font-size:14px;line-height:14px;font-weight:bold;background: #222;cursor:pointer;">Overall Room Stats</h5>';
 		html += '<div id="tt2_stats_overall" style="max-height:100px; overflow-x:hidden; overflow-y: auto; margin-bottom: 10px;">';
 		html += '<ul style="padding:10px 10px 0">';
-		html += '<li>Songs Played: <span id="tt2_stats_overall_users" style="float:right;display:inline;text-align:right">0</span></li>';
+		html += '<li>Total Users: <span id="tt2_stats_overall_users" style="float:right;display:inline;text-align:right">0</span></li>';
 		html += '<li>Songs Played: <span id="tt2_stats_overall_totalSongs" style="float:right;display:inline;text-align:right">0</span></li>';
 		html += '<li>Upvotes: <span id="tt2_stats_overall_upvotes" style="float:right;display:inline;text-align:right">0</span></li>';
 		html += '<li>Downvotes: <span id="tt2_stats_overall_downvotes" style="float:right;display:inline;text-align:right">0</span></li>';
@@ -744,7 +744,7 @@
 			entity: 'musicTrack',
 			// mixTerm, genreIndex, artistTerm, composerTerm, albumTerm, ratingIndex, songTerm, musicTrackTerm
 			//attribute: 'artistTerm,albumTerm,songTerm,musicTrackTerm',
-			limit: 5,
+			limit: 1,
 			callback: 'handleItunesResults'
 		};
 		var url = 'http://ax.itunes.apple.com/WebObjects/MZStoreServices.woa/wa/wsSearch?' + urlencode(params);
@@ -886,42 +886,48 @@ function _log(msg) {
 /**
  * Given a set of itunes search results, display them.
  * http://www.apple.com/itunes/affiliates/resources/documentation/itunes-store-web-service-search-api.html#lookup
- http://www.rahulsingla.com/blog/2011/08/itunes-performing-itunes-store-search-in-javascript
+ * http://www.rahulsingla.com/blog/2011/08/itunes-performing-itunes-store-search-in-javascript
  */
 function handleItunesResults(arg) {
 	var results = arg.results;
+	var len = results ? results.length : 0;
+
 	_log(results);
+
+	var $caholder = $('#tt2_stats_current_coverart');
 	var html = '';
-	for (var i = 0; i < results.length; i++) {
-		/*
-		var item = results[i];
-		var obj = {
-			source: 0,
-			track_id: item.trackId,
-			track_name: item.trackCensoredName,
-			track_url: item.trackViewUrl,
-			artist_name: item.artistName,
-			artist_url: item.artistViewUrl,
-			collection_name: item.collectionCensoredName,
-			collection_url: item.collectionViewUrl,
-			genre: item.primaryGenreName
-		};
-		results[i] = obj;
+	var width = 150, height = 150;
 
-		html += '<div class="songs-search-result">';
-		html += '<span class="label">Track:</span>{0}&nbsp;&nbsp;'.replace("{0}", obj.track_name);
-		html += '<a href="{0}" target="_blank">Preview</a>&nbsp;&nbsp;'.replace("{0}", item.previewUrl);
-		html += '<a href="{0}" target="_blank">Full Song</a>&nbsp;&nbsp;'.replace("{0}", obj.track_url);
-		html += '<span class="label">Track Price:</span>{0} {1}<br />'.replace("{0}", item.trackPrice).replace("{1}", item.currency);
-		html += '<span class="label">Artist:</span><a href="{0}" target="_blank">{1}</a><br />'.replace("{0}", obj.artist_url).replace("{1}", obj.artist_name);
-		html += '<span class="label">Collection:</span><a href="{0}" target="_blank">{1}</a><br />'.replace("{0}", obj.collection_url).replace("{1}", obj.collection_name);
-		html += '<span class="label">Collection Price:</span>{0} {1}<br />'.replace("{0}", item.collectionPrice).replace("{1}", item.currency);
-		html += '<span class="label">Primary Genre:</span>{0}<br />'.replace("{0}", obj.genre);
-		html += '</div>';
-		*/
+	if (len) {
+		for (var i = 0; i < len; i++) {
+			// check if we need album art
+			if ($caholder.find('img').length == 0 && results[i].artworkUrl100) {
+				var alt = results[i].artistName + ' - "' + results[i].trackName + '" (' + results[i].collectionName + ')';
+				$caholder.append('<img src="' + results[i].artworkUrl100 + '" width="100" height="100" alt="' + alt + '" style="text-align:center;border:4px solid #222;" />');
+				width = 100;
+				height = 100;
+			}
+
+			// copy example affiliate link up to point indiciated
+			var baseurl = 'http://click.linksynergy.com/fs-bin/stat?id=5PGIX6Dk9zE&offerid=146261&type=3&subid=0&tmpid=1826&RD_PARM1=';
+
+			// attach partner id to link urls
+			var trackUrl = baseurl + encodeURI(encodeURI(results[i].trackViewUrl + '&partnerId=30'));
+			var artistUrl = baseurl + encodeURI(encodeURI(results[i].artistViewUrl + '&partnerId=30'));
+			var albumUrl = baseurl + encodeURI(encodeURI(results[i].collectionViewUrl + '&partnerId=30'));
+
+			// create html
+			html += '<div style="position:relative;width:' + width + 'px;height:' + height + 'px;background:;width:16px;height:16px;">';
+			//html += '<a href="#" target="_blank" style="display:block;width:' + width + 'px;height:' + height + 'px;background:;width:16px;height:16px;"></a>';
+			html += '<a href="' + artistUrl + '" target="_blank">View Artist</a>';
+			html += '<a href="' + trackUrl + '" target="_blank">Buy Track $' + results[i].trackPrice + '</a>';
+			html += '<a href="' + albumUrl + '" target="_blank">Buy Album $' + results[i].collectionPrice + '</a>';
+			html += '</div>';
+		}
+
+		// display
+		$caholder.append(html);
 	}
-
-	//$('#itunes-results').html(html);
 
 	// clean up the JS from HEAD
 	$('head').find('script[src^="http://ax.itunes.apple.com"]').remove();
