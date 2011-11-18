@@ -559,12 +559,6 @@
 			return;
 		}
 
-		// record any commands
-		if (e.command) {
-			_log('Command: ' + e.command);
-			_log(e);
-		}
-
 		// handle chat messages
 		if (e.command == 'speak' && e.userid) {
 			watchForChatMentions(e);
@@ -586,6 +580,9 @@
         _log('Initiating the event listener.');
 		_tt.addEventListener('message', messageListener);
 
+		// log the manager
+		_log(_manager);
+
 		// periodically update turntable.lastMotionTime
 		setInterval(function() {
 			preventIdle();
@@ -601,7 +598,7 @@
 	 */
 	function displayOptionsMenu() {
 		// watch for toggle of auto-dj
-		var html = '<div id="tt2_options" style="position:absolute;top:10px;right:10px;width:200px;max-height:90%;background:#333;color:#FFF;font-size:12px;line-height:18px;vertical-align:middle;overflow-x:hidden;overflow-y:auto;">';
+		var html = '<div id="tt2_options" style="position:fixed;top:10px;right:10px;width:200px;max-height:90%;background:#333;color:#FFF;font-size:12px;line-height:18px;vertical-align:middle;overflow-x:hidden;overflow-y:auto;">';
 		html += '<h4 style="padding:0 10px 4px;margin-bottom: 10px;font-size:18px;line-height:18px;font-weight:bold;border-bottom:1px dotted #000;background:#44D2E5;color:#000;">TT<sup>2</sup> Options</h4>';
 		html += '<div style="padding:10px 10px 0">';
 		html += '<div style="margin-bottom:8px"><label><input type="checkbox" name="tt2_autoupvote" id="tt2_autoupvote" value="1" checked="checked" /> Auto Upvote</label></div>';
@@ -613,7 +610,7 @@
 		html += '</div>';
 		
 		// stats container
-		html += '<div id="tt2_stats" style="position:absolute;top:10px;left:10px;width:200px;max-height:90%;background:#333;color:#FFF;font-size:12px;line-height:18px;vertical-align:middle;overflow-x:hidden;overflow-y:auto;">';
+		html += '<div id="tt2_stats" style="position:fixed;top:10px;left:10px;width:200px;max-height:90%;background:#333;color:#FFF;font-size:12px;line-height:18px;vertical-align:middle;overflow-x:hidden;overflow-y:auto;">';
 		// current track stats
 		html += '<h4 style="padding:0 10px 4px;margin-bottom: 0;font-size:18px;line-height:18px;font-weight:bold;border-bottom:1px dotted #000;background:#44D2E5;color:#000;">TT<sup>2</sup> Stats</h4>';
 		html += '<div>';
