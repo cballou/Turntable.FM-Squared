@@ -581,6 +581,7 @@
 		_tt.addEventListener('message', messageListener);
 
 		// log the manager
+		_log(_room);
 		_log(_manager);
 
 		// periodically update turntable.lastMotionTime
