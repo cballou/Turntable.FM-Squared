@@ -548,9 +548,9 @@
 	 */
 	function displayOptionsMenu() {
 		// watch for toggle of auto-dj
-		var html = '<div id="tt2_options" style="position:absolute;top:10px;right:10px;width:200px;max-height: 90%;padding:10px;background:#333;color:#fff;font-size:12px;line-height:18px;vertical-align:middle;overflow-x:hidden;overflow-y:scroll;">';
-		html += '<h4 style="padding-bottom:4px;margin-bottom: 10px;font-size:18px;line-height:18px;font-weight:bold;border-bottom:1px dotted #000;">TT<sup>2</sup> Options</h4>';
-		html += '<div>';
+		var html = '<div id="tt2_options" style="position:absolute;top:10px;right:10px;width:200px;max-height: 90%;background:#333;color:#fff;font-size:12px;line-height:18px;vertical-align:middle;overflow-x:hidden;overflow-y:scroll;">';
+		html += '<h4 style="padding:0 10px 4px;margin-bottom: 10px;font-size:18px;line-height:18px;font-weight:bold;border-bottom:1px dotted #000;">TT<sup>2</sup> Options</h4>';
+		html += '<div style="padding:10px 10px 0">';
 		html += '<div style="margin-bottom:8px"><label><input type="checkbox" name="tt2_autoupvote" id="tt2_autoupvote" value="1" checked="checked" /> Auto Upvote</label></div>';
 		html += '<div style="margin-bottom:8px"><label><input type="checkbox" name="tt2_autodj" id="tt2_autodj" value="1" /> Auto DJ</label></div>';
 		html += '<div style="margin-bottom:8px"><label><input type="checkbox" name="tt2_autorespond" id="tt2_autorespond" value="1" checked="checked" /> Auto Respond</label></div>';
@@ -560,13 +560,13 @@
 		html += '</div>';
 		
 		// stats container
-		var html = '<div id="tt2_stats" style="position:absolute;top:10px;left:10px;width:200px;max-height: 90%;padding:10px;background:#333;color:#fff;font-size:12px;line-height:18px;vertical-align:middle;overflow-x:hidden;overflow-y:scroll;">';
+		html += '<div id="tt2_stats" style="position:absolute;top:10px;left:10px;width:200px;max-height: 90%;padding:10px;background:#333;color:#fff;font-size:12px;line-height:18px;vertical-align:middle;overflow-x:hidden;overflow-y:scroll;">';
 		// current track stats
-		html += '<h4 style="padding-bottom:4px;margin-bottom: 10px;font-size:18px;line-height:18px;font-weight:bold;border-bottom:1px dotted #000;">TT<sup>2</sup> Stats</h4>';
+		html += '<h4 style="padding:0 10px 4px;margin-bottom: 0;font-size:18px;line-height:18px;font-weight:bold;border-bottom:1px dotted #000;">TT<sup>2</sup> Stats</h4>';
 		html += '<div>';
-		html += '<h5 style="padding:4px;margin-bottom: 10px;font-size:14px;line-height:14px;font-weight:bold;background: #222;">Current Track Stats</h5>';
+		html += '<h5 style="padding:4px;font-size:14px;line-height:14px;font-weight:bold;background: #222;">Current Track Stats</h5>';
 		html += '<div id="tt2_stats_current" style="max-height:500px; overflow-x:hidden; overflow-y: auto; margin-bottom: 10px;">';
-		html += '<ul>';
+		html += '<ul style="padding:10px 10px 0">';
 		html += '<li>Song Artist: <span id="tt2_stats_current_artist" style="float:right;display:inline;text-align:right">n/a</span></li>';
 		html += '<li>Song Title: <span id="tt2_stats_current_title" style="float:right;display:inline;text-align:right">n/a</span></li>';
 		html += '<li>Votes: <span id="tt2_stats_current_votes" style="float:right;display:inline;text-align:right">0</span></li>';
@@ -577,9 +577,9 @@
 		html += '</div>';
 		// overall stats
 		html += '<div>';
-		html += '<h5 style="padding:4px;margin-bottom: 10px;font-size:14px;line-height:14px;font-weight:bold;background: #222;">Overall Track Stats</h5>';
+		html += '<h5 style="padding:4px;font-size:14px;line-height:14px;font-weight:bold;background: #222;">Overall Track Stats</h5>';
 		html += '<div id="tt2_stats_overall" style="max-height:100px; overflow-x:hidden; overflow-y: auto; margin-bottom: 10px;">';
-		html += '<ul>';
+		html += '<ul style="padding:10px 10px 0">';
 		html += '<li>Songs Played: <span id="tt2_stats_overall_totalSongs" style="float:right;display:inline;text-align:right">0</span></li>';
 		html += '<li>Upvotes: <span id="tt2_stats_overall_upvotes" style="float:right;display:inline;text-align:right">0</span></li>';
 		html += '<li>Downvotes: <span id="tt2_stats_overall_downvotes" style="float:right;display:inline;text-align:right">0</span></li>';
@@ -587,9 +587,9 @@
 		html += '</ul>';
 		html += '</div>';
 		// personal stats
-		html += '<h5 style="padding:4px;margin-bottom: 10px;font-size:14px;line-height:14px;font-weight:bold;background: #222;">My Stats</h5>';
+		html += '<h5 style="padding:4px;font-size:14px;line-height:14px;font-weight:bold;background: #222;">My Stats</h5>';
 		html += '<div id="tt2_stats_mine" style="max-height:100px; overflow-x:hidden; overflow-y: auto; margin-bottom: 10px;">';
-		html += '<ul>';
+		html += '<ul style="padding:10px 10px 0">';
 		html += '<li>Songs Played: <span id="tt2_stats_mine_totalSongs" style="float:right;display:inline;text-align:right">0</span></li>';
 		html += '<li>Votes: <span id="tt2_stats_mine_votes" style="float:right;display:inline;text-align:right">0</span></li>';
 		html += '<li>Upvotes: <span id="tt2_stats_mine_upvotes" style="float:right;display:inline;text-align:right">0</span></li>';
@@ -598,9 +598,9 @@
 		html += '</ul>';
 		html += '</div>';
 		// user stats
-		html += '<h5 style="padding:4px;margin-bottom: 10px;font-size:14px;line-height:14px;font-weight:bold;background: #222;">User Stats</h5>';
+		html += '<h5 style="padding:4px;font-size:14px;line-height:14px;font-weight:bold;background: #222;">User Stats</h5>';
 		html += '<div id="tt2_stats_user" style="display:none; max-height:100px; overflow-x:hidden; overflow-y: auto; margin-bottom: 10px;">';
-		html += '<ul></ul>';
+		html += '<ul style="padding:10px 10px 0"></ul>';
 		html += '</div>';
 		// song stats
 		/*
@@ -655,7 +655,6 @@
 		if (e.command) {
 			if (e.command == 'newsong') {
 				_log('Song change.');
-				_log(e);
 			}
 		}
 
@@ -694,13 +693,10 @@
 	 * Check if currently DJing.
 	 */
 	function isDj() {
-		_log('MANAGER AND ROOM (look for metadata.djs)');
-		_log(_manager);
-		_log(_room);
-		if (typeof _room.metadata.djs != 'undefined') {
-			for (var i in _room.metadata.djs) {
-				if (typeof _room.metadata.djs[i] != 'undefined') {
-					if (_room.metadata.djs[i][0] == _room.selfId) {
+		if (typeof _manager.djs != 'undefined') {
+			for (var i in _manager.djs) {
+				if (typeof _manager.djs[i] != 'undefined') {
+					if (_manager.djs[i][0] == _room.selfId) {
 						return true;
 					}
 				}
