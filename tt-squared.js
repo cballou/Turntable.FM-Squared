@@ -17,7 +17,8 @@
 		antiIdle: true,
 		muteAlert: false,
 		smartVote: false,
-		autoUpvote: true
+		autoUpvote: true,
+		debugMode: false
 	}
 
 	// vote monitoring
@@ -875,7 +876,7 @@
 	 * Safely log a message.
 	 */
 	function _log(msg) {
-		if (window.console) {
+		if (window.console && config.debugMode) {
 			console.log(msg);
 		}
 	}
@@ -925,7 +926,7 @@ function handleItunesResults(arg) {
 			var albumUrl = baseurl + encodeURI(encodeURI(results[i].collectionViewUrl + '&partnerId=30'));
 
 			// create html
-			html += '<div style="position:absolute;z-index:1;width:' + width + 'px;height:' + height + 'px;background:#444;width:16px;height:16px;">';
+			html += '<div style="position:absolute;top:0;left:0;z-index:1;width:' + width + 'px;height:' + height + 'px;background:#444;width:16px;height:16px;">';
 			//html += '<a href="#" target="_blank" style="display:block;width:' + width + 'px;height:' + height + 'px;background:;width:16px;height:16px;"></a>';
 			html += '<a href="' + artistUrl + '" target="_blank" style="display:block;padding:4px 10px;color:#000;background:#222;text-decoration:none">View Artist</a>';
 			html += '<a href="' + trackUrl + '" target="_blank" style="display:block;padding:4px 10px;color:#000;background:#222;text-decoration:none">Buy Track $' + results[i].trackPrice + '</a>';
