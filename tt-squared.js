@@ -397,7 +397,10 @@
 		}
 		
 		// handle purchase cover art
-		var details = song.artist + ' - "' + song.song + (song.album?'" on the album '+song.album:'"');
+		var details = 'Artist: <strong style="float:right;display:inline;text-align:right">' + song.artist + '</strong>';
+		details += 'Track: <strong style="float:right;display:inline;text-align:right">' + song.song + '</strong>';
+		details += 'Album: <strong style="float:right;display:inline;text-align:right">' + (song.album?song.album:'/na') + '</strong>';
+		
 		var albumArt = '';
 		if (song.coverart) {
 			var alt = song.artist + ' - "' + song.song + '" (' + song.album + ')';
@@ -459,7 +462,7 @@
 	 * Initially display song information when app is first loaded.
 	 */
 	function initCurrentlyPlaying() {
-		if (!_room.currentSong || !_room.currentSong.id) {
+		if (!_room.currentSong || !_room.currentSong._id) {
 			return false;
 		}
 		
@@ -475,7 +478,10 @@
 		$('#tt2_stats_overall_totalSongs').text(votes.totalSongs);
 		
 		// handle purchase cover art
-		var details = song.artist + ' - "' + song.song + (song.album?'" on the album '+song.album:'"');
+		var details = 'Artist: <strong style="float:right;display:inline;text-align:right">' + song.artist + '</strong>';
+		details += 'Track: <strong style="float:right;display:inline;text-align:right">' + song.song + '</strong>';
+		details += 'Album: <strong style="float:right;display:inline;text-align:right">' + (song.album?song.album:'/na') + '</strong>';
+		
 		var albumArt = '';
 		if (song.coverart) {
 			var alt = song.artist + ' - "' + song.song + '" (' + song.album + ')';
@@ -738,20 +744,18 @@
 		
 		// create tt2 container
 		var html = '<div id="tt2_container" style="position:absolute;top:10px;right:10px;width:' + (tt2_size.width-20) + 'px;height:' + (tt2_size.height-20) + 'px;margin:0;padding:0;background:#333;color:#FFF;font-size:12px;line-height:18px;overflow-x:hidden;overflow-y:auto;">';
-		html += '<h3 style="padding:0 10px 4px;margin-bottom: 10px;font-size:22px;line-height:22px;font-weight:bold;background:#44D2E5;color:#000;">TT<sup>SQUARED</sup></h3>';
+		html += '<h3 style="padding:0 10px 4px;margin:0;font-size:22px;line-height:22px;font-weight:bold;background:#44D2E5;color:#000;">TT<sup>SQUARED</sup></h3>';
 
 		// currently playing container
-		html += '<div id="tt2_playing">';
+		html += '<div id="tt2_playing" style="margin-bottom:10px">';
 			html += '<h4 style="padding:0 10px 4px;margin-bottom: 0;font-size:18px;line-height:18px;font-weight:bold;background:#5C755E;color:#FFF;">Currently Playing</h4>';
-			html += '<ul style="padding:10px 10px 0">';
-			html += '<li id="tt2_stats_current_coverart">';
-			html += '<p class="songinfo" style="margin:0"></p>';
-			html += '</li>';
-			html += '</ul>';
+			html += '<div id="tt2_stats_current_coverart" style="overflow:hidden">';
+			html += '<div class="songinfo" style="float:left;display:inline;margin:0;"></div>';
+			html += '</div>';
 		html += '</div>';
 
 		// stats container
-		html += '<div id="tt2_stats">';
+		html += '<div id="tt2_stats" style="margin-bottom:10px">';
 		
 			// current track stats
 			html += '<h4 style="padding:0 10px 4px;margin-bottom: 0;font-size:18px;line-height:18px;font-weight:bold;background:#5C755E;color:#FFF;">Stats</h4>';
@@ -929,7 +933,7 @@
 					if ($caholder.find('img').length == 0 && results[i].artworkUrl100) {
 						var alt = results[i].artistName + ' - "' + results[i].trackName + '" (' + results[i].collectionName + ')';
 						var img = '<img src="' + results[i].artworkUrl100 + '" width="100" height="100" alt="' + alt + '" style="float:left;display:inline;margin: 0 10px 10px 0;border:4px solid #222;" />';
-						$caholder.find('#tt2_stats_current_coverart_wrapper').append(img);
+						$caholder.find('#tt2_stats_current_coverart').prepend(img);
 					}
 		
 					// copy example affiliate link up to point indiciated
@@ -941,14 +945,16 @@
 					var albumUrl = baseurl + encodeURI(encodeURI(results[i].collectionViewUrl + '&partnerId=30'));
 		
 					// create html
+					html += '<div class="purchaseinfo">';
 					html += '<a href="' + artistUrl + '" target="_blank" style="display:block;padding:4px 10px;color:#fff">View Artist</a>';
 					html += '<a href="' + trackUrl + '" target="_blank" style="display:block;padding:4px 10px;color:#fff">Buy Track $' + results[i].trackPrice + '</a>';
 					html += '<a href="' + albumUrl + '" target="_blank" style="display:block;padding:4px 10px;color:#fff">Buy Album $' + results[i].collectionPrice + '</a>';
 					html += '<a href="#" class="similarTracks" target="_blank" style="display:block;padding:4px 10px;color:#fff">See Similar Tracks</a>';
+					html += '</div>';
 				}
 		
 				// display
-				$('#tt2_stats_current_coverart_wrapper').append(html);
+				$('#tt2_stats_current_coverart').find('.songinfo').append(html);
 			}
 			
 		});
