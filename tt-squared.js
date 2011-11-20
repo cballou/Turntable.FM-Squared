@@ -9,6 +9,17 @@
 	var _room = null;
 	var _manager = null;
 	var _k = null;
+	
+	// sizing
+	var windowSize = {
+		width: $('window').width(),
+		height: $('window').height()
+	};
+	var containerWidth = $('#outer').width();
+	var tt2_size = {
+		width: windowSize.width - containerWidth,
+		height: windowSize.height
+	}
 
 	// default config values
 	var config = {
@@ -396,13 +407,11 @@
 		var albumArt = '';
 		if (song.coverart) {
 			var alt = song.artist + ' - "' + song.song + '" (' + song.album + ')';
-			albumArt += '<img src="' + song.coverart + '" width="150" height="150" alt="' + alt + '" style="text-align:center;border:4px solid #222;" />';
-			$('#tt2_stats_current_coverart_wrapper').css({ height: 150, width: 150 });
-		} else {
-			$('#tt2_stats_current_coverart_wrapper').css({ height: 100, width: 100 });
-		}
+			albumArt += '<img src="' + song.coverart + '" width="150" height="150" alt="' + alt + '" style="float:left;display:inline;margin:0 10px 10px 0;border:4px solid #222;" />';
+		} 
 		$('#tt2_stats_current_coverart').find('.songinfo').html(details);
-		$('#tt2_stats_current_coverart_wrapper').html(albumArt);
+		$('#tt2_stats_current_coverart').find('img').remove();
+		$('#tt2_stats_current_coverart').prepend(albumArt);
 
 		// track song votes
 		if (!votes.songs.song[song_id]) {
@@ -579,7 +588,6 @@
 
 		// perform actions
 		updateCounters(e.room.metadata);
-		//updateTitle(e.room.metadata);
 		recordVote(e.room.metadata.votelog[0]);
 
 		// update list of voters
@@ -618,6 +626,24 @@
 		// log the manager
 		_log(_room);
 		_log(_manager);
+		
+		// watch for window resize
+		$(window).bind('resize', function(e) {
+			var $this = $(this);
+			// compare old and new size
+			var oldSize = windowSize;
+			windowSize.width = $(this)[width]();
+			windowSize.height = $this[height]();
+			if (oldSize.width != windowSize.width) {
+				tt2_size.width = windowSize.width - containerWidth;
+				$('#tt2_container').css('width', tt2_size.width - 20);
+			}
+			
+			if (oldSize.height != windowSize.height) {
+				tt2_size.height = windowSize.height;
+				$('#tt2_container').css('height', tt2_size.height - 20);
+			}
+		});
 
 		// periodically update turntable.lastMotionTime
 		setInterval(function() {
@@ -633,74 +659,93 @@
 	 * Display the options menu.
 	 */
 	function displayOptionsMenu() {
-		// watch for toggle of auto-dj
-		var html = '<div id="tt2_options" style="position:fixed;top:10px;right:10px;width:200px;max-height:90%;background:#333;color:#FFF;font-size:12px;line-height:18px;vertical-align:middle;overflow-x:hidden;overflow-y:auto;">';
-		html += '<h4 style="padding:0 10px 4px;margin-bottom: 10px;font-size:18px;line-height:18px;font-weight:bold;border-bottom:1px dotted #000;background:#44D2E5;color:#000;">TT<sup>2</sup> Options</h4>';
-		html += '<div style="padding:10px 10px 0">';
-		html += '<div style="margin-bottom:8px"><label><input type="checkbox" name="tt2_autoupvote" id="tt2_autoupvote" value="1" checked="checked" /> Auto Upvote</label></div>';
-		html += '<div style="margin-bottom:8px"><label><input type="checkbox" name="tt2_autodj" id="tt2_autodj" value="1" /> Auto DJ</label></div>';
-		html += '<div style="margin-bottom:8px"><label><input type="checkbox" name="tt2_autorespond" id="tt2_autorespond" value="1" checked="checked" /> Auto Respond</label></div>';
-		html += '<div style="margin-bottom:8px"><label><input type="checkbox" name="tt2_antiidle" id="tt2_antiidle" value="1" checked="checked" /> Anti Idle</label></div>';
-		html += '<div style="margin-bottom:8px"><label><input type="checkbox" name="tt2_muteAlert" id="tt2_muteAlert" value="1" checked="checked" /> Enable Mention Alert</label></div>';
-		html += '</div>';
+		// re-position TT.FM
+		$('#outer').css('margin', 0);
+		$('#footer').css({ 'text-align': 'left' });
+		
+		// create tt2 container
+		var html = '<div id="tt2_container" style="position:absolute;top:10px;right:10px;width:' + (tt2_size.width-20) + 'px;height:' + (tt2_size.height-20) + 'px;margin:0;padding:0;background:#333;color:#FFF;font-size:12px;line-height:18px;overflow-x:hidden;overflow-y:auto;">';
+		html += '<h3 style="padding:0 10px 4px;margin-bottom: 10px;font-size:22px;line-height:22px;font-weight:bold;background:#44D2E5;color:#000;">TT<sup>SQUARED</sup></h3>';
+
+		// currently playing container
+		html += '<div id="tt2_playing">';
+			html += '<h4 style="padding:0 10px 4px;margin-bottom: 0;font-size:18px;line-height:18px;font-weight:bold;background:#5C755E;color:#FFF;">Currently Playing</h4>';
+			html += '<ul style="padding:10px 10px 0">';
+			html += '<li id="tt2_stats_current_coverart">';
+			html += '<p class="songinfo" style="margin:0"></p>';
+			html += '</li>';
+			html += '</ul>';
 		html += '</div>';
 
 		// stats container
-		html += '<div id="tt2_stats" style="position:fixed;top:10px;left:10px;width:200px;max-height:90%;background:#333;color:#FFF;font-size:12px;line-height:18px;vertical-align:middle;overflow-x:hidden;overflow-y:auto;">';
-		// current track stats
-		html += '<h4 style="padding:0 10px 4px;margin-bottom: 0;font-size:18px;line-height:18px;font-weight:bold;border-bottom:1px dotted #000;background:#44D2E5;color:#000;">TT<sup>2</sup> Stats</h4>';
-		html += '<div>';
-		html += '<h5 class="stat_heading" style="padding:4px 10px;font-size:14px;line-height:14px;font-weight:bold;background: #222;cursor:pointer;">Current Track</h5>';
-		html += '<div id="tt2_stats_current" style="max-height:500px; overflow-x:hidden; overflow-y: auto; margin-bottom: 10px;">';
-		html += '<ul style="padding:10px 10px 0">';
-		html += '<li id="tt2_stats_current_coverart">';
-		html += '<p class="songinfo" style="text-align:center;margin:0 0 4px;"></p>';
-		html += '<div id="tt2_stats_current_coverart_wrapper" style="position:relative;display:block;text-align:center;margin:0 auto;"></div>';
-		html += '</li>';
-		//html += '<li>Song Artist: <span id="tt2_stats_current_artist" style="float:right;display:inline;text-align:right">n/a</span></li>';
-		//html += '<li>Song Title: <span id="tt2_stats_current_title" style="float:right;display:inline;text-align:right">n/a</span></li>';
-		//html += '<li>Votes: <span id="tt2_stats_current_votes" style="float:right;display:inline;text-align:right">0</span></li>';
-		html += '<li>Rating: <span id="tt2_stats_current_rating" style="float:right;display:inline;text-align:right">0</span></li>';
-		html += '<li>Upvotes: <span id="tt2_stats_current_upvotes" style="float:right;display:inline;text-align:right">0</span><ul id="tt2_stats_current_upvoters" style="max-height: 200px;overflow-x:hidden;overflow-y:auto"></ul></li>';
-		html += '<li>Downvotes: <span id="tt2_stats_current_downvotes" style="float:right;display:inline;text-align:right">0</span><ul id="tt2_stats_current_downvoters" style="max-height: 200px;overflow-x:hidden;overflow-y:auto"></ul></li>';
-		html += '</ul>';
+		html += '<div id="tt2_stats">';
+		
+			// current track stats
+			html += '<h4 style="padding:0 10px 4px;margin-bottom: 0;font-size:18px;line-height:18px;font-weight:bold;background:#5C755E;color:#FFF;">Stats</h4>';
+			html += '<div>';
+				html += '<h5 class="stat_heading" style="padding:4px 10px;font-size:14px;line-height:14px;font-weight:bold;background: #222;cursor:pointer;">Current Track</h5>';
+				html += '<div id="tt2_stats_current" style="max-height:500px; overflow-x:hidden; overflow-y: auto; margin-bottom: 10px;">';
+					html += '<ul style="padding:10px 10px 0">';
+					html += '<li>Rating: <span id="tt2_stats_current_rating" style="float:right;display:inline;text-align:right">0</span></li>';
+					html += '<li>Upvotes: <span id="tt2_stats_current_upvotes" style="float:right;display:inline;text-align:right">0</span><ul id="tt2_stats_current_upvoters" style="max-height: 200px;overflow-x:hidden;overflow-y:auto"></ul></li>';
+					html += '<li>Downvotes: <span id="tt2_stats_current_downvotes" style="float:right;display:inline;text-align:right">0</span><ul id="tt2_stats_current_downvoters" style="max-height: 200px;overflow-x:hidden;overflow-y:auto"></ul></li>';
+					html += '</ul>';
+				html += '</div>';
+			html += '</div>';
+		
+			// personal stats
+			html += '<h5 class="stat_heading" style="padding:4px 10px;font-size:14px;line-height:14px;font-weight:bold;background: #222;cursor:pointer;">My Stats</h5>';
+			html += '<div id="tt2_stats_mine" style="max-height:100px; overflow-x:hidden; overflow-y: auto; margin-bottom: 10px;">';
+			html += '<ul style="padding:10px 10px 0">';
+			html += '<li>Songs Played: <span id="tt2_stats_mine_totalSongs" style="float:right;display:inline;text-align:right">0</span></li>';
+			html += '<li>Votes: <span id="tt2_stats_mine_votes" style="float:right;display:inline;text-align:right">0</span></li>';
+			html += '<li>Upvotes: <span id="tt2_stats_mine_upvotes" style="float:right;display:inline;text-align:right">0</span></li>';
+			html += '<li>Downvotes: <span id="tt2_stats_mine_downvotes" style="float:right;display:inline;text-align:right">0</span></li>';
+			html += '<li>Rating: <span id="tt2_stats_mine_rating" style="float:right;display:inline;text-align:right">0</span></li>';
+			html += '</ul>';
+			html += '</div>';
+		
+			// overall stats
+			html += '<div>';
+			html += '<h5 class="stat_heading" style="padding:4px 10px;font-size:14px;line-height:14px;font-weight:bold;background: #222;cursor:pointer;">Overall Room Stats</h5>';
+			html += '<div id="tt2_stats_overall" style="max-height:100px; overflow-x:hidden; overflow-y: auto; margin-bottom: 10px;">';
+			html += '<ul style="padding:10px 10px 0">';
+			html += '<li>Total Users: <span id="tt2_stats_overall_users" style="float:right;display:inline;text-align:right">0</span></li>';
+			html += '<li>Songs Played: <span id="tt2_stats_overall_totalSongs" style="float:right;display:inline;text-align:right">0</span></li>';
+			html += '<li>Upvotes: <span id="tt2_stats_overall_upvotes" style="float:right;display:inline;text-align:right">0</span></li>';
+			html += '<li>Downvotes: <span id="tt2_stats_overall_downvotes" style="float:right;display:inline;text-align:right">0</span></li>';
+			html += '<li>Rating: <span id="tt2_stats_current_rating" style="float:right;display:inline;text-align:right">0</span></li>';
+			html += '</ul>';
+			html += '</div>';
+		
+			// user stats
+			html += '<h5 class="stat_heading" style="padding:4px 10px;font-size:14px;line-height:14px;font-weight:bold;background: #222;cursor:pointer;">User Stats</h5>';
+			html += '<div id="tt2_stats_user" style="display:none; max-height:100px; overflow-x:hidden; overflow-y: auto; margin-bottom: 10px;">';
+			html += '<ul style="padding:10px 10px 0"></ul>';
+			html += '</div>';
+		
+			/*
+			// song stats
+			html += '<h5 style="padding:4px;margin-bottom: 10px;font-size:14px;line-height:14px;font-weight:bold;background: #222;">Song Stats</h5>';
+			html += '<div id="tt2_stats_song" style="display:none; max-height:100px; overflow-x:hidden; overflow-y: auto; margin-bottom: 10px;">';
+			html += '<ul></ul>';
+			html += '</div>';
+			*/
 		html += '</div>';
-		// personal stats
-		html += '<h5 class="stat_heading" style="padding:4px 10px;font-size:14px;line-height:14px;font-weight:bold;background: #222;cursor:pointer;">My Stats</h5>';
-		html += '<div id="tt2_stats_mine" style="max-height:100px; overflow-x:hidden; overflow-y: auto; margin-bottom: 10px;">';
-		html += '<ul style="padding:10px 10px 0">';
-		html += '<li>Songs Played: <span id="tt2_stats_mine_totalSongs" style="float:right;display:inline;text-align:right">0</span></li>';
-		html += '<li>Votes: <span id="tt2_stats_mine_votes" style="float:right;display:inline;text-align:right">0</span></li>';
-		html += '<li>Upvotes: <span id="tt2_stats_mine_upvotes" style="float:right;display:inline;text-align:right">0</span></li>';
-		html += '<li>Downvotes: <span id="tt2_stats_mine_downvotes" style="float:right;display:inline;text-align:right">0</span></li>';
-		html += '<li>Rating: <span id="tt2_stats_mine_rating" style="float:right;display:inline;text-align:right">0</span></li>';
-		html += '</ul>';
+					
+		// options container
+		html += '<div id="tt2_options">';
+			html += '<h4 class="toggleAccordion" style="padding:0 10px 4px;margin-bottom: 10px;font-size:18px;line-height:18px;font-weight:bold;background:#5C755E;color:#FFF;">Configuration Options</h4>';
+			html += '<div style="padding:10px 10px 0;display:none;">';
+				html += '<div style="margin-bottom:8px"><label><input type="checkbox" name="tt2_autoupvote" id="tt2_autoupvote" value="1" checked="checked" /> Auto Upvote</label></div>';
+				html += '<div style="margin-bottom:8px"><label><input type="checkbox" name="tt2_autodj" id="tt2_autodj" value="1" /> Auto DJ</label></div>';
+				html += '<div style="margin-bottom:8px"><label><input type="checkbox" name="tt2_autorespond" id="tt2_autorespond" value="1" checked="checked" /> Auto Respond</label></div>';
+				html += '<div style="margin-bottom:8px"><label><input type="checkbox" name="tt2_antiidle" id="tt2_antiidle" value="1" checked="checked" /> Anti Idle</label></div>';
+				html += '<div style="margin-bottom:8px"><label><input type="checkbox" name="tt2_muteAlert" id="tt2_muteAlert" value="1" checked="checked" /> Enable Mention Alert</label></div>';
+			html += '</div>';
 		html += '</div>';
-		// overall stats
-		html += '<div>';
-		html += '<h5 class="stat_heading" style="padding:4px 10px;font-size:14px;line-height:14px;font-weight:bold;background: #222;cursor:pointer;">Overall Room Stats</h5>';
-		html += '<div id="tt2_stats_overall" style="max-height:100px; overflow-x:hidden; overflow-y: auto; margin-bottom: 10px;">';
-		html += '<ul style="padding:10px 10px 0">';
-		html += '<li>Total Users: <span id="tt2_stats_overall_users" style="float:right;display:inline;text-align:right">0</span></li>';
-		html += '<li>Songs Played: <span id="tt2_stats_overall_totalSongs" style="float:right;display:inline;text-align:right">0</span></li>';
-		html += '<li>Upvotes: <span id="tt2_stats_overall_upvotes" style="float:right;display:inline;text-align:right">0</span></li>';
-		html += '<li>Downvotes: <span id="tt2_stats_overall_downvotes" style="float:right;display:inline;text-align:right">0</span></li>';
-		html += '<li>Rating: <span id="tt2_stats_current_rating" style="float:right;display:inline;text-align:right">0</span></li>';
-		html += '</ul>';
-		html += '</div>';
-		// user stats
-		html += '<h5 class="stat_heading" style="padding:4px 10px;font-size:14px;line-height:14px;font-weight:bold;background: #222;cursor:pointer;">User Stats</h5>';
-		html += '<div id="tt2_stats_user" style="display:none; max-height:100px; overflow-x:hidden; overflow-y: auto; margin-bottom: 10px;">';
-		html += '<ul style="padding:10px 10px 0"></ul>';
-		html += '</div>';
-		// song stats
-		/*
-		html += '<h5 style="padding:4px;margin-bottom: 10px;font-size:14px;line-height:14px;font-weight:bold;background: #222;">Song Stats</h5>';
-		html += '<div id="tt2_stats_song" style="display:none; max-height:100px; overflow-x:hidden; overflow-y: auto; margin-bottom: 10px;">';
-		html += '<ul></ul>';
-		html += '</div>';
-		html += '</div>';
-		*/
+		
+		html += '</div>'; // close container
 
 		$(html).appendTo('body');
 		$options = $('#tt2_options');
@@ -738,6 +783,44 @@
 	}
 
 	/**
+	 * Retrieve similar tracks via Last.FM
+	 * http://ws.audioscrobbler.com/2.0/?method=track.getsimilar&artist=cher&track=believe&api_key=d1b14c712954973f098a226d80d6b5c2
+	 */
+	function getSimilarTracks(artist, song, album) {
+		var url = 'http://ws.audioscrobbler.com/2.0/?method=track.getsimilar&autocorrect=1&artist=' + encodeURIComponent(artist) + '&track=' + encodeURIComponent(song) + '&api_key=d1b14c712954973f098a226d80d6b5c2&format=json&callback=?';
+		$.getJSON(url, function(data) {
+			$.each(data.recenttracks.track, function(i, item){
+				if (item.image[1]['#text'] == '') {
+					art = settings.noart;
+				} else {
+					art = stripslashes(item.image[imgSize]['#text']);
+				}
+	
+				url = stripslashes(item.url);
+				song = item.name;
+				artist = item.artist['#text'];
+				album = item.album['#text'];
+	
+				$this.append(container);
+				
+				var $current = $this.children(':eq('+i+')');
+				
+				$current.find('[class=lfm_song]').append(song);
+				$current.find('[class=lfm_artist]').append(artist);
+				$current.find('[class=lfm_album]').append(album);
+				$current.find('[class=lfm_art]').append("<img src='"+art+"' alt='Artwork for "+album+"'/>");
+				$current.find('a').attr('href', url).attr('title', 'Listen to '+song+' on Last.FM').attr('target', '_blank');
+				
+				//callback
+				if(i==(settings.number-1)){
+					settings.onComplete.call(this);
+				}
+				
+			});
+		});
+	}
+
+	/**
 	 * Perform an iTunes song search. Valid return entities include
 	 * musicArtist, musicTrack, album, musicVideo, mix, and song.
 	 *
@@ -754,11 +837,51 @@
 			// mixTerm, genreIndex, artistTerm, composerTerm, albumTerm, ratingIndex, songTerm, musicTrackTerm
 			//attribute: 'artistTerm,albumTerm,songTerm,musicTrackTerm',
 			limit: 1,
-			callback: 'handleItunesResults'
+			callback: '?' // handleItunesResults
 		};
 		var url = 'http://ax.itunes.apple.com/WebObjects/MZStoreServices.woa/wa/wsSearch?' + urlencode(params);
-		var html = '<script src="' + url + '"><\/script>';
-		$('head').append(html);
+		$.getJSON(url, function(results) {
+
+			//var results = arg.results;
+			var len = results ? results.length : 0;
+		
+			_log(results);
+		
+			var $caholder = $('#tt2_stats_current_coverart');
+			var html = '';
+		
+			if (len) {
+				for (var i = 0; i < len; i++) {
+					// check if we need album art
+					if ($caholder.find('img').length == 0 && results[i].artworkUrl100) {
+						var alt = results[i].artistName + ' - "' + results[i].trackName + '" (' + results[i].collectionName + ')';
+						var img = '<img src="' + results[i].artworkUrl100 + '" width="100" height="100" alt="' + alt + '" style="float:left;display:inline;margin: 0 10px 10px 0;border:4px solid #222;" />';
+						$caholder.find('#tt2_stats_current_coverart_wrapper').append(img);
+					}
+		
+					// copy example affiliate link up to point indiciated
+					var baseurl = 'http://click.linksynergy.com/fs-bin/stat?id=5PGIX6Dk9zE&offerid=146261&type=3&subid=0&tmpid=1826&RD_PARM1=';
+		
+					// attach partner id to link urls
+					var trackUrl = baseurl + encodeURI(encodeURI(results[i].trackViewUrl + '&partnerId=30'));
+					var artistUrl = baseurl + encodeURI(encodeURI(results[i].artistViewUrl + '&partnerId=30'));
+					var albumUrl = baseurl + encodeURI(encodeURI(results[i].collectionViewUrl + '&partnerId=30'));
+		
+					// create html
+					html += '<a href="' + artistUrl + '" target="_blank" style="display:block;padding:4px 10px;color:#fff">View Artist</a>';
+					html += '<a href="' + trackUrl + '" target="_blank" style="display:block;padding:4px 10px;color:#fff">Buy Track $' + results[i].trackPrice + '</a>';
+					html += '<a href="' + albumUrl + '" target="_blank" style="display:block;padding:4px 10px;color:#fff">Buy Album $' + results[i].collectionPrice + '</a>';
+					html += '<a href="#" class="similarTracks" target="_blank" style="display:block;padding:4px 10px;color:#fff">See Similar Tracks</a>';
+				}
+		
+				// display
+				$('#tt2_stats_current_coverart_wrapper').append(html);
+			}
+			
+		});
+		
+		//var html = '<script src="' + url + '"><\/script>';
+		//$('head').append(html);
 	}
 
 	/**
@@ -897,6 +1020,7 @@ function _log(msg) {
  * http://www.apple.com/itunes/affiliates/resources/documentation/itunes-store-web-service-search-api.html#lookup
  * http://www.rahulsingla.com/blog/2011/08/itunes-performing-itunes-store-search-in-javascript
  */
+/*
 function handleItunesResults(arg) {
 	var results = arg.results;
 	var len = results ? results.length : 0;
@@ -941,3 +1065,4 @@ function handleItunesResults(arg) {
 	// clean up the JS from HEAD
 	$('head').find('script[src^="http://ax.itunes.apple.com"]').remove();
 }
+*/
