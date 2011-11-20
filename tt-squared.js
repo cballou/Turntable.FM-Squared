@@ -12,17 +12,14 @@
 	
 	// sizing
 	var windowSize = {
-		width: $('window').width(),
-		height: $('window').height()
+		width: $(window).width(),
+		height: $(window).height()
 	};
 	var containerWidth = $('#outer').width();
 	var tt2_size = {
 		width: windowSize.width - containerWidth,
 		height: windowSize.height
 	}
-	
-	alert(windowSize.width+'x'+windowSize.height);
-	alert(tt2_size.width+'x'+tt2_size.height);
 
 	// default config values
 	var config = {
