@@ -716,11 +716,11 @@
 		
 		// create tt2 container
 		var html = '<div id="tt2_container" style="position:absolute;top:10px;right:10px;width:' + (tt2_size.width-20) + 'px;height:' + (tt2_size.height-20) + 'px;margin:0;padding:0;background:#333;color:#FFF;font-size:12px;line-height:18px;overflow-x:hidden;overflow-y:auto;">';
-		html += '<h3 style="padding:0 10px 4px;margin:0;font-size:22px;line-height:22px;font-weight:bold;background:#44D2E5;color:#000;">TT<sup>SQUARED</sup></h3>';
+		html += '<h3 style="padding:4px 10px;margin:0;font-size:22px;line-height:22px;font-weight:bold;background:#44D2E5;color:#000;">TT<sup>SQUARED</sup></h3>';
 
 		// currently playing container
 		html += '<div id="tt2_playing" style="margin-bottom:10px">';
-			html += '<h4 style="padding:0 10px 4px;margin-bottom: 0;font-size:18px;line-height:18px;font-weight:bold;background:#5C755E;color:#FFF;">Currently Playing</h4>';
+			html += '<h4 style="padding:4px 10px;margin-bottom: 0;font-size:18px;line-height:18px;font-weight:bold;background:#5C755E;color:#FFF;">Currently Playing</h4>';
 			html += '<div id="tt2_stats_current_coverart" style="overflow:hidden;padding:10px 10px 0;">';
 			html += '<div class="songinfo" style="float:left;display:inline;margin:0;font-size:14px;line-height: 18px;"></div>';
 			html += '</div>';
@@ -730,7 +730,7 @@
 		html += '<div id="tt2_stats" style="margin-bottom:10px">';
 		
 			// current track stats
-			html += '<h4 style="padding:0 10px 4px;margin-bottom: 0;font-size:18px;line-height:18px;font-weight:bold;background:#5C755E;color:#FFF;">Stats</h4>';
+			html += '<h4 style="padding:4px 10px;margin-bottom: 0;font-size:18px;line-height:18px;font-weight:bold;background:#5C755E;color:#FFF;">Stats</h4>';
 			html += '<div>';
 				html += '<h5 class="stat_heading" style="margin:0;padding:4px 10px;font-size:14px;line-height:14px;font-weight:bold;background: #222;cursor:pointer;">Current Track</h5>';
 				html += '<div id="tt2_stats_current" style="margin-bottom: 10px;">';
@@ -784,7 +784,7 @@
 					
 		// options container
 		html += '<div id="tt2_options">';
-			html += '<h4 class="toggleAccordion" style="padding:0 10px 4px;margin-bottom: 10px;font-size:18px;line-height:18px;font-weight:bold;background:#5C755E;color:#FFF;">Configuration Options</h4>';
+			html += '<h4 class="toggleAccordion" style="padding:4px 10px;margin-bottom: 10px;font-size:18px;line-height:18px;font-weight:bold;background:#5C755E;color:#FFF;">Configuration Options</h4>';
 			html += '<div style="padding:10px 10px 0;display:none;">';
 				html += '<div style="margin-bottom:8px"><label><input type="checkbox" name="tt2_autoupvote" id="tt2_autoupvote" value="1" checked="checked" /> Auto Upvote</label></div>';
 				html += '<div style="margin-bottom:8px"><label><input type="checkbox" name="tt2_autodj" id="tt2_autodj" value="1" /> Auto DJ</label></div>';
@@ -1056,9 +1056,9 @@ function handleItunesResults(arg) {
 		
 			// create html
 			html += '<div class="purchaseinfo">';
-			html += '<a href="' + artistUrl + '" target="_blank" style="display:block;padding:4px 10px;color:#fff">View Artist</a>';
-			html += '<a href="' + trackUrl + '" target="_blank" style="display:block;padding:4px 10px;color:#fff">Buy Track $' + results[i].trackPrice + '</a>';
-			html += '<a href="' + albumUrl + '" target="_blank" style="display:block;padding:4px 10px;color:#fff">Buy Album $' + results[i].collectionPrice + '</a>';
+			html += '<a href="' + artistUrl + '" target="_blank" style="display:block;padding:2px 0;color:#fff">View Artist Details and Top Songs</a>';
+			html += '<a href="' + trackUrl + '" target="_blank" style="display:block;padding:2px 0;color:#fff">Buy Track $' + results[i].trackPrice + '</a>';
+			html += '<a href="' + albumUrl + '" target="_blank" style="display:block;padding:2px 0;color:#fff">Buy Album $' + results[i].collectionPrice + '</a>';
 			html += '<a href="#" class="similarTracks" target="_blank" style="display:block;padding:4px 10px;color:#fff">See Similar Tracks</a>';
 			html += '</div>';
 		}
