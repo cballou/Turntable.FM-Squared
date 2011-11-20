@@ -397,9 +397,9 @@
 		}
 		
 		// handle purchase cover art
-		var details = 'Artist: <strong style="float:right;display:inline;text-align:right">' + song.artist + '</strong>';
-		details += 'Track: <strong style="float:right;display:inline;text-align:right">' + song.song + '</strong>';
-		details += 'Album: <strong style="float:right;display:inline;text-align:right">' + (song.album?song.album:'/na') + '</strong>';
+		var details = '<p>Artist: <strong style="float:right;display:inline;text-align:right">' + song.artist + '</strong></p>';
+		details += '<p>Track: <strong style="float:right;display:inline;text-align:right">' + song.song + '</strong></p>';
+		details += '<p>Album: <strong style="float:right;display:inline;text-align:right">' + (song.album?song.album:'/na') + '</strong></p>';
 		
 		var albumArt = '';
 		if (song.coverart) {
