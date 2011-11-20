@@ -397,7 +397,7 @@
 		}
 		
 		// handle purchase cover art
-		var alt = song.artist + ' - "' + song.song + '" (' + song.album + ')';
+		var alt = escape(song.artist) + ' - ' + escape(song.song) + ' (' + escape(song.album) + ')';
 		var details = '<p><span style="float:left;display:inline;width:150px">Artist:</span> <strong>' + song.artist + '</strong></p>';
 		details += '<p><span style="float:left;display:inline;width:150px">Track:</span> <strong>' + song.song + '</strong></p>';
 		details += '<p><span style="float:left;display:inline;width:150px">Album:</span> <strong>' + (song.album?song.album:'n/a') + '</strong></p>';
@@ -409,7 +409,7 @@
 			albumArt += '<img src="" width="150" height="150" alt="' + alt + '" style="float:left;display:inline;width:150px;height:150px;margin:0 10px 10px 0;background:#222;border:4px solid #222;" />';
 		}
 		
-		$('#tt2_stats_current_coverart').find('.songinfo').css('min-width', tt2_size.width - 210);
+		$('#tt2_stats_current_coverart').find('.songinfo').css('min-width', tt2_size.width - 225);
 		$('#tt2_stats_current_coverart').find('.songinfo').html(details);
 		$('#tt2_stats_current_coverart').find('img').remove();
 		$('#tt2_stats_current_coverart').prepend(albumArt);
@@ -482,7 +482,7 @@
 		$('#tt2_stats_overall_totalSongs').text(votes.totalSongs);
 		
 		// handle purchase cover art
-		var alt = song.artist + ' - "' + song.song + '" (' + song.album + ')';
+		var alt = escape(song.artist) + ' - ' + escape(song.song) + ' (' + escape(song.album) + ')';
 		var details = '<p><span style="float:left;display:inline;width:150px">Artist:</span> <strong>' + song.artist + '</strong></p>';
 		details += '<p><span style="float:left;display:inline;width:150px">Track:</span> <strong>' + song.song + '</strong></p>';
 		details += '<p><span style="float:left;display:inline;width:150px">Album:</span> <strong>' + (song.album?song.album:'n/a') + '</strong></p>';
@@ -494,7 +494,7 @@
 			albumArt += '<img src="" width="150" height="150" alt="' + alt + '" style="float:left;display:inline;width:150px;height:150px;margin:0 10px 10px 0;background:#222;border:4px solid #222;" />';
 		}
 		
-		$('#tt2_stats_current_coverart').find('.songinfo').css('min-width', tt2_size.width - 210);
+		$('#tt2_stats_current_coverart').find('.songinfo').css('min-width', tt2_size.width - 225);
 		$('#tt2_stats_current_coverart').find('.songinfo').html(details);
 		$('#tt2_stats_current_coverart').find('img').remove();
 		$('#tt2_stats_current_coverart').prepend(albumArt);
