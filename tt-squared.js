@@ -397,18 +397,19 @@
 		}
 		
 		// handle purchase cover art
-		var details = '<p>Artist: <strong style="float:right;display:inline;text-align:right">' + song.artist + '</strong></p>';
-		details += '<p>Track: <strong style="float:right;display:inline;text-align:right">' + song.song + '</strong></p>';
-		details += '<p>Album: <strong style="float:right;display:inline;text-align:right">' + (song.album?song.album:'/na') + '</strong></p>';
+		var alt = song.artist + ' - "' + song.song + '" (' + song.album + ')';
+		var details = '<p><span style="float:left;display:inline;width:150px">Artist:</span> <strong>' + song.artist + '</strong></p>';
+		details += '<p><span style="float:left;display:inline;width:150px">Track:</span> <strong>' + song.song + '</strong></p>';
+		details += '<p><span style="float:left;display:inline;width:150px">Album:</span> <strong>' + (song.album?song.album:'n/a') + '</strong></p>';
 		
 		var albumArt = '';
 		if (song.coverart) {
-			var alt = song.artist + ' - "' + song.song + '" (' + song.album + ')';
 			albumArt += '<img src="' + song.coverart + '" width="150" height="150" alt="' + alt + '" style="float:left;display:inline;margin:0 10px 10px 0;border:4px solid #222;" />';
 		} else {
-			albumArt += '<div style="float:left;display:inline;width:150px;height:150px;margin:0 10px 10px 0;background:#363636;border:4px solid #222;"></div>';
+			albumArt += '<img src="" width="150" height="150" alt="' + alt + '" style="float:left;display:inline;width:150px;height:150px;margin:0 10px 10px 0;background:#222;border:4px solid #222;"></div>';
 		}
-		$('#tt2_stats_current_coverart').find('.songinfo').css('min-width', tt2_size.width - 188);
+		
+		$('#tt2_stats_current_coverart').find('.songinfo').css('min-width', tt2_size.width - 210);
 		$('#tt2_stats_current_coverart').find('.songinfo').html(details);
 		$('#tt2_stats_current_coverart').find('img').remove();
 		$('#tt2_stats_current_coverart').prepend(albumArt);
@@ -481,19 +482,19 @@
 		$('#tt2_stats_overall_totalSongs').text(votes.totalSongs);
 		
 		// handle purchase cover art
-		var details = '<p>Artist: <strong style="float:right;display:inline;text-align:right">' + song.artist + '</strong></p>';
-		details += '<p>Track: <strong style="float:right;display:inline;text-align:right">' + song.song + '</strong></p>';
-		details += '<p>Album: <strong style="float:right;display:inline;text-align:right">' + (song.album?song.album:'/na') + '</strong></p>';
+		var alt = song.artist + ' - "' + song.song + '" (' + song.album + ')';
+		var details = '<p><span style="float:left;display:inline;width:150px">Artist:</span> <strong>' + song.artist + '</strong></p>';
+		details += '<p><span style="float:left;display:inline;width:150px">Track:</span> <strong>' + song.song + '</strong></p>';
+		details += '<p><span style="float:left;display:inline;width:150px">Album:</span> <strong>' + (song.album?song.album:'n/a') + '</strong></p>';
 		
 		var albumArt = '';
 		if (song.coverart) {
-			var alt = song.artist + ' - "' + song.song + '" (' + song.album + ')';
 			albumArt += '<img src="' + song.coverart + '" width="150" height="150" alt="' + alt + '" style="float:left;display:inline;margin:0 10px 10px 0;border:4px solid #222;" />';
 		} else {
-			albumArt += '<div style="float:left;display:inline;width:150px;height:150px;margin:0 10px 10px 0;background:#363636;border:4px solid #222;"></div>';
+			albumArt += '<img src="" width="150" height="150" alt="' + alt + '" style="float:left;display:inline;width:150px;height:150px;margin:0 10px 10px 0;background:#222;border:4px solid #222;"></div>';
 		}
 		
-		$('#tt2_stats_current_coverart').find('.songinfo').css('min-width', tt2_size.width - 188);
+		$('#tt2_stats_current_coverart').find('.songinfo').css('min-width', tt2_size.width - 210);
 		$('#tt2_stats_current_coverart').find('.songinfo').html(details);
 		$('#tt2_stats_current_coverart').find('img').remove();
 		$('#tt2_stats_current_coverart').prepend(albumArt);
