@@ -734,10 +734,10 @@
 			html += '<div>';
 				html += '<h5 class="stat_heading" style="margin:0;padding:4px 10px;font-size:14px;line-height:14px;font-weight:bold;background: #222;cursor:pointer;">Current Track</h5>';
 				html += '<div id="tt2_stats_current" style="margin-bottom: 10px;">';
-					html += '<ul style="padding:10px 10px 0">';
+					html += '<ul style="padding:0 10px">';
 					html += '<li style="padding:2px 0;">Rating: <span id="tt2_stats_current_rating" style="float:right;display:inline;text-align:right">0</span></li>';
-					html += '<li style="padding:2px 0;border-top:1px solid #222;">Upvotes: <span id="tt2_stats_current_upvotes" style="float:right;display:inline;text-align:right">0</span><ul id="tt2_stats_current_upvoters" style="max-height: 200px;overflow-x:hidden;overflow-y:auto"></ul></li>';
-					html += '<li style="padding:2px 0;border-top:1px solid #222;">Downvotes: <span id="tt2_stats_current_downvotes" style="float:right;display:inline;text-align:right">0</span><ul id="tt2_stats_current_downvoters" style="max-height: 200px;overflow-x:hidden;overflow-y:auto"></ul></li>';
+					html += '<li style="padding:2px 0;border-top:1px dotted #222;">Upvotes: <span id="tt2_stats_current_upvotes" style="float:right;display:inline;text-align:right">0</span><ul id="tt2_stats_current_upvoters" style="max-height: 200px;overflow-x:hidden;overflow-y:auto"></ul></li>';
+					html += '<li style="padding:2px 0;border-top:1px dotted #222;">Downvotes: <span id="tt2_stats_current_downvotes" style="float:right;display:inline;text-align:right">0</span><ul id="tt2_stats_current_downvoters" style="max-height: 200px;overflow-x:hidden;overflow-y:auto"></ul></li>';
 					html += '</ul>';
 				html += '</div>';
 			html += '</div>';
@@ -745,12 +745,12 @@
 			// personal stats
 			html += '<h5 class="stat_heading" style="margin:0;padding:4px 10px;font-size:14px;line-height:14px;font-weight:bold;background: #222;cursor:pointer;">My Stats</h5>';
 			html += '<div id="tt2_stats_mine" style="margin-bottom: 10px;">';
-			html += '<ul style="padding:10px 10px 0">';
+			html += '<ul style="padding:0 10px">';
 			html += '<li style="padding:2px 0;">Songs Played: <span id="tt2_stats_mine_totalSongs" style="float:right;display:inline;text-align:right">0</span></li>';
-			html += '<li style="padding:2px 0;border-top:1px solid #222;">Votes: <span id="tt2_stats_mine_votes" style="float:right;display:inline;text-align:right">0</span></li>';
-			html += '<li style="padding:2px 0;border-top:1px solid #222;">Upvotes: <span id="tt2_stats_mine_upvotes" style="float:right;display:inline;text-align:right">0</span></li>';
-			html += '<li style="padding:2px 0;border-top:1px solid #222;">Downvotes: <span id="tt2_stats_mine_downvotes" style="float:right;display:inline;text-align:right">0</span></li>';
-			html += '<li style="padding:2px 0;border-top:1px solid #222;">Rating: <span id="tt2_stats_mine_rating" style="float:right;display:inline;text-align:right">0</span></li>';
+			html += '<li style="padding:2px 0;border-top:1px dotted #222;">Votes: <span id="tt2_stats_mine_votes" style="float:right;display:inline;text-align:right">0</span></li>';
+			html += '<li style="padding:2px 0;border-top:1px dotted #222;">Upvotes: <span id="tt2_stats_mine_upvotes" style="float:right;display:inline;text-align:right">0</span></li>';
+			html += '<li style="padding:2px 0;border-top:1px dotted #222;">Downvotes: <span id="tt2_stats_mine_downvotes" style="float:right;display:inline;text-align:right">0</span></li>';
+			html += '<li style="padding:2px 0;border-top:1px dotted #222;">Rating: <span id="tt2_stats_mine_rating" style="float:right;display:inline;text-align:right">0</span></li>';
 			html += '</ul>';
 			html += '</div>';
 		
@@ -758,19 +758,19 @@
 			html += '<div>';
 			html += '<h5 class="stat_heading" style="margin:0;padding:4px 10px;font-size:14px;line-height:14px;font-weight:bold;background: #222;cursor:pointer;">Overall Room Stats</h5>';
 			html += '<div id="tt2_stats_overall" style="margin-bottom: 10px;">';
-			html += '<ul style="padding:10px 10px 0">';
+			html += '<ul style="padding:0 10px">';
 			html += '<listyle="padding:2px 0;">Total Users: <span id="tt2_stats_overall_users" style="float:right;display:inline;text-align:right">0</span></li>';
-			html += '<li style="padding:2px 0;border-top:1px solid #222;">Songs Played: <span id="tt2_stats_overall_totalSongs" style="float:right;display:inline;text-align:right">0</span></li>';
-			html += '<li style="padding:2px 0;border-top:1px solid #222;">Upvotes: <span id="tt2_stats_overall_upvotes" style="float:right;display:inline;text-align:right">0</span></li>';
-			html += '<li style="padding:2px 0;border-top:1px solid #222;">Downvotes: <span id="tt2_stats_overall_downvotes" style="float:right;display:inline;text-align:right">0</span></li>';
-			html += '<li style="padding:2px 0;border-top:1px solid #222;">Rating: <span id="tt2_stats_current_rating" style="float:right;display:inline;text-align:right">0</span></li>';
+			html += '<li style="padding:2px 0;border-top:1px dotted #222;">Songs Played: <span id="tt2_stats_overall_totalSongs" style="float:right;display:inline;text-align:right">0</span></li>';
+			html += '<li style="padding:2px 0;border-top:1px dotted #222;">Upvotes: <span id="tt2_stats_overall_upvotes" style="float:right;display:inline;text-align:right">0</span></li>';
+			html += '<li style="padding:2px 0;border-top:1px dotted #222;">Downvotes: <span id="tt2_stats_overall_downvotes" style="float:right;display:inline;text-align:right">0</span></li>';
+			html += '<li style="padding:2px 0;border-top:1px dotted #222;">Rating: <span id="tt2_stats_current_rating" style="float:right;display:inline;text-align:right">0</span></li>';
 			html += '</ul>';
 			html += '</div>';
 		
 			// user stats
 			html += '<h5 class="stat_heading" style="margin:0;padding:4px 10px;font-size:14px;line-height:14px;font-weight:bold;background: #222;cursor:pointer;">User Stats</h5>';
 			html += '<div id="tt2_stats_user" style="display:none; max-height:100px; overflow-x:hidden; overflow-y: auto; margin-bottom: 10px;">';
-			html += '<ul style="padding:10px 10px 0"></ul>';
+			html += '<ul style="padding:0 10px"></ul>';
 			html += '</div>';
 		
 			/*
@@ -847,37 +847,39 @@
 	function getSimilarTracks(artist, song, album) {
 		var url = 'http://ws.audioscrobbler.com/2.0/?method=track.getsimilar&autocorrect=1&artist=' + artist + '&track=' + song + '&api_key=d1b14c712954973f098a226d80d6b5c2&format=json&callback=?';
 		$.getJSON(url, function(data) {
-			alert(JSON.stringify(data));
-			/*
-			$.each(data.recenttracks.track, function(i, item){
-				if (item.image[1]['#text'] == '') {
-					art = settings.noart;
-				} else {
-					art = stripslashes(item.image[imgSize]['#text']);
+			
+			var html = '';
+			
+			$.each(similartracks.track, function(i, item){
+				
+				// name
+				// playcount
+				// duration
+				// url
+				// artist.name
+				// artist.mbid
+				// artist.url
+				// image[size|"#text"]
+				//
+				
+				html += '<li>';
+				if (item.image[1]['#text'].length) {
+					html += '<img src="' + item.image[1]['#text'] + '" height="64" width="64" />';
 				}
-	
-				url = stripslashes(item.url);
-				song = item.name;
-				artist = item.artist['#text'];
-				album = item.album['#text'];
-	
-				$this.append(container);
-				
-				var $current = $this.children(':eq('+i+')');
-				
-				$current.find('[class=lfm_song]').append(song);
-				$current.find('[class=lfm_artist]').append(artist);
-				$current.find('[class=lfm_album]').append(album);
-				$current.find('[class=lfm_art]').append("<img src='"+art+"' alt='Artwork for "+album+"'/>");
-				$current.find('a').attr('href', url).attr('title', 'Listen to '+song+' on Last.FM').attr('target', '_blank');
-				
-				//callback
-				if(i==(settings.number-1)){
-					settings.onComplete.call(this);
+				html += '<p style="clear:both"><span style="float:left;display:inline;width:100px;">Artist:</span>' + item.artist.name + '</p>';
+				html += '<p style="clear:both"><span style="float:left;display:inline;width:100px;">Track:</span>' + item.name + '</p>';
+				if (item.mbid.length) {
+					html += '<p style="clear:both"><a href="#" style="display:block">Preview &amp; Buy Track</a>';
 				}
-				
+				if (item.artist.mbid.length) {
+					html += '<p style="clear:both"><a href="#" style="display:block">View Artist Details</a>';
+				}
+				html += '</li>';
 			});
-			*/
+			
+			// append html
+			
+
 		});
 	}
 
