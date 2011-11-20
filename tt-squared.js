@@ -1038,6 +1038,7 @@ function handleItunesResults(arg) {
 		
 		for (var i = 0; i < len; i++) {
 			// check if we need album art
+			$caholder = $('#tt2_stats_current_coverart');
 			if ($caholder.find('img').length == 0 && results[i].artworkUrl100) {				
 				var alt = escape(results[i].artistName) + ' - ' + escape(results[i].trackName) + ' (' + escape(results[i].collectionName) + ')';
 				var img = '<img src="' + results[i].artworkUrl100 + '" width="100" height="100" alt="' + alt + '" style="float:left;display:inline;margin: 0 10px 10px 0;border:4px solid #222;" />';
