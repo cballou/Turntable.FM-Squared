@@ -732,43 +732,43 @@
 			// current track stats
 			html += '<h4 style="padding:0 10px 4px;margin-bottom: 0;font-size:18px;line-height:18px;font-weight:bold;background:#5C755E;color:#FFF;">Stats</h4>';
 			html += '<div>';
-				html += '<h5 class="stat_heading" style="padding:4px 10px;font-size:14px;line-height:14px;font-weight:bold;background: #222;cursor:pointer;">Current Track</h5>';
+				html += '<h5 class="stat_heading" style="margin:0;padding:4px 10px;font-size:14px;line-height:14px;font-weight:bold;background: #222;cursor:pointer;">Current Track</h5>';
 				html += '<div id="tt2_stats_current" style="max-height:500px; overflow-x:hidden; overflow-y: auto; margin-bottom: 10px;">';
 					html += '<ul style="padding:10px 10px 0">';
 					html += '<li>Rating: <span id="tt2_stats_current_rating" style="float:right;display:inline;text-align:right">0</span></li>';
-					html += '<li>Upvotes: <span id="tt2_stats_current_upvotes" style="float:right;display:inline;text-align:right">0</span><ul id="tt2_stats_current_upvoters" style="max-height: 200px;overflow-x:hidden;overflow-y:auto"></ul></li>';
-					html += '<li>Downvotes: <span id="tt2_stats_current_downvotes" style="float:right;display:inline;text-align:right">0</span><ul id="tt2_stats_current_downvoters" style="max-height: 200px;overflow-x:hidden;overflow-y:auto"></ul></li>';
+					html += '<li style="border-top:1px solid #222;">Upvotes: <span id="tt2_stats_current_upvotes" style="float:right;display:inline;text-align:right">0</span><ul id="tt2_stats_current_upvoters" style="max-height: 200px;overflow-x:hidden;overflow-y:auto"></ul></li>';
+					html += '<li style="border-top:1px solid #222;">Downvotes: <span id="tt2_stats_current_downvotes" style="float:right;display:inline;text-align:right">0</span><ul id="tt2_stats_current_downvoters" style="max-height: 200px;overflow-x:hidden;overflow-y:auto"></ul></li>';
 					html += '</ul>';
 				html += '</div>';
 			html += '</div>';
 		
 			// personal stats
-			html += '<h5 class="stat_heading" style="padding:4px 10px;font-size:14px;line-height:14px;font-weight:bold;background: #222;cursor:pointer;">My Stats</h5>';
+			html += '<h5 class="stat_heading" style="margin:0;padding:4px 10px;font-size:14px;line-height:14px;font-weight:bold;background: #222;cursor:pointer;">My Stats</h5>';
 			html += '<div id="tt2_stats_mine" style="max-height:100px; overflow-x:hidden; overflow-y: auto; margin-bottom: 10px;">';
 			html += '<ul style="padding:10px 10px 0">';
 			html += '<li>Songs Played: <span id="tt2_stats_mine_totalSongs" style="float:right;display:inline;text-align:right">0</span></li>';
-			html += '<li>Votes: <span id="tt2_stats_mine_votes" style="float:right;display:inline;text-align:right">0</span></li>';
-			html += '<li>Upvotes: <span id="tt2_stats_mine_upvotes" style="float:right;display:inline;text-align:right">0</span></li>';
-			html += '<li>Downvotes: <span id="tt2_stats_mine_downvotes" style="float:right;display:inline;text-align:right">0</span></li>';
-			html += '<li>Rating: <span id="tt2_stats_mine_rating" style="float:right;display:inline;text-align:right">0</span></li>';
+			html += '<li style="border-top:1px solid #222;">Votes: <span id="tt2_stats_mine_votes" style="float:right;display:inline;text-align:right">0</span></li>';
+			html += '<li style="border-top:1px solid #222;">Upvotes: <span id="tt2_stats_mine_upvotes" style="float:right;display:inline;text-align:right">0</span></li>';
+			html += '<li style="border-top:1px solid #222;">Downvotes: <span id="tt2_stats_mine_downvotes" style="float:right;display:inline;text-align:right">0</span></li>';
+			html += '<li style="border-top:1px solid #222;">Rating: <span id="tt2_stats_mine_rating" style="float:right;display:inline;text-align:right">0</span></li>';
 			html += '</ul>';
 			html += '</div>';
 		
 			// overall stats
 			html += '<div>';
-			html += '<h5 class="stat_heading" style="padding:4px 10px;font-size:14px;line-height:14px;font-weight:bold;background: #222;cursor:pointer;">Overall Room Stats</h5>';
+			html += '<h5 class="stat_heading" style="margin:0;padding:4px 10px;font-size:14px;line-height:14px;font-weight:bold;background: #222;cursor:pointer;">Overall Room Stats</h5>';
 			html += '<div id="tt2_stats_overall" style="max-height:100px; overflow-x:hidden; overflow-y: auto; margin-bottom: 10px;">';
 			html += '<ul style="padding:10px 10px 0">';
 			html += '<li>Total Users: <span id="tt2_stats_overall_users" style="float:right;display:inline;text-align:right">0</span></li>';
-			html += '<li>Songs Played: <span id="tt2_stats_overall_totalSongs" style="float:right;display:inline;text-align:right">0</span></li>';
-			html += '<li>Upvotes: <span id="tt2_stats_overall_upvotes" style="float:right;display:inline;text-align:right">0</span></li>';
-			html += '<li>Downvotes: <span id="tt2_stats_overall_downvotes" style="float:right;display:inline;text-align:right">0</span></li>';
-			html += '<li>Rating: <span id="tt2_stats_current_rating" style="float:right;display:inline;text-align:right">0</span></li>';
+			html += '<li style="border-top:1px solid #222;">Songs Played: <span id="tt2_stats_overall_totalSongs" style="float:right;display:inline;text-align:right">0</span></li>';
+			html += '<li style="border-top:1px solid #222;">Upvotes: <span id="tt2_stats_overall_upvotes" style="float:right;display:inline;text-align:right">0</span></li>';
+			html += '<li style="border-top:1px solid #222;">Downvotes: <span id="tt2_stats_overall_downvotes" style="float:right;display:inline;text-align:right">0</span></li>';
+			html += '<li style="border-top:1px solid #222;">Rating: <span id="tt2_stats_current_rating" style="float:right;display:inline;text-align:right">0</span></li>';
 			html += '</ul>';
 			html += '</div>';
 		
 			// user stats
-			html += '<h5 class="stat_heading" style="padding:4px 10px;font-size:14px;line-height:14px;font-weight:bold;background: #222;cursor:pointer;">User Stats</h5>';
+			html += '<h5 class="stat_heading" style="margin:0;padding:4px 10px;font-size:14px;line-height:14px;font-weight:bold;background: #222;cursor:pointer;">User Stats</h5>';
 			html += '<div id="tt2_stats_user" style="display:none; max-height:100px; overflow-x:hidden; overflow-y: auto; margin-bottom: 10px;">';
 			html += '<ul style="padding:10px 10px 0"></ul>';
 			html += '</div>';
