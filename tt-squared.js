@@ -488,6 +488,7 @@
 			var alt = song.artist + ' - "' + song.song + '" (' + song.album + ')';
 			albumArt += '<img src="' + song.coverart + '" width="150" height="150" alt="' + alt + '" style="float:left;display:inline;margin:0 10px 10px 0;border:4px solid #222;" />';
 		} 
+		$('#tt2_stats_current_coverart').find('.songinfo').css('min-width', tt2_size.width - 170);
 		$('#tt2_stats_current_coverart').find('.songinfo').html(details);
 		$('#tt2_stats_current_coverart').find('img').remove();
 		$('#tt2_stats_current_coverart').prepend(albumArt);
