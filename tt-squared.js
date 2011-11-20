@@ -663,6 +663,9 @@
 		$('#outer').css('margin', 0);
 		$('#footer').css({ 'text-align': 'left' });
 		
+		_log('Container size');
+		_log(tt2_size);
+		
 		// create tt2 container
 		var html = '<div id="tt2_container" style="position:absolute;top:10px;right:10px;width:' + (tt2_size.width-20) + 'px;height:' + (tt2_size.height-20) + 'px;margin:0;padding:0;background:#333;color:#FFF;font-size:12px;line-height:18px;overflow-x:hidden;overflow-y:auto;">';
 		html += '<h3 style="padding:0 10px 4px;margin-bottom: 10px;font-size:22px;line-height:22px;font-weight:bold;background:#44D2E5;color:#000;">TT<sup>SQUARED</sup></h3>';
