@@ -829,6 +829,15 @@
 		$('#tt2_stats').find('.stat_heading').click(function() {
 			$(this).next('div').stop().slideToggle();
 		});
+		
+		// watch for similar track click
+		$('.similarTracks').live('click', function() {
+			var $this = $(this);
+			var artist = $this.data('artist');
+			var song = $this.data('song');
+			getSimilarTracks(artist, song);
+			return false;
+		});
 	}
 
 	/**
@@ -836,8 +845,10 @@
 	 * http://ws.audioscrobbler.com/2.0/?method=track.getsimilar&artist=cher&track=believe&api_key=d1b14c712954973f098a226d80d6b5c2
 	 */
 	function getSimilarTracks(artist, song, album) {
-		var url = 'http://ws.audioscrobbler.com/2.0/?method=track.getsimilar&autocorrect=1&artist=' + encodeURIComponent(artist) + '&track=' + encodeURIComponent(song) + '&api_key=d1b14c712954973f098a226d80d6b5c2&format=json&callback=?';
+		var url = 'http://ws.audioscrobbler.com/2.0/?method=track.getsimilar&autocorrect=1&artist=' + artist + '&track=' + song + '&api_key=d1b14c712954973f098a226d80d6b5c2&format=json&callback=?';
 		$.getJSON(url, function(data) {
+			alert(JSON.stringify(data));
+			/*
 			$.each(data.recenttracks.track, function(i, item){
 				if (item.image[1]['#text'] == '') {
 					art = settings.noart;
@@ -866,6 +877,7 @@
 				}
 				
 			});
+			*/
 		});
 	}
 
@@ -1056,10 +1068,10 @@ function handleItunesResults(arg) {
 		
 			// create html
 			html += '<div class="purchaseinfo">';
-			html += '<a href="' + artistUrl + '" target="_blank" style="display:block;padding:2px 0;color:#fff">View Artist Details and Top Songs</a>';
 			html += '<a href="' + trackUrl + '" target="_blank" style="display:block;padding:2px 0;color:#fff">Buy Track $' + results[i].trackPrice + '</a>';
 			html += '<a href="' + albumUrl + '" target="_blank" style="display:block;padding:2px 0;color:#fff">Buy Album $' + results[i].collectionPrice + '</a>';
-			html += '<a href="#" class="similarTracks" target="_blank" style="display:block;padding:4px 10px;color:#fff">See Similar Tracks</a>';
+			html += '<a href="#" class="similarTracks" data-artist="' + encodeURIComponent(results[i].artistName) + '" data-song="' + encodeURIComponent(results[i].trackName) + '" target="_blank" style="display:block;padding:2px 0;color:#fff">See Similar Tracks</a>';
+			html += '<a href="' + artistUrl + '" target="_blank" style="display:block;padding:2px 0;color:#fff">View Artist Details and Top Songs</a>';
 			html += '</div>';
 		}
 
