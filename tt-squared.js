@@ -395,13 +395,7 @@
 			// add to the play counter
 			votes.songs[song_id].plays += 1;
 		}
-
-		// update current song
-		performSearch(song.artist, song.song, song.album || '');
-		//$('#tt2_stats_current_artist').text(song.artist);
-		//$('#tt2_stats_current_title').text(song.song);
-		//$('#tt2_stats_current_album').text(song.album || 'n/a');
-
+		
 		// handle purchase cover art
 		var details = song.artist + ' - "' + song.song + (song.album?'" on the album '+song.album:'"');
 		var albumArt = '';
@@ -412,6 +406,9 @@
 		$('#tt2_stats_current_coverart').find('.songinfo').html(details);
 		$('#tt2_stats_current_coverart').find('img').remove();
 		$('#tt2_stats_current_coverart').prepend(albumArt);
+
+		// update current song
+		performSearch(song.artist, song.song, song.album || '');
 
 		// track song votes
 		if (!votes.songs.song[song_id]) {
@@ -455,6 +452,72 @@
 				votes.mine.songs[song_id].plays += 1;
 
 			}
+		}
+	}
+
+	/**
+	 * Initially display song information when app is first loaded.
+	 */
+	function initCurrentlyPlaying() {
+		// retrieve song data
+		var song_id = _room.currentSong._id;
+		var song = _room.currentSong.metadata;
+
+		// update the window title
+		document.title = 'TT.FM Playing: ' + song.artist + ' - "' + song.song + '" (' + song.album + ')';
+
+		// increment total songs played
+		votes.totalSongs += 1;
+		$('#tt2_stats_overall_totalSongs').text(votes.totalSongs);
+		
+		// handle purchase cover art
+		var details = song.artist + ' - "' + song.song + (song.album?'" on the album '+song.album:'"');
+		var albumArt = '';
+		if (song.coverart) {
+			var alt = song.artist + ' - "' + song.song + '" (' + song.album + ')';
+			albumArt += '<img src="' + song.coverart + '" width="150" height="150" alt="' + alt + '" style="float:left;display:inline;margin:0 10px 10px 0;border:4px solid #222;" />';
+		} 
+		$('#tt2_stats_current_coverart').find('.songinfo').html(details);
+		$('#tt2_stats_current_coverart').find('img').remove();
+		$('#tt2_stats_current_coverart').prepend(albumArt);
+
+		// update current song
+		performSearch(song.artist, song.song, song.album || '');
+		
+		// if this is the first time the song has been played
+		if (!votes.songs[song_id]) {
+			votes.songs[song_id] = {
+				artist: song.artist,
+				title: song.song,
+				album: song.album,
+				coverart: song.coverart,
+				plays: 1,
+				score: 0,
+				votes: 0,
+				upvoters: [],
+				downvoters: []
+			}
+		} else {
+			// add to the play counter
+			votes.songs[song_id].plays += 1;
+		}
+		
+		// track song votes
+		if (!votes.songs.song[song_id]) {
+			votes.songs.song[song_id] = {
+				artist: song.artist,
+				title: song.song,
+				album: song.album,
+				coverart: song.coverart,
+				plays: 1,
+				score: 0,
+				votes: 0,
+				upvoters: [],
+				downvoters: []
+			};
+		} else {
+			// add to the play counter
+			votes.songs.song[song_id].plays += 1;
 		}
 	}
 
@@ -623,6 +686,9 @@
         _log('Initiating the event listener.');
 		_tt.addEventListener('message', messageListener);
 
+		// grab initial song data
+		initCurrentlyPlaying();
+
 		// log the manager
 		_log(_room);
 		_log(_manager);
@@ -632,8 +698,8 @@
 			var $this = $(this);
 			// compare old and new size
 			var oldSize = windowSize;
-			windowSize.width = $(this)[width]();
-			windowSize.height = $this[height]();
+			windowSize.width = $this.width();
+			windowSize.height = $this.height();
 			if (oldSize.width != windowSize.width) {
 				tt2_size.width = windowSize.width - containerWidth;
 				$('#tt2_container').css('width', tt2_size.width - 20);
