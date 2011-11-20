@@ -398,9 +398,9 @@
 		
 		// handle purchase cover art
 		var alt = escape(song.artist) + ' - ' + escape(song.song) + ' (' + escape(song.album) + ')';
-		var details = '<p><span style="float:left;display:inline;width:150px">Artist:</span> <strong>' + song.artist + '</strong></p>';
-		details += '<p><span style="float:left;display:inline;width:150px">Track:</span> <strong>' + song.song + '</strong></p>';
-		details += '<p><span style="float:left;display:inline;width:150px">Album:</span> <strong>' + (song.album?song.album:'n/a') + '</strong></p>';
+		var details = '<p><span style="float:left;display:inline;width:100px">Artist:</span> <strong>' + song.artist + '</strong></p>';
+		details += '<p><span style="float:left;display:inline;width:100px">Track:</span> <strong>' + song.song + '</strong></p>';
+		details += '<p><span style="float:left;display:inline;width:100px">Album:</span> <strong>' + (song.album?song.album:'n/a') + '</strong></p>';
 		
 		var albumArt = '';
 		if (song.coverart) {
@@ -465,9 +465,9 @@
 		
 		// handle purchase cover art
 		var alt = escape(song.artist) + ' - ' + escape(song.song) + ' (' + escape(song.album) + ')';
-		var details = '<p><span style="float:left;display:inline;width:150px">Artist:</span> <strong>' + song.artist + '</strong></p>';
-		details += '<p><span style="float:left;display:inline;width:150px">Track:</span> <strong>' + song.song + '</strong></p>';
-		details += '<p><span style="float:left;display:inline;width:150px">Album:</span> <strong>' + (song.album?song.album:'n/a') + '</strong></p>';
+		var details = '<p><span style="float:left;display:inline;width:100px">Artist:</span> <strong>' + song.artist + '</strong></p>';
+		details += '<p><span style="float:left;display:inline;width:100px">Track:</span> <strong>' + song.song + '</strong></p>';
+		details += '<p><span style="float:left;display:inline;width:100px">Album:</span> <strong>' + (song.album?song.album:'n/a') + '</strong></p>';
 		
 		var albumArt = '';
 		if (song.coverart) {
@@ -722,7 +722,7 @@
 		html += '<div id="tt2_playing" style="margin-bottom:10px">';
 			html += '<h4 style="padding:0 10px 4px;margin-bottom: 0;font-size:18px;line-height:18px;font-weight:bold;background:#5C755E;color:#FFF;">Currently Playing</h4>';
 			html += '<div id="tt2_stats_current_coverart" style="overflow:hidden;padding:10px 10px 0;">';
-			html += '<div class="songinfo" style="float:left;display:inline;margin:0;"></div>';
+			html += '<div class="songinfo" style="float:left;display:inline;margin:0;font-size:14px;line-height: 18px;"></div>';
 			html += '</div>';
 		html += '</div>';
 
