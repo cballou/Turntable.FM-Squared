@@ -406,34 +406,16 @@
 		if (song.coverart) {
 			albumArt += '<img src="' + song.coverart + '" width="150" height="150" alt="' + alt + '" style="float:left;display:inline;margin:0 10px 10px 0;border:4px solid #222;" />';
 		} else {
-			albumArt += '<img src="" width="150" height="150" alt="' + alt + '" style="float:left;display:inline;width:150px;height:150px;margin:0 10px 10px 0;background:#222;border:4px solid #222;" />';
+			albumArt += '<div class="img" width="150" height="150" alt="' + alt + '" style="float:left;display:inline;width:150px;height:150px;margin:0 10px 10px 0;background:#222;border:4px solid #222;"></div>';
 		}
 		
 		$('#tt2_stats_current_coverart').find('.songinfo').css('min-width', tt2_size.width - 225);
 		$('#tt2_stats_current_coverart').find('.songinfo').html(details);
-		$('#tt2_stats_current_coverart').find('img').remove();
+		$('#tt2_stats_current_coverart').find('img, .img').remove();
 		$('#tt2_stats_current_coverart').prepend(albumArt);
 
 		// update current song
 		performSearch(song.artist, song.song, song.album || '');
-
-		// track song votes
-		if (!votes.songs.song[song_id]) {
-			votes.songs.song[song_id] = {
-				artist: song.artist,
-				title: song.song,
-				album: song.album,
-				coverart: song.coverart,
-				plays: 1,
-				score: 0,
-				votes: 0,
-				upvoters: [],
-				downvoters: []
-			};
-		} else {
-			// add to the play counter
-			votes.songs.song[song_id].plays += 1;
-		}
 
 		// if im djing, track votes
 		if (isCurrentDj()) {
@@ -491,12 +473,12 @@
 		if (song.coverart) {
 			albumArt += '<img src="' + song.coverart + '" width="150" height="150" alt="' + alt + '" style="float:left;display:inline;margin:0 10px 10px 0;border:4px solid #222;" />';
 		} else {
-			albumArt += '<img src="" width="150" height="150" alt="' + alt + '" style="float:left;display:inline;width:150px;height:150px;margin:0 10px 10px 0;background:#222;border:4px solid #222;" />';
+			albumArt += '<div class="img" width="150" height="150" alt="' + alt + '" style="float:left;display:inline;width:150px;height:150px;margin:0 10px 10px 0;background:#222;border:4px solid #222;"></div>';
 		}
 		
 		$('#tt2_stats_current_coverart').find('.songinfo').css('min-width', tt2_size.width - 225);
 		$('#tt2_stats_current_coverart').find('.songinfo').html(details);
-		$('#tt2_stats_current_coverart').find('img').remove();
+		$('#tt2_stats_current_coverart').find('img, .img').remove();
 		$('#tt2_stats_current_coverart').prepend(albumArt);
 
 		// update current song
@@ -518,24 +500,6 @@
 		} else {
 			// add to the play counter
 			votes.songs[song_id].plays += 1;
-		}
-		
-		// track song votes
-		if (!votes.songs.song[song_id]) {
-			votes.songs.song[song_id] = {
-				artist: song.artist,
-				title: song.song,
-				album: song.album,
-				coverart: song.coverart,
-				plays: 1,
-				score: 0,
-				votes: 0,
-				upvoters: [],
-				downvoters: []
-			};
-		} else {
-			// add to the play counter
-			votes.songs.song[song_id].plays += 1;
 		}
 	}
 
@@ -922,53 +886,11 @@
 			// mixTerm, genreIndex, artistTerm, composerTerm, albumTerm, ratingIndex, songTerm, musicTrackTerm
 			//attribute: 'artistTerm,albumTerm,songTerm,musicTrackTerm',
 			limit: 1,
-			callback: '?' // handleItunesResults
+			callback: 'handleItunesResults'
 		};
 		var url = 'http://ax.itunes.apple.com/WebObjects/MZStoreServices.woa/wa/wsSearch?' + urlencode(params);
-		$.getJSON(url, function(results) {
-
-			//var results = arg.results;
-			var len = results ? results.length : 0;
-		
-			_log(results);
-		
-			var $caholder = $('#tt2_stats_current_coverart');
-			var html = '';
-		
-			if (len) {
-				for (var i = 0; i < len; i++) {
-					// check if we need album art
-					if ($caholder.find('img').length == 0 && results[i].artworkUrl100) {
-						var alt = results[i].artistName + ' - "' + results[i].trackName + '" (' + results[i].collectionName + ')';
-						var img = '<img src="' + results[i].artworkUrl100 + '" width="100" height="100" alt="' + alt + '" style="float:left;display:inline;margin: 0 10px 10px 0;border:4px solid #222;" />';
-						$caholder.find('#tt2_stats_current_coverart').prepend(img);
-					}
-		
-					// copy example affiliate link up to point indiciated
-					var baseurl = 'http://click.linksynergy.com/fs-bin/stat?id=5PGIX6Dk9zE&offerid=146261&type=3&subid=0&tmpid=1826&RD_PARM1=';
-		
-					// attach partner id to link urls
-					var trackUrl = baseurl + encodeURI(encodeURI(results[i].trackViewUrl + '&partnerId=30'));
-					var artistUrl = baseurl + encodeURI(encodeURI(results[i].artistViewUrl + '&partnerId=30'));
-					var albumUrl = baseurl + encodeURI(encodeURI(results[i].collectionViewUrl + '&partnerId=30'));
-		
-					// create html
-					html += '<div class="purchaseinfo">';
-					html += '<a href="' + artistUrl + '" target="_blank" style="display:block;padding:4px 10px;color:#fff">View Artist</a>';
-					html += '<a href="' + trackUrl + '" target="_blank" style="display:block;padding:4px 10px;color:#fff">Buy Track $' + results[i].trackPrice + '</a>';
-					html += '<a href="' + albumUrl + '" target="_blank" style="display:block;padding:4px 10px;color:#fff">Buy Album $' + results[i].collectionPrice + '</a>';
-					html += '<a href="#" class="similarTracks" target="_blank" style="display:block;padding:4px 10px;color:#fff">See Similar Tracks</a>';
-					html += '</div>';
-				}
-		
-				// display
-				$('#tt2_stats_current_coverart').find('.songinfo').append(html);
-			}
-			
-		});
-		
-		//var html = '<script src="' + url + '"><\/script>';
-		//$('head').append(html);
+		var html = '<script src="' + url + '"><\/script>';
+		$('head').append(html);
 	}
 
 	/**
@@ -1107,10 +1029,54 @@ function _log(msg) {
  * http://www.apple.com/itunes/affiliates/resources/documentation/itunes-store-web-service-search-api.html#lookup
  * http://www.rahulsingla.com/blog/2011/08/itunes-performing-itunes-store-search-in-javascript
  */
-/*
 function handleItunesResults(arg) {
 	var results = arg.results;
 	var len = results ? results.length : 0;
+	if (len) {
+		
+		var html = '';
+		
+		for (var i = 0; i < len; i++) {
+			// check if we need album art
+			if ($caholder.find('img').length == 0 && results[i].artworkUrl100) {				
+				var alt = escape(results[i].artistName) + ' - ' + escape(results[i].trackName) + ' (' + escape(results[i].collectionName) + ')';
+				var img = '<img src="' + results[i].artworkUrl100 + '" width="100" height="100" alt="' + alt + '" style="float:left;display:inline;margin: 0 10px 10px 0;border:4px solid #222;" />';
+				$caholder.find('#tt2_stats_current_coverart').prepend(img);
+			}
+
+			// generate baseurl
+			var baseurl = 'http://click.linksynergy.com/fs-bin/stat?id=5PGIX6Dk9zE&offerid=146261&type=3&subid=0&tmpid=1826&RD_PARM1=';
+
+			// attach partner id to link urls
+			var trackUrl = baseurl + encodeURI(encodeURI(results[i].trackViewUrl + '&partnerId=30'));
+			var artistUrl = baseurl + encodeURI(encodeURI(results[i].artistViewUrl + '&partnerId=30'));
+			var albumUrl = baseurl + encodeURI(encodeURI(results[i].collectionViewUrl + '&partnerId=30'));
+		
+			// create html
+			html += '<div class="purchaseinfo">';
+			html += '<a href="' + artistUrl + '" target="_blank" style="display:block;padding:4px 10px;color:#fff">View Artist</a>';
+			html += '<a href="' + trackUrl + '" target="_blank" style="display:block;padding:4px 10px;color:#fff">Buy Track $' + results[i].trackPrice + '</a>';
+			html += '<a href="' + albumUrl + '" target="_blank" style="display:block;padding:4px 10px;color:#fff">Buy Album $' + results[i].collectionPrice + '</a>';
+			html += '<a href="#" class="similarTracks" target="_blank" style="display:block;padding:4px 10px;color:#fff">See Similar Tracks</a>';
+			html += '</div>';
+		}
+
+		// display
+		$('#tt2_stats_current_coverart').find('.songinfo').append(html);
+	}
+
+	// clean up the JS from HEAD
+	$('head').find('script[src^="http://ax.itunes.apple.com"]').remove();
+}
+
+
+
+
+
+
+
+
+
 
 	_log(results);
 
@@ -1118,38 +1084,40 @@ function handleItunesResults(arg) {
 	var html = '';
 	var width = 150, height = 150;
 
-	if (len) {
-		for (var i = 0; i < len; i++) {
-			// check if we need album art
-			if ($caholder.find('img').length == 0 && results[i].artworkUrl100) {
-				var alt = results[i].artistName + ' - "' + results[i].trackName + '" (' + results[i].collectionName + ')';
-				$caholder.find('#tt2_stats_current_coverart_wrapper').append('<img src="' + results[i].artworkUrl100 + '" width="100" height="100" alt="' + alt + '" style="text-align:center;border:4px solid #222;" />');
-				width = 100;
-				height = 100;
-			}
-
-			// copy example affiliate link up to point indiciated
-			var baseurl = 'http://click.linksynergy.com/fs-bin/stat?id=5PGIX6Dk9zE&offerid=146261&type=3&subid=0&tmpid=1826&RD_PARM1=';
-
-			// attach partner id to link urls
-			var trackUrl = baseurl + encodeURI(encodeURI(results[i].trackViewUrl + '&partnerId=30'));
-			var artistUrl = baseurl + encodeURI(encodeURI(results[i].artistViewUrl + '&partnerId=30'));
-			var albumUrl = baseurl + encodeURI(encodeURI(results[i].collectionViewUrl + '&partnerId=30'));
-
-			// create html
-			html += '<div style="position:absolute;top:0;left:0;z-index:1;width:' + width + 'px;height:' + height + 'px;background:#444;width:16px;height:16px;">';
-			//html += '<a href="#" target="_blank" style="display:block;width:' + width + 'px;height:' + height + 'px;background:;width:16px;height:16px;"></a>';
-			html += '<a href="' + artistUrl + '" target="_blank" style="display:block;padding:4px 10px;color:#000;background:#222;text-decoration:none">View Artist</a>';
-			html += '<a href="' + trackUrl + '" target="_blank" style="display:block;padding:4px 10px;color:#000;background:#222;text-decoration:none">Buy Track $' + results[i].trackPrice + '</a>';
-			html += '<a href="' + albumUrl + '" target="_blank" style="display:block;padding:4px 10px;color:#000;background:#222;text-decoration:none">Buy Album $' + results[i].collectionPrice + '</a>';
-			html += '</div>';
-		}
-
-		// display
-		$('#tt2_stats_current_coverart_wrapper').append(html);
+	// check if we need album art
+	if ($caholder.find('img, .img').length == 0 && results[i].artworkUrl100) {
+		var alt = results[i].artistName + ' - "' + results[i].trackName + '" (' + results[i].collectionName + ')';
+		var img = '<img src="' + results[i].artworkUrl100 + '" width="100" height="100" alt="' + alt + '" style="float:left;display:inline;margin: 0 10px 10px 0;border:4px solid #222;" />';
+		$caholder.find('#tt2_stats_current_coverart').prepend(img);
 	}
 
-	// clean up the JS from HEAD
-	$('head').find('script[src^="http://ax.itunes.apple.com"]').remove();
+	// copy example affiliate link up to point indiciated
+	var baseurl = 'http://click.linksynergy.com/fs-bin/stat?id=5PGIX6Dk9zE&offerid=146261&type=3&subid=0&tmpid=1826&RD_PARM1=';
+
+	// attach partner id to link urls
+	var trackUrl = baseurl + encodeURI(encodeURI(results[i].trackViewUrl + '&partnerId=30'));
+	var artistUrl = baseurl + encodeURI(encodeURI(results[i].artistViewUrl + '&partnerId=30'));
+	var albumUrl = baseurl + encodeURI(encodeURI(results[i].collectionViewUrl + '&partnerId=30'));
+
+	// create html
+	html += '<div class="purchaseinfo">';
+	html += '<a href="' + artistUrl + '" target="_blank" style="display:block;padding:4px 10px;color:#fff">View Artist</a>';
+	html += '<a href="' + trackUrl + '" target="_blank" style="display:block;padding:4px 10px;color:#fff">Buy Track $' + results[i].trackPrice + '</a>';
+	html += '<a href="' + albumUrl + '" target="_blank" style="display:block;padding:4px 10px;color:#fff">Buy Album $' + results[i].collectionPrice + '</a>';
+	html += '<a href="#" class="similarTracks" target="_blank" style="display:block;padding:4px 10px;color:#fff">See Similar Tracks</a>';
+	html += '</div>';
 }
-*/
+
+// display
+$('#tt2_stats_current_coverart').find('.songinfo').append(html);
+
+
+
+
+
+
+
+
+
+
+
