@@ -20,6 +20,9 @@
 		width: windowSize.width - containerWidth,
 		height: windowSize.height
 	}
+	
+	alert(windowSize.width+'x'+windowSize.height);
+	alert(tt2_size.width+'x'+tt2_size.height);
 
 	// default config values
 	var config = {
