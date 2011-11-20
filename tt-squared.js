@@ -459,6 +459,10 @@
 	 * Initially display song information when app is first loaded.
 	 */
 	function initCurrentlyPlaying() {
+		if (!_room.currentSong || !_room.currentSong.id) {
+			return false;
+		}
+		
 		// retrieve song data
 		var song_id = _room.currentSong._id;
 		var song = _room.currentSong.metadata;
