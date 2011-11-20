@@ -405,8 +405,10 @@
 		if (song.coverart) {
 			var alt = song.artist + ' - "' + song.song + '" (' + song.album + ')';
 			albumArt += '<img src="' + song.coverart + '" width="150" height="150" alt="' + alt + '" style="float:left;display:inline;margin:0 10px 10px 0;border:4px solid #222;" />';
+		} else {
+			albumArt += '<div style="float:left;display:inline;width:150px;height:150px;margin:0 10px 10px 0;background:#363636;border:4px solid #222;"></div>';
 		}
-		$('#tt2_stats_current_coverart').find('.songinfo').css('min-width', tt2_size.width - 170);
+		$('#tt2_stats_current_coverart').find('.songinfo').css('min-width', tt2_size.width - 188);
 		$('#tt2_stats_current_coverart').find('.songinfo').html(details);
 		$('#tt2_stats_current_coverart').find('img').remove();
 		$('#tt2_stats_current_coverart').prepend(albumArt);
@@ -487,8 +489,11 @@
 		if (song.coverart) {
 			var alt = song.artist + ' - "' + song.song + '" (' + song.album + ')';
 			albumArt += '<img src="' + song.coverart + '" width="150" height="150" alt="' + alt + '" style="float:left;display:inline;margin:0 10px 10px 0;border:4px solid #222;" />';
-		} 
-		$('#tt2_stats_current_coverart').find('.songinfo').css('min-width', tt2_size.width - 170);
+		} else {
+			albumArt += '<div style="float:left;display:inline;width:150px;height:150px;margin:0 10px 10px 0;background:#363636;border:4px solid #222;"></div>';
+		}
+		
+		$('#tt2_stats_current_coverart').find('.songinfo').css('min-width', tt2_size.width - 188);
 		$('#tt2_stats_current_coverart').find('.songinfo').html(details);
 		$('#tt2_stats_current_coverart').find('img').remove();
 		$('#tt2_stats_current_coverart').prepend(albumArt);
@@ -751,7 +756,7 @@
 		// currently playing container
 		html += '<div id="tt2_playing" style="margin-bottom:10px">';
 			html += '<h4 style="padding:0 10px 4px;margin-bottom: 0;font-size:18px;line-height:18px;font-weight:bold;background:#5C755E;color:#FFF;">Currently Playing</h4>';
-			html += '<div id="tt2_stats_current_coverart" style="overflow:hidden">';
+			html += '<div id="tt2_stats_current_coverart" style="overflow:hidden;padding:10px 10px 0;">';
 			html += '<div class="songinfo" style="float:left;display:inline;margin:0;"></div>';
 			html += '</div>';
 		html += '</div>';
