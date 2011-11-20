@@ -406,7 +406,7 @@
 		if (song.coverart) {
 			albumArt += '<img src="' + song.coverart + '" width="150" height="150" alt="' + alt + '" style="float:left;display:inline;margin:0 10px 10px 0;border:4px solid #222;" />';
 		} else {
-			albumArt += '<img src="" width="150" height="150" alt="' + alt + '" style="float:left;display:inline;width:150px;height:150px;margin:0 10px 10px 0;background:#222;border:4px solid #222;"></div>';
+			albumArt += '<img src="" width="150" height="150" alt="' + alt + '" style="float:left;display:inline;width:150px;height:150px;margin:0 10px 10px 0;background:#222;border:4px solid #222;" />';
 		}
 		
 		$('#tt2_stats_current_coverart').find('.songinfo').css('min-width', tt2_size.width - 210);
@@ -491,7 +491,7 @@
 		if (song.coverart) {
 			albumArt += '<img src="' + song.coverart + '" width="150" height="150" alt="' + alt + '" style="float:left;display:inline;margin:0 10px 10px 0;border:4px solid #222;" />';
 		} else {
-			albumArt += '<img src="" width="150" height="150" alt="' + alt + '" style="float:left;display:inline;width:150px;height:150px;margin:0 10px 10px 0;background:#222;border:4px solid #222;"></div>';
+			albumArt += '<img src="" width="150" height="150" alt="' + alt + '" style="float:left;display:inline;width:150px;height:150px;margin:0 10px 10px 0;background:#222;border:4px solid #222;" />';
 		}
 		
 		$('#tt2_stats_current_coverart').find('.songinfo').css('min-width', tt2_size.width - 210);
