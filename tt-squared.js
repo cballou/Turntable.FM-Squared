@@ -32,6 +32,11 @@
 		debugMode: true
 	}
 
+	// stats monitoring
+	var stats = {
+		usersCount: 0
+	};
+
 	// vote monitoring
 	var votes = {
 		// total songs played
@@ -534,9 +539,6 @@
 			// the room users
 			var users = _room.users;
 
-			// update the number of users in the room
-			$('#tt2_stats_overall_users').text(users.length);
-
 			// the voting user
 			var uid = data[0];
 
@@ -640,6 +642,22 @@
 	}
 
 	/**
+	 * Update the number of current users in the room.
+	 */
+	function getUsersCount() {
+		// update the number of users in the room
+		var count = 0;
+		for (var i in _room.users) {
+			count++;
+		}
+
+		if (stats.usersCount != count) {
+			stats.usersCount = count;
+			$('#tt2_stats_overall_users').text(count);
+		}
+	}
+
+	/**
 	 * Listen to all incoming messages and route accordingly.
 	 */
 	function messageListener(e) {
@@ -673,6 +691,7 @@
 
 		// log the manager
 		_log(_room);
+		_log(_room.numUsers());
 		_log(_manager);
 
 		// watch for window resize
@@ -692,6 +711,11 @@
 				$('#tt2_container').css('height', tt2_size.height - 20);
 			}
 		});
+
+		// periodically check for number of users
+		setInterval(function() {
+			getUsersCount();
+		}, 5000);
 
 		// periodically update turntable.lastMotionTime
 		setInterval(function() {
@@ -1022,7 +1046,7 @@ function getSimilarTracks(artist, song, album) {
 			// image[size|"#text"]
 
 			html += '<li style="overflow:hidden; clear: left;">';
-			if (item.image.length && item.image[1]['#text'].length) {
+			if (item.image && item.image[1] && item.image[1]['#text'].length) {
 				html += '<img src="' + item.image[1]['#text'] + '" height="64" width="64" style="float:left;display:inline;margin:0 10px 10px 0;" />';
 			}
 			html += '<p><span style="float:left;display:inline;width:100px;">Artist:</span>' + item.artist.name + '</p>';
