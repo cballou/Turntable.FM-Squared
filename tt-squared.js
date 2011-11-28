@@ -29,7 +29,7 @@
 		muteAlert: false,
 		smartVote: false,
 		autoUpvote: true,
-		debugMode: false
+		debugMode: true
 	}
 
 	// vote monitoring
@@ -1022,7 +1022,7 @@ function getSimilarTracks(artist, song, album) {
 			// image[size|"#text"]
 
 			html += '<li style="overflow:hidden; clear: left;">';
-			if (item.image[1]['#text'].length) {
+			if (item.image.length && item.image[1]['#text'].length) {
 				html += '<img src="' + item.image[1]['#text'] + '" height="64" width="64" style="float:left;display:inline;margin:0 10px 10px 0;" />';
 			}
 			html += '<p><span style="float:left;display:inline;width:100px;">Artist:</span>' + item.artist.name + '</p>';
