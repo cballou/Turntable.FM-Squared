@@ -1002,6 +1002,7 @@ function _log(msg) {
 function getSimilarTracks(artist, song, album) {
 	var url = 'http://ws.audioscrobbler.com/2.0/?method=track.getsimilar&autocorrect=1&artist=' + artist + '&track=' + song + '&api_key=d1b14c712954973f098a226d80d6b5c2&format=json&callback=?';
 	$.getJSON(url, function(data) {
+		_log(data);
 		var html = '';
 		$.each(similartracks.track, function(i, item) {
 
