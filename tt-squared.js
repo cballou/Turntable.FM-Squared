@@ -9,7 +9,7 @@
 	var _room = null;
 	var _manager = null;
 	var _k = null;
-	
+
 	// sizing
 	var windowSize = {
 		width: $(window).width(),
@@ -395,20 +395,20 @@
 			// add to the play counter
 			votes.songs[song_id].plays += 1;
 		}
-		
+
 		// handle purchase cover art
 		var alt = escape(song.artist) + ' - ' + escape(song.song) + ' (' + escape(song.album) + ')';
 		var details = '<p><span style="float:left;display:inline;width:100px">Artist:</span> <strong>' + song.artist + '</strong></p>';
 		details += '<p><span style="float:left;display:inline;width:100px">Track:</span> <strong>' + song.song + '</strong></p>';
 		details += '<p><span style="float:left;display:inline;width:100px">Album:</span> <strong>' + (song.album?song.album:'n/a') + '</strong></p>';
-		
+
 		var albumArt = '';
 		if (song.coverart) {
 			albumArt += '<img src="' + song.coverart + '" width="150" height="150" alt="' + alt + '" style="float:left;display:inline;margin:0 10px 10px 0;border:4px solid #222;" />';
 		} else {
 			albumArt += '<div class="img" width="150" height="150" alt="' + alt + '" style="float:left;display:inline;width:150px;height:150px;margin:0 10px 10px 0;background:#222;border:4px solid #222;"></div>';
 		}
-		
+
 		$('#tt2_stats_current_coverart').find('.songinfo').css('min-width', tt2_size.width - 225);
 		$('#tt2_stats_current_coverart').find('.songinfo').html(details);
 		$('#tt2_stats_current_coverart').find('img, .img').remove();
@@ -451,7 +451,7 @@
 		if (!_room.currentSong || !_room.currentSong._id) {
 			return false;
 		}
-		
+
 		// retrieve song data
 		var song_id = _room.currentSong._id;
 		var song = _room.currentSong.metadata;
@@ -462,20 +462,20 @@
 		// increment total songs played
 		votes.totalSongs += 1;
 		$('#tt2_stats_overall_totalSongs').text(votes.totalSongs);
-		
+
 		// handle purchase cover art
 		var alt = escape(song.artist) + ' - ' + escape(song.song) + ' (' + escape(song.album) + ')';
 		var details = '<p><span style="float:left;display:inline;width:100px">Artist:</span> <strong>' + song.artist + '</strong></p>';
 		details += '<p><span style="float:left;display:inline;width:100px">Track:</span> <strong>' + song.song + '</strong></p>';
 		details += '<p><span style="float:left;display:inline;width:100px">Album:</span> <strong>' + (song.album?song.album:'n/a') + '</strong></p>';
-		
+
 		var albumArt = '';
 		if (song.coverart) {
 			albumArt += '<img src="' + song.coverart + '" width="150" height="150" alt="' + alt + '" style="float:left;display:inline;margin:0 10px 10px 0;border:4px solid #222;" />';
 		} else {
 			albumArt += '<div class="img" width="150" height="150" alt="' + alt + '" style="float:left;display:inline;width:150px;height:150px;margin:0 10px 10px 0;background:#222;border:4px solid #222;"></div>';
 		}
-		
+
 		$('#tt2_stats_current_coverart').find('.songinfo').css('min-width', tt2_size.width - 225);
 		$('#tt2_stats_current_coverart').find('.songinfo').html(details);
 		$('#tt2_stats_current_coverart').find('img, .img').remove();
@@ -483,7 +483,7 @@
 
 		// update current song
 		performSearch(song.artist, song.song, song.album || '');
-		
+
 		// if this is the first time the song has been played
 		if (!votes.songs[song_id]) {
 			votes.songs[song_id] = {
@@ -674,7 +674,7 @@
 		// log the manager
 		_log(_room);
 		_log(_manager);
-		
+
 		// watch for window resize
 		$(window).bind('resize', function(e) {
 			var $this = $(this);
@@ -686,7 +686,7 @@
 				tt2_size.width = windowSize.width - containerWidth;
 				$('#tt2_container').css('width', tt2_size.width - 20);
 			}
-			
+
 			if (oldSize.height != windowSize.height) {
 				tt2_size.height = windowSize.height;
 				$('#tt2_container').css('height', tt2_size.height - 20);
@@ -710,17 +710,14 @@
 		// re-position TT.FM
 		$('#outer').css('margin', 0);
 		$('#footer').css({ 'text-align': 'left' });
-		
-		_log('Container size');
-		_log(tt2_size);
-		
+
 		// create tt2 container
 		var html = '<div id="tt2_container" style="position:absolute;top:10px;right:10px;width:' + (tt2_size.width-20) + 'px;height:' + (tt2_size.height-20) + 'px;margin:0;padding:0;background:#333;color:#FFF;font-size:12px;line-height:18px;overflow-x:hidden;overflow-y:auto;">';
-		html += '<h3 style="padding:4px 10px;margin:0;font-size:22px;line-height:22px;font-weight:bold;background:#44D2E5;color:#000;">TT<sup>SQUARED</sup></h3>';
+		html += '<h3 style="padding:4px 10px;margin:0;font-size:22px;line-height:22px;font-weight:bold;background:#44D2E5;color:#000;">Turntable.FM Squared</h3>';
 
 		// currently playing container
 		html += '<div id="tt2_playing" style="margin-bottom:10px">';
-			html += '<h4 style="padding:4px 10px;margin-bottom: 0;font-size:18px;line-height:18px;font-weight:bold;background:#5C755E;color:#FFF;">Currently Playing</h4>';
+			html += '<h4 class="toggleAccordion" style="padding:4px 10px;margin-bottom: 0;font-size:18px;line-height:18px;font-weight:bold;background:#5C755E;color:#FFF;cursor:pointer;">Currently Playing</h4>';
 			html += '<div id="tt2_stats_current_coverart" style="overflow:hidden;padding:10px 10px 0;">';
 			html += '<div class="songinfo" style="float:left;display:inline;margin:0;font-size:14px;line-height: 18px;"></div>';
 			html += '</div>';
@@ -728,11 +725,11 @@
 
 		// stats container
 		html += '<div id="tt2_stats" style="margin-bottom:10px">';
-		
+
 			// current track stats
-			html += '<h4 style="padding:4px 10px;margin-bottom: 0;font-size:18px;line-height:18px;font-weight:bold;background:#5C755E;color:#FFF;">Stats</h4>';
+			html += '<h4 class="toggleAccordion" style="padding:4px 10px;margin-bottom: 0;font-size:18px;line-height:18px;font-weight:bold;background:#5C755E;color:#FFF;cursor:pointer;">Stats</h4>';
 			html += '<div>';
-				html += '<h5 class="stat_heading" style="margin:0;padding:4px 10px;font-size:14px;line-height:14px;font-weight:bold;background: #222;cursor:pointer;">Current Track</h5>';
+				html += '<h5 class="toggleAccordion" style="margin:0;padding:4px 10px;font-size:14px;line-height:14px;font-weight:bold;background: #222;cursor:pointer;">Current Track</h5>';
 				html += '<div id="tt2_stats_current" style="margin-bottom: 10px;">';
 					html += '<ul style="padding:0 10px">';
 					html += '<li style="padding:2px 0;">Rating: <span id="tt2_stats_current_rating" style="float:right;display:inline;text-align:right">0</span></li>';
@@ -741,9 +738,9 @@
 					html += '</ul>';
 				html += '</div>';
 			html += '</div>';
-		
+
 			// personal stats
-			html += '<h5 class="stat_heading" style="margin:0;padding:4px 10px;font-size:14px;line-height:14px;font-weight:bold;background: #222;cursor:pointer;">My Stats</h5>';
+			html += '<h5 class="toggleAccordion" style="margin:0;padding:4px 10px;font-size:14px;line-height:14px;font-weight:bold;background: #222;cursor:pointer;">My Stats</h5>';
 			html += '<div id="tt2_stats_mine" style="margin-bottom: 10px;">';
 			html += '<ul style="padding:0 10px">';
 			html += '<li style="padding:2px 0;">Songs Played: <span id="tt2_stats_mine_totalSongs" style="float:right;display:inline;text-align:right">0</span></li>';
@@ -753,10 +750,10 @@
 			html += '<li style="padding:2px 0;border-top:1px dotted #222;">Rating: <span id="tt2_stats_mine_rating" style="float:right;display:inline;text-align:right">0</span></li>';
 			html += '</ul>';
 			html += '</div>';
-		
+
 			// overall stats
 			html += '<div>';
-			html += '<h5 class="stat_heading" style="margin:0;padding:4px 10px;font-size:14px;line-height:14px;font-weight:bold;background: #222;cursor:pointer;">Overall Room Stats</h5>';
+			html += '<h5 class="toggleAccordion" style="margin:0;padding:4px 10px;font-size:14px;line-height:14px;font-weight:bold;background: #222;cursor:pointer;">Overall Room Stats</h5>';
 			html += '<div id="tt2_stats_overall" style="margin-bottom: 10px;">';
 			html += '<ul style="padding:0 10px">';
 			html += '<listyle="padding:2px 0;">Total Users: <span id="tt2_stats_overall_users" style="float:right;display:inline;text-align:right">0</span></li>';
@@ -766,13 +763,13 @@
 			html += '<li style="padding:2px 0;border-top:1px dotted #222;">Rating: <span id="tt2_stats_current_rating" style="float:right;display:inline;text-align:right">0</span></li>';
 			html += '</ul>';
 			html += '</div>';
-		
+
 			// user stats
-			html += '<h5 class="stat_heading" style="margin:0;padding:4px 10px;font-size:14px;line-height:14px;font-weight:bold;background: #222;cursor:pointer;">User Stats</h5>';
+			html += '<h5 class="toggleAccordion" style="margin:0;padding:4px 10px;font-size:14px;line-height:14px;font-weight:bold;background: #222;cursor:pointer;">User Stats</h5>';
 			html += '<div id="tt2_stats_user" style="display:none; max-height:100px; overflow-x:hidden; overflow-y: auto; margin-bottom: 10px;">';
 			html += '<ul style="padding:0 10px"></ul>';
 			html += '</div>';
-		
+
 			/*
 			// song stats
 			html += '<h5 style="padding:4px;margin-bottom: 10px;font-size:14px;line-height:14px;font-weight:bold;background: #222;">Song Stats</h5>';
@@ -781,10 +778,10 @@
 			html += '</div>';
 			*/
 		html += '</div>';
-					
+
 		// options container
 		html += '<div id="tt2_options">';
-			html += '<h4 class="toggleAccordion" style="padding:4px 10px;margin-bottom: 10px;font-size:18px;line-height:18px;font-weight:bold;background:#5C755E;color:#FFF;">Configuration Options</h4>';
+			html += '<h4 class="toggleAccordion" style="padding:4px 10px;margin-bottom: 10px;font-size:18px;line-height:18px;font-weight:bold;background:#5C755E;color:#FFF;cursor:pointer;">Configuration Options</h4>';
 			html += '<div style="padding:10px 10px 0;display:none;">';
 				html += '<div style="margin-bottom:8px"><label><input type="checkbox" name="tt2_autoupvote" id="tt2_autoupvote" value="1" checked="checked" /> Auto Upvote</label></div>';
 				html += '<div style="margin-bottom:8px"><label><input type="checkbox" name="tt2_autodj" id="tt2_autodj" value="1" /> Auto DJ</label></div>';
@@ -793,7 +790,7 @@
 				html += '<div style="margin-bottom:8px"><label><input type="checkbox" name="tt2_muteAlert" id="tt2_muteAlert" value="1" checked="checked" /> Enable Mention Alert</label></div>';
 			html += '</div>';
 		html += '</div>';
-		
+
 		html += '</div>'; // close container
 
 		$(html).appendTo('body');
@@ -826,10 +823,13 @@
 			_log('Changed Enable Mention Alert option to: ' + (!checked ? 'Yes' : 'No'));
 			config.muteAlert = !checked;
 		});
-		$('#tt2_stats').find('.stat_heading').click(function() {
-			$(this).next('div').stop().slideToggle();
+
+		// watch for accordion toggle
+		$('.toggleAccordion').live('click', function() {
+			$(this).next('div').stop().slideToggle('fast');
+			return false;
 		});
-		
+
 		// watch for similar track click
 		$('.similarTracks').live('click', function() {
 			var $this = $(this);
@@ -847,11 +847,9 @@
 	function getSimilarTracks(artist, song, album) {
 		var url = 'http://ws.audioscrobbler.com/2.0/?method=track.getsimilar&autocorrect=1&artist=' + artist + '&track=' + song + '&api_key=d1b14c712954973f098a226d80d6b5c2&format=json&callback=?';
 		$.getJSON(url, function(data) {
-			
 			var html = '';
-			
-			$.each(similartracks.track, function(i, item){
-				
+			$.each(similartracks.track, function(i, item) {
+
 				// name
 				// playcount
 				// duration
@@ -860,26 +858,29 @@
 				// artist.mbid
 				// artist.url
 				// image[size|"#text"]
-				//
-				
-				html += '<li>';
+
+				html += '<li style="overflow:hidden; clear: left;">';
 				if (item.image[1]['#text'].length) {
-					html += '<img src="' + item.image[1]['#text'] + '" height="64" width="64" />';
+					html += '<img src="' + item.image[1]['#text'] + '" height="64" width="64" style="float:left;display:inline;margin:0 10px 10px 0;" />';
 				}
-				html += '<p style="clear:both"><span style="float:left;display:inline;width:100px;">Artist:</span>' + item.artist.name + '</p>';
-				html += '<p style="clear:both"><span style="float:left;display:inline;width:100px;">Track:</span>' + item.name + '</p>';
+				html += '<p><span style="float:left;display:inline;width:100px;">Artist:</span>' + item.artist.name + '</p>';
+				html += '<p><span style="float:left;display:inline;width:100px;">Track:</span>' + item.name + '</p>';
 				if (item.mbid.length) {
-					html += '<p style="clear:both"><a href="#" style="display:block">Preview &amp; Buy Track</a>';
+					html += '<p><a href="#" style="display:block">Preview &amp; Buy Track</a>';
 				}
 				if (item.artist.mbid.length) {
-					html += '<p style="clear:both"><a href="#" style="display:block">View Artist Details</a>';
+					html += '<p><a href="#" style="display:block">View Artist Details</a>';
 				}
 				html += '</li>';
 			});
-			
-			// append html
-			
 
+			if (html.length) {
+				// append html
+				$('#similarTracks').find('ul').html(html);
+				$('#similarTracks').show();
+			} else {
+				$('#similarTracks').show();
+			}
 		});
 	}
 
@@ -1047,13 +1048,13 @@ function handleItunesResults(arg) {
 	var results = arg.results;
 	var len = results ? results.length : 0;
 	if (len) {
-		
+
 		var html = '';
-		
+
 		for (var i = 0; i < len; i++) {
 			// check if we need album art
 			$caholder = $('#tt2_stats_current_coverart');
-			if ($caholder.find('img').length == 0 && results[i].artworkUrl100) {				
+			if ($caholder.find('img').length == 0 && results[i].artworkUrl100) {
 				var alt = escape(results[i].artistName) + ' - ' + escape(results[i].trackName) + ' (' + escape(results[i].collectionName) + ')';
 				var img = '<img src="' + results[i].artworkUrl100 + '" width="100" height="100" alt="' + alt + '" style="float:left;display:inline;margin: 0 10px 10px 0;border:4px solid #222;" />';
 				$caholder.find('#tt2_stats_current_coverart .img').remove();
@@ -1067,18 +1068,28 @@ function handleItunesResults(arg) {
 			var trackUrl = baseurl + encodeURI(encodeURI(results[i].trackViewUrl + '&partnerId=30'));
 			var artistUrl = baseurl + encodeURI(encodeURI(results[i].artistViewUrl + '&partnerId=30'));
 			var albumUrl = baseurl + encodeURI(encodeURI(results[i].collectionViewUrl + '&partnerId=30'));
-		
+
 			// create html
 			html += '<div class="purchaseinfo">';
 			html += '<a href="' + trackUrl + '" target="_blank" style="display:block;padding:2px 0;color:#fff">Buy Track $' + results[i].trackPrice + '</a>';
 			html += '<a href="' + albumUrl + '" target="_blank" style="display:block;padding:2px 0;color:#fff">Buy Album $' + results[i].collectionPrice + '</a>';
-			html += '<a href="#" class="similarTracks" data-artist="' + encodeURIComponent(results[i].artistName) + '" data-song="' + encodeURIComponent(results[i].trackName) + '" target="_blank" style="display:block;padding:2px 0;color:#fff">See Similar Tracks</a>';
 			html += '<a href="' + artistUrl + '" target="_blank" style="display:block;padding:2px 0;color:#fff">View Artist Details and Top Songs</a>';
 			html += '</div>';
+
+			html += '<div id="similarTracks" style="display:none;clear:both;margin-top:10px;">';
+			html += '<h5 class="toggleAccordion" style="margin:0;padding:4px 10px;font-size:14px;line-height:14px;font-weight:bold;background: #222;cursor:pointer;">Similar Tracks</h5>';
+			html += '<ul></ul>';
+			html += '</div>';
+
+			// only display first result
+			break;
 		}
 
 		// display
 		$('#tt2_stats_current_coverart').find('.songinfo').append(html);
+
+		// attempt to find similar tracks
+		getSimilarTracks(results[i].artistName, results[i].trackName);
 	}
 
 	// clean up the JS from HEAD
