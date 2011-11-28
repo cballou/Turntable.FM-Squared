@@ -1045,9 +1045,11 @@ function getSimilarTracks(artist, song, album) {
 			// artist.url
 			// image[size|"#text"]
 
-			html += '<li style="overflow:hidden; clear: left;">';
+			html += '<li style="overflow:hidden; clear: left; margin-bottom: 4px;">';
 			if (item.image && item.image[1] && item.image[1]['#text'].length) {
-				html += '<img src="' + item.image[1]['#text'] + '" height="64" width="64" style="float:left;display:inline;margin:0 10px 10px 0;" />';
+				html += '<img src="' + item.image[1]['#text'] + '" height="32" width="32" style="float:left;display:inline;margin:0 10px 10px 0;" />';
+			} else {
+				html += '<div style="float:left;display:inline;width:32px;height:32px;margin:0 10px 10px 0;background:#222;"></div>'
 			}
 			html += '<p><span style="float:left;display:inline;width:100px;">Artist:</span>' + item.artist.name + '</p>';
 			html += '<p><span style="float:left;display:inline;width:100px;">Track:</span>' + item.name + '</p>';
@@ -1112,8 +1114,8 @@ function handleItunesResults(arg) {
 			html += '</div>';
 
 			html += '<div id="similarTracks" style="display:none;clear:both;margin-top:10px;">';
-			html += '<h5 class="toggleAccordion" style="margin:0;padding:4px 10px;font-size:14px;line-height:14px;font-weight:bold;background: #222;cursor:pointer;">Similar Tracks</h5>';
-			html += '<ul></ul>';
+			html += '<h5 class="toggleAccordion" style="clear: both; margin:0;padding:4px 10px;font-size:14px;line-height:14px;font-weight:bold;background: #222;cursor:pointer;">Similar Tracks</h5>';
+			html += '<ul style="display:block;overflow-x:hidden;overflow-y:auto;max-height:200px;></ul>';
 			html += '</div>';
 
 			// only display first result
