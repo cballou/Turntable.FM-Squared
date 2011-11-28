@@ -841,50 +841,6 @@
 	}
 
 	/**
-	 * Retrieve similar tracks via Last.FM
-	 * http://ws.audioscrobbler.com/2.0/?method=track.getsimilar&artist=cher&track=believe&api_key=d1b14c712954973f098a226d80d6b5c2
-	 */
-	function getSimilarTracks(artist, song, album) {
-		var url = 'http://ws.audioscrobbler.com/2.0/?method=track.getsimilar&autocorrect=1&artist=' + artist + '&track=' + song + '&api_key=d1b14c712954973f098a226d80d6b5c2&format=json&callback=?';
-		$.getJSON(url, function(data) {
-			var html = '';
-			$.each(similartracks.track, function(i, item) {
-
-				// name
-				// playcount
-				// duration
-				// url
-				// artist.name
-				// artist.mbid
-				// artist.url
-				// image[size|"#text"]
-
-				html += '<li style="overflow:hidden; clear: left;">';
-				if (item.image[1]['#text'].length) {
-					html += '<img src="' + item.image[1]['#text'] + '" height="64" width="64" style="float:left;display:inline;margin:0 10px 10px 0;" />';
-				}
-				html += '<p><span style="float:left;display:inline;width:100px;">Artist:</span>' + item.artist.name + '</p>';
-				html += '<p><span style="float:left;display:inline;width:100px;">Track:</span>' + item.name + '</p>';
-				if (item.mbid.length) {
-					html += '<p><a href="#" style="display:block">Preview &amp; Buy Track</a>';
-				}
-				if (item.artist.mbid.length) {
-					html += '<p><a href="#" style="display:block">View Artist Details</a>';
-				}
-				html += '</li>';
-			});
-
-			if (html.length) {
-				// append html
-				$('#similarTracks').find('ul').html(html);
-				$('#similarTracks').show();
-			} else {
-				$('#similarTracks').show();
-			}
-		});
-	}
-
-	/**
 	 * Perform an iTunes song search. Valid return entities include
 	 * musicArtist, musicTrack, album, musicVideo, mix, and song.
 	 *
@@ -1037,6 +993,50 @@ function _log(msg) {
 	if (window.console) {
 		console.log(msg);
 	}
+}
+
+/**
+ * Retrieve similar tracks via Last.FM
+ * http://ws.audioscrobbler.com/2.0/?method=track.getsimilar&artist=cher&track=believe&api_key=d1b14c712954973f098a226d80d6b5c2
+ */
+function getSimilarTracks(artist, song, album) {
+	var url = 'http://ws.audioscrobbler.com/2.0/?method=track.getsimilar&autocorrect=1&artist=' + artist + '&track=' + song + '&api_key=d1b14c712954973f098a226d80d6b5c2&format=json&callback=?';
+	$.getJSON(url, function(data) {
+		var html = '';
+		$.each(similartracks.track, function(i, item) {
+
+			// name
+			// playcount
+			// duration
+			// url
+			// artist.name
+			// artist.mbid
+			// artist.url
+			// image[size|"#text"]
+
+			html += '<li style="overflow:hidden; clear: left;">';
+			if (item.image[1]['#text'].length) {
+				html += '<img src="' + item.image[1]['#text'] + '" height="64" width="64" style="float:left;display:inline;margin:0 10px 10px 0;" />';
+			}
+			html += '<p><span style="float:left;display:inline;width:100px;">Artist:</span>' + item.artist.name + '</p>';
+			html += '<p><span style="float:left;display:inline;width:100px;">Track:</span>' + item.name + '</p>';
+			if (item.mbid.length) {
+				html += '<p><a href="#" style="display:block">Preview &amp; Buy Track</a>';
+			}
+			if (item.artist.mbid.length) {
+				html += '<p><a href="#" style="display:block">View Artist Details</a>';
+			}
+			html += '</li>';
+		});
+
+		if (html.length) {
+			// append html
+			$('#similarTracks').find('ul').html(html);
+			$('#similarTracks').show();
+		} else {
+			$('#similarTracks').show();
+		}
+	});
 }
 
 /**
