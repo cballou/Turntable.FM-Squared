@@ -1052,7 +1052,14 @@ function getSimilarTracks(artist, song, album) {
 		}
 
 		// log similar tracks until we're happy
+		_log('Similar tracks');
+		_log(data);
 		_log(data.similartracks);
+
+		if (typeof data.similartracks.track == 'string') {
+			$('#similarTracks').hide();
+			return false;
+		}
 
 		// iterate over each similar track
 		$.each(data.similartracks.track, function(i, item) {
