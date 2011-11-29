@@ -753,9 +753,9 @@ p=/[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u20
 				html += '<div id="tt2_stats_current_coverart" style="overflow:hidden;padding:10px 10px 0;">';
 					html += '<div class="songinfo" style="float:left;display:inline;margin:0;font-size:14px;line-height: 18px;"></div>';
 					html += '<div id="similarTracks" style="display:none;clear:both;margin-top:10px;">';
-						html += '<h5 class="toggleAccordion" style="clear: both; margin:0;padding:4px 10px;font-size:14px;line-height:14px;font-weight:bold;background: #222;cursor:pointer;">Similar Tracks</h5>';
-						html += '<div style="padding: 10px;overflow-x:hidden;overflow-y:auto;max-height:200px;">';
-							html += '<ul style="display:block;padding: 10px;></ul>';
+						html += '<h5 class="toggleAccordion" style="clear:both;margin:0;padding:4px 10px;font-size:14px;line-height:14px;font-weight:bold;background: #222;cursor:pointer;">Similar Tracks</h5>';
+						html += '<div style="padding:10px;overflow-x:hidden;overflow-y:auto;max-height:200px;">';
+							html += '<ul style="display:block;padding:10px;"></ul>';
 						html += '</div>';
 					html += '</div>';
 				html += '</div>';
