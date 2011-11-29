@@ -320,7 +320,8 @@ p=/[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u20
 		}
 		turntable.isIdle = false;
 
-		if (recentlyResponded()) {
+		// if we're not djing, nobody cares to hear you. likewise if we recently replied
+		if (!isDj() || recentlyResponded()) {
 			return;
 		}
 
@@ -338,12 +339,7 @@ p=/[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u20
 	 * Handle auto-upvoting songs.
 	 */
 	function autoVote(e) {
-		if (!config.autoUpvote) {
-			return;
-		}
-
-		// don't vote on own song
-		if (e.room.metadata.current_dj == _tt.user.id) {
+		if (!config.autoUpvote || isCurrentDj()) {
 			return;
 		}
 
@@ -755,7 +751,11 @@ p=/[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u20
 		html += '<div id="tt2_playing" style="margin-bottom:10px">';
 			html += '<h4 class="toggleAccordion" style="padding:4px 10px;margin-bottom: 0;font-size:18px;line-height:18px;font-weight:bold;background:#5C755E;color:#FFF;cursor:pointer;">Currently Playing</h4>';
 			html += '<div id="tt2_stats_current_coverart" style="overflow:hidden;padding:10px 10px 0;">';
-			html += '<div class="songinfo" style="float:left;display:inline;margin:0;font-size:14px;line-height: 18px;"></div>';
+				html += '<div class="songinfo" style="float:left;display:inline;margin:0;font-size:14px;line-height: 18px;"></div>';
+				html += '<div id="similarTracks" style="display:none;clear:both;margin-top:10px;">';
+					html += '<h5 class="toggleAccordion" style="clear: both; margin:0;padding:4px 10px;font-size:14px;line-height:14px;font-weight:bold;background: #222;cursor:pointer;">Similar Tracks</h5>';
+					html += '<ul style="display:block;overflow-x:hidden;overflow-y:auto;max-height:200px;></ul>';
+				html += '</div>';
 			html += '</div>';
 		html += '</div>';
 
@@ -1054,6 +1054,7 @@ function getSimilarTracks(artist, song, album) {
 		// log similar tracks until we're happy
 		_log(data.similartracks);
 
+		// iterate over each similar track
 		$.each(data.similartracks.track, function(i, item) {
 
 			// name
@@ -1076,6 +1077,7 @@ function getSimilarTracks(artist, song, album) {
 			if (item.mbid.length) {
 				html += '<p><a href="#" style="display:block">Preview &amp; Buy Track</a>';
 				// get buy links and change them
+				// http://www.last.fm/api/show?service=431
 				var buyUrl = 'http://ws.audioscrobbler.com/2.0/?method=track.getbuylinks&artist=' + encodeURIComponent(artist) + '&track=' + encodeURIComponent(song) + '&api_key=d1b14c712954973f098a226d80d6b5c2&format=json&callback=?';
 				$.getJSON(buyUrl, function(data) {
 					_log('buy url data');
@@ -1092,6 +1094,8 @@ function getSimilarTracks(artist, song, album) {
 			// append html
 			$('#similarTracks').find('ul').html(html);
 			$('#similarTracks').show();
+		} else {
+			$('#similarTracks').hide();
 		}
 	});
 }
@@ -1107,6 +1111,7 @@ function handleItunesResults(arg) {
 	if (len) {
 
 		var html = '';
+		var sim = '';
 
 		for (var i = 0; i < len; i++) {
 			// check if we need album art
@@ -1131,11 +1136,6 @@ function handleItunesResults(arg) {
 			html += '<a href="' + trackUrl + '" target="_blank" style="display:block;padding:2px 0;color:#fff">Buy Track $' + results[i].trackPrice + '</a>';
 			html += '<a href="' + albumUrl + '" target="_blank" style="display:block;padding:2px 0;color:#fff">Buy Album $' + results[i].collectionPrice + '</a>';
 			html += '<a href="' + artistUrl + '" target="_blank" style="display:block;padding:2px 0;color:#fff">View Artist Details and Top Songs</a>';
-			html += '</div>';
-
-			html += '<div id="similarTracks" style="display:none;clear:both;margin-top:10px;">';
-			html += '<h5 class="toggleAccordion" style="clear: both; margin:0;padding:4px 10px;font-size:14px;line-height:14px;font-weight:bold;background: #222;cursor:pointer;">Similar Tracks</h5>';
-			html += '<ul style="display:block;overflow-x:hidden;overflow-y:auto;max-height:200px;></ul>';
 			html += '</div>';
 
 			// only display first result
