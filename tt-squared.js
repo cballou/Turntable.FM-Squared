@@ -745,88 +745,89 @@ p=/[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u20
 
 		// create tt2 container
 		var html = '<div id="tt2_container" style="position:absolute;top:10px;right:10px;width:' + (tt2_size.width-20) + 'px;height:' + (tt2_size.height-20) + 'px;margin:0;padding:0;background:#333;color:#FFF;font-size:12px;line-height:18px;overflow-x:hidden;overflow-y:auto;">';
-		html += '<h3 style="padding:4px 10px;margin:0;font-size:22px;line-height:22px;font-weight:bold;background:#44D2E5;color:#000;">Turntable.FM Squared</h3>';
+			html += '<h3 style="padding:4px 10px;margin:0;font-size:22px;line-height:22px;font-weight:bold;background:#44D2E5;color:#000;">Turntable.FM Squared</h3>';
 
-		// currently playing container
-		html += '<div id="tt2_playing" style="margin-bottom:10px">';
-			html += '<h4 class="toggleAccordion" style="padding:4px 10px;margin-bottom: 0;font-size:18px;line-height:18px;font-weight:bold;background:#5C755E;color:#FFF;cursor:pointer;">Currently Playing</h4>';
-			html += '<div id="tt2_stats_current_coverart" style="overflow:hidden;padding:10px 10px 0;">';
-				html += '<div class="songinfo" style="float:left;display:inline;margin:0;font-size:14px;line-height: 18px;"></div>';
-				html += '<div id="similarTracks" style="display:none;clear:both;margin-top:10px;">';
-					html += '<h5 class="toggleAccordion" style="clear: both; margin:0;padding:4px 10px;font-size:14px;line-height:14px;font-weight:bold;background: #222;cursor:pointer;">Similar Tracks</h5>';
-					html += '<ul style="display:block;overflow-x:hidden;overflow-y:auto;max-height:200px;></ul>';
+			// currently playing container
+			html += '<div id="tt2_playing" style="margin-bottom:10px">';
+				html += '<h4 class="toggleAccordion" style="padding:4px 10px;margin-bottom: 0;font-size:18px;line-height:18px;font-weight:bold;background:#5C755E;color:#FFF;cursor:pointer;">Currently Playing</h4>';
+				html += '<div id="tt2_stats_current_coverart" style="overflow:hidden;padding:10px 10px 0;">';
+					html += '<div class="songinfo" style="float:left;display:inline;margin:0;font-size:14px;line-height: 18px;"></div>';
+					html += '<div id="similarTracks" style="display:none;clear:both;margin-top:10px;">';
+						html += '<h5 class="toggleAccordion" style="clear: both; margin:0;padding:4px 10px;font-size:14px;line-height:14px;font-weight:bold;background: #222;cursor:pointer;">Similar Tracks</h5>';
+						html += '<div>';
+							html += '<ul style="display:block;overflow-x:hidden;overflow-y:auto;max-height:200px;></ul>';
+						html += '</div>';
+					html += '</div>';
 				html += '</div>';
 			html += '</div>';
-		html += '</div>';
 
-		// stats container
-		html += '<div id="tt2_stats" style="margin-bottom:10px">';
+			// stats wrapper
+			html += '<div id="tt2_stats" style="margin-bottom:10px">';
 
-			// current track stats
-			html += '<h4 class="toggleAccordion" style="padding:4px 10px;margin-bottom: 0;font-size:18px;line-height:18px;font-weight:bold;background:#5C755E;color:#FFF;cursor:pointer;">Stats</h4>';
-			html += '<div>';
-				html += '<h5 class="toggleAccordion" style="margin:0;padding:4px 10px;font-size:14px;line-height:14px;font-weight:bold;background: #222;cursor:pointer;">Current Track</h5>';
-				html += '<div id="tt2_stats_current">';
-					html += '<ul style="padding:0 10px">';
-					html += '<li style="padding:2px 0;">Rating: <span id="tt2_stats_current_rating" style="float:right;display:inline;text-align:right">0</span></li>';
-					html += '<li style="padding:2px 0;border-top:1px dotted #222;">Upvotes: <span id="tt2_stats_current_upvotes" style="float:right;display:inline;text-align:right">0</span><ul id="tt2_stats_current_upvoters" style="max-height: 200px;overflow-x:hidden;overflow-y:auto"></ul></li>';
-					html += '<li style="padding:2px 0;border-top:1px dotted #222;">Downvotes: <span id="tt2_stats_current_downvotes" style="float:right;display:inline;text-align:right">0</span><ul id="tt2_stats_current_downvoters" style="max-height: 200px;overflow-x:hidden;overflow-y:auto"></ul></li>';
-					html += '</ul>';
+				// current track stats
+				html += '<h4 class="toggleAccordion" style="padding:4px 10px;margin-bottom: 0;font-size:18px;line-height:18px;font-weight:bold;background:#5C755E;color:#FFF;cursor:pointer;">Stats</h4>';
+				html += '<div>'; // stats accordion wrapper
+					html += '<h5 class="toggleAccordion" style="margin:0;padding:4px 10px;font-size:14px;line-height:14px;font-weight:bold;background: #222;cursor:pointer;">Current Track</h5>';
+					html += '<div id="tt2_stats_current">';
+						html += '<ul style="padding:0 10px">';
+						html += '<li style="padding:2px 0;">Rating: <span id="tt2_stats_current_rating" style="float:right;display:inline;text-align:right">0</span></li>';
+						html += '<li style="padding:2px 0;border-top:1px dotted #222;">Upvotes: <span id="tt2_stats_current_upvotes" style="float:right;display:inline;text-align:right">0</span><ul id="tt2_stats_current_upvoters" style="max-height: 200px;overflow-x:hidden;overflow-y:auto"></ul></li>';
+						html += '<li style="padding:2px 0;border-top:1px dotted #222;">Downvotes: <span id="tt2_stats_current_downvotes" style="float:right;display:inline;text-align:right">0</span><ul id="tt2_stats_current_downvoters" style="max-height: 200px;overflow-x:hidden;overflow-y:auto"></ul></li>';
+						html += '</ul>';
+					html += '</div>';
+
+					// personal stats
+					html += '<h5 class="toggleAccordion" style="margin:0;padding:4px 10px;font-size:14px;line-height:14px;font-weight:bold;background: #222;cursor:pointer;">My Stats</h5>';
+					html += '<div id="tt2_stats_mine">';
+						html += '<ul style="padding:0 10px">';
+							html += '<li style="padding:2px 0;">Songs Played: <span id="tt2_stats_mine_totalSongs" style="float:right;display:inline;text-align:right">0</span></li>';
+							html += '<li style="padding:2px 0;border-top:1px dotted #222;">Votes: <span id="tt2_stats_mine_votes" style="float:right;display:inline;text-align:right">0</span></li>';
+							html += '<li style="padding:2px 0;border-top:1px dotted #222;">Upvotes: <span id="tt2_stats_mine_upvotes" style="float:right;display:inline;text-align:right">0</span></li>';
+							html += '<li style="padding:2px 0;border-top:1px dotted #222;">Downvotes: <span id="tt2_stats_mine_downvotes" style="float:right;display:inline;text-align:right">0</span></li>';
+							html += '<li style="padding:2px 0;border-top:1px dotted #222;">Rating: <span id="tt2_stats_mine_rating" style="float:right;display:inline;text-align:right">0</span></li>';
+						html += '</ul>';
+					html += '</div>';
+
+					// overall stats
+					html += '<h5 class="toggleAccordion" style="margin:0;padding:4px 10px;font-size:14px;line-height:14px;font-weight:bold;background: #222;cursor:pointer;">Overall Room Stats</h5>';
+					html += '<div id="tt2_stats_overall">';
+						html += '<ul style="padding:0 10px">';
+							html += '<listyle="padding:2px 0;">Total Users: <span id="tt2_stats_overall_users" style="float:right;display:inline;text-align:right">0</span></li>';
+							html += '<li style="padding:2px 0;border-top:1px dotted #222;">Songs Played: <span id="tt2_stats_overall_totalSongs" style="float:right;display:inline;text-align:right">0</span></li>';
+							html += '<li style="padding:2px 0;border-top:1px dotted #222;">Upvotes: <span id="tt2_stats_overall_upvotes" style="float:right;display:inline;text-align:right">0</span></li>';
+							html += '<li style="padding:2px 0;border-top:1px dotted #222;">Downvotes: <span id="tt2_stats_overall_downvotes" style="float:right;display:inline;text-align:right">0</span></li>';
+							html += '<li style="padding:2px 0;border-top:1px dotted #222;">Rating: <span id="tt2_stats_current_rating" style="float:right;display:inline;text-align:right">0</span></li>';
+						html += '</ul>';
+					html += '</div>';
+
+
+					// user stats
+					html += '<h5 class="toggleAccordion" style="margin:0;padding:4px 10px;font-size:14px;line-height:14px;font-weight:bold;background: #222;cursor:pointer;">User Stats</h5>';
+					html += '<div id="tt2_stats_user" style="display:none; max-height:100px; overflow-x:hidden; overflow-y: auto; margin-bottom: 10px;">';
+						html += '<ul style="padding:0 10px"></ul>';
+					html += '</div>';
+
+					/*
+					// song stats
+					html += '<h5 style="padding:4px;margin-bottom: 10px;font-size:14px;line-height:14px;font-weight:bold;background: #222;">Song Stats</h5>';
+					html += '<div id="tt2_stats_song" style="display:none; max-height:100px; overflow-x:hidden; overflow-y: auto; margin-bottom: 10px;">';
+					html += '<ul></ul>';
+					html += '</div>';
+					*/
+				html += '</div>'; // end stats accordion container
+			html += '</div>'; // end stats wrapper
+
+			// options container
+			html += '<div id="tt2_options">';
+				html += '<h4 class="toggleAccordion" style="padding:4px 10px;margin-bottom: 10px;font-size:18px;line-height:18px;font-weight:bold;background:#5C755E;color:#FFF;cursor:pointer;">Configuration Options</h4>';
+				html += '<div style="padding:10px 10px 0;display:none;">';
+					html += '<div style="margin-bottom:8px"><label><input type="checkbox" name="tt2_autoupvote" id="tt2_autoupvote" value="1" checked="checked" /> Auto Upvote</label></div>';
+					html += '<div style="margin-bottom:8px"><label><input type="checkbox" name="tt2_autodj" id="tt2_autodj" value="1" /> Auto DJ</label></div>';
+					html += '<div style="margin-bottom:8px"><label><input type="checkbox" name="tt2_autorespond" id="tt2_autorespond" value="1" checked="checked" /> Auto Respond</label></div>';
+					html += '<div style="margin-bottom:8px"><label><input type="checkbox" name="tt2_antiidle" id="tt2_antiidle" value="1" checked="checked" /> Anti Idle</label></div>';
+					html += '<div style="margin-bottom:8px"><label><input type="checkbox" name="tt2_muteAlert" id="tt2_muteAlert" value="1" checked="checked" /> Enable Mention Alert</label></div>';
 				html += '</div>';
-
-				// personal stats
-				html += '<h5 class="toggleAccordion" style="margin:0;padding:4px 10px;font-size:14px;line-height:14px;font-weight:bold;background: #222;cursor:pointer;">My Stats</h5>';
-				html += '<div id="tt2_stats_mine">';
-					html += '<ul style="padding:0 10px">';
-						html += '<li style="padding:2px 0;">Songs Played: <span id="tt2_stats_mine_totalSongs" style="float:right;display:inline;text-align:right">0</span></li>';
-						html += '<li style="padding:2px 0;border-top:1px dotted #222;">Votes: <span id="tt2_stats_mine_votes" style="float:right;display:inline;text-align:right">0</span></li>';
-						html += '<li style="padding:2px 0;border-top:1px dotted #222;">Upvotes: <span id="tt2_stats_mine_upvotes" style="float:right;display:inline;text-align:right">0</span></li>';
-						html += '<li style="padding:2px 0;border-top:1px dotted #222;">Downvotes: <span id="tt2_stats_mine_downvotes" style="float:right;display:inline;text-align:right">0</span></li>';
-						html += '<li style="padding:2px 0;border-top:1px dotted #222;">Rating: <span id="tt2_stats_mine_rating" style="float:right;display:inline;text-align:right">0</span></li>';
-					html += '</ul>';
-				html += '</div>';
-
-				// overall stats
-				html += '<h5 class="toggleAccordion" style="margin:0;padding:4px 10px;font-size:14px;line-height:14px;font-weight:bold;background: #222;cursor:pointer;">Overall Room Stats</h5>';
-				html += '<div id="tt2_stats_overall">';
-					html += '<ul style="padding:0 10px">';
-						html += '<listyle="padding:2px 0;">Total Users: <span id="tt2_stats_overall_users" style="float:right;display:inline;text-align:right">0</span></li>';
-						html += '<li style="padding:2px 0;border-top:1px dotted #222;">Songs Played: <span id="tt2_stats_overall_totalSongs" style="float:right;display:inline;text-align:right">0</span></li>';
-						html += '<li style="padding:2px 0;border-top:1px dotted #222;">Upvotes: <span id="tt2_stats_overall_upvotes" style="float:right;display:inline;text-align:right">0</span></li>';
-						html += '<li style="padding:2px 0;border-top:1px dotted #222;">Downvotes: <span id="tt2_stats_overall_downvotes" style="float:right;display:inline;text-align:right">0</span></li>';
-						html += '<li style="padding:2px 0;border-top:1px dotted #222;">Rating: <span id="tt2_stats_current_rating" style="float:right;display:inline;text-align:right">0</span></li>';
-					html += '</ul>';
-				html += '</div>';
-
-
-				// user stats
-				html += '<h5 class="toggleAccordion" style="margin:0;padding:4px 10px;font-size:14px;line-height:14px;font-weight:bold;background: #222;cursor:pointer;">User Stats</h5>';
-				html += '<div id="tt2_stats_user" style="display:none; max-height:100px; overflow-x:hidden; overflow-y: auto; margin-bottom: 10px;">';
-					html += '<ul style="padding:0 10px"></ul>';
-				html += '</div>';
-
-				/*
-				// song stats
-				html += '<h5 style="padding:4px;margin-bottom: 10px;font-size:14px;line-height:14px;font-weight:bold;background: #222;">Song Stats</h5>';
-				html += '<div id="tt2_stats_song" style="display:none; max-height:100px; overflow-x:hidden; overflow-y: auto; margin-bottom: 10px;">';
-				html += '<ul></ul>';
-				html += '</div>';
-				*/
-
-			html += '</div>'; // end stats accordion container
-		html += '</div>'; // end stats wrapper
-
-		// options container
-		html += '<div id="tt2_options">';
-			html += '<h4 class="toggleAccordion" style="padding:4px 10px;margin-bottom: 10px;font-size:18px;line-height:18px;font-weight:bold;background:#5C755E;color:#FFF;cursor:pointer;">Configuration Options</h4>';
-			html += '<div style="padding:10px 10px 0;display:none;">';
-				html += '<div style="margin-bottom:8px"><label><input type="checkbox" name="tt2_autoupvote" id="tt2_autoupvote" value="1" checked="checked" /> Auto Upvote</label></div>';
-				html += '<div style="margin-bottom:8px"><label><input type="checkbox" name="tt2_autodj" id="tt2_autodj" value="1" /> Auto DJ</label></div>';
-				html += '<div style="margin-bottom:8px"><label><input type="checkbox" name="tt2_autorespond" id="tt2_autorespond" value="1" checked="checked" /> Auto Respond</label></div>';
-				html += '<div style="margin-bottom:8px"><label><input type="checkbox" name="tt2_antiidle" id="tt2_antiidle" value="1" checked="checked" /> Anti Idle</label></div>';
-				html += '<div style="margin-bottom:8px"><label><input type="checkbox" name="tt2_muteAlert" id="tt2_muteAlert" value="1" checked="checked" /> Enable Mention Alert</label></div>';
 			html += '</div>';
-		html += '</div>';
 
 		html += '</div>'; // close container
 
