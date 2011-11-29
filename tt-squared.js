@@ -754,7 +754,7 @@ p=/[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u20
 					html += '<div class="songinfo" style="float:left;display:inline;margin:0;font-size:14px;line-height: 18px;"></div>';
 					html += '<div id="similarTracks" style="display:none;clear:both;margin-top:10px;">';
 						html += '<h5 class="toggleAccordion" style="clear:both;margin:0;padding:4px 10px;font-size:14px;line-height:14px;font-weight:bold;background: #222;cursor:pointer;">Similar Tracks</h5>';
-						html += '<div style="padding:10px;overflow-x:hidden;overflow-y:auto;max-height:200px;">';
+						html += '<div style="overflow-x:hidden;overflow-y:auto;max-height:200px;">';
 							html += '<ul style="display:block;padding:10px;"></ul>';
 						html += '</div>';
 					html += '</div>';
@@ -1074,14 +1074,16 @@ function getSimilarTracks(artist, song, album) {
 			// artist.url
 			// image[size|"#text"]
 
-			html += '<li style="overflow:hidden; clear: left; margin-bottom: 4px;">';
+			html += '<li style="overflow:hidden;float:left;display:inline;margin:0 4px 4px 0;padding:2px 4px;background:#222;color:#fff;border-radius:3px;-webkit-border-radius:3px;-moz-border-radius:3px;">';
 			if (item.image && item.image[1] && item.image[1]['#text'].length) {
 				html += '<img src="' + item.image[1]['#text'] + '" height="32" width="32" style="float:left;display:inline;margin:0 10px 10px 0;" />';
 			} else {
 				html += '<div style="float:left;display:inline;width:32px;height:32px;margin:0 10px 10px 0;background:#222;"></div>'
 			}
-			html += '<p><span style="float:left;display:inline;width:100px;">Artist:</span>' + item.artist.name + '</p>';
-			html += '<p><span style="float:left;display:inline;width:100px;">Track:</span>' + item.name + '</p>';
+			html += '<div style="float:left;display:inline;">';
+			html += '<p style="display:block;margin:0;padding:0;"><span style="float:left;display:inline;width:50px;">Artist:</span>' + item.artist.name + '</p>';
+			html += '<p style="display:block;margin:0;padding:0;"><span style="float:left;display:inline;width:50px;">Track:</span>' + item.name + '</p>';
+			html += '</div>';
 			if (item.mbid.length) {
 				html += '<p><a href="#" style="display:block">Preview &amp; Buy Track</a>';
 				// get buy links and change them
