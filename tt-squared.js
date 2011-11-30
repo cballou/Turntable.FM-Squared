@@ -428,7 +428,7 @@ p=/[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u20
 
 		$('#tt2_stats_current_coverart').find('.songinfo').css('min-width', tt2_size.width - 225);
 		$('#tt2_stats_current_coverart').find('.songinfo').html(details);
-		$('#tt2_stats_current_coverart').find('img, .img').remove();
+		$('#tt2_stats_current_coverart').find('img, .img').eq(0).remove();
 		$('#tt2_stats_current_coverart').prepend(albumArt);
 
 		// update current song
@@ -524,6 +524,9 @@ p=/[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u20
 	 * Keeps internal track of voting for each new song played.
 	 */
 	function updateVotes(e) {
+		// initially hide similar tracks
+		$('#similarTracks').hide();
+
 		// retrieve song data
 		var song_id = _room.currentSong._id;
 		var song = _room.currentSong.metadata;
@@ -755,7 +758,7 @@ p=/[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u20
 					html += '<div id="similarTracks" style="display:none;clear:both;margin-top:10px;">';
 						html += '<h5 class="toggleAccordion" style="clear:both;margin:0;padding:4px 10px;font-size:14px;line-height:14px;font-weight:bold;background: #222;cursor:pointer;">Similar Tracks</h5>';
 						html += '<div style="overflow-x:hidden;overflow-y:auto;max-height:200px;">';
-							html += '<table cellpadding="0" cellspacing="0" style="border-collapse: collapse;border:1px solid #222;"><thead><tr><th>&nbsp;</th><th>Artist</th><th>Song</th><th>&nbsp;</th></thead><tbody></tbody></table>';
+							html += '<table cellpadding="0" cellspacing="0" style="margin: 10px 10px 0; border-collapse: collapse;border:1px solid #222;border-spacing: 0;line-height:12px;"><thead><tr style="background-color:#262626;"><th style="padding:2px;text-align:left">&nbsp;</th><th style="padding:2px;text-align:left">Artist</th><th>Song</th><th style="padding:2px;text-align:left">&nbsp;</th></thead><tbody></tbody></table>';
 						html += '</div>';
 					html += '</div>';
 				html += '</div>';
@@ -770,9 +773,10 @@ p=/[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u20
 					html += '<h5 class="toggleAccordion" style="margin:0;padding:4px 10px;font-size:14px;line-height:14px;font-weight:bold;background: #222;cursor:pointer;">Current Track</h5>';
 					html += '<div id="tt2_stats_current">';
 						html += '<ul style="padding:0 10px">';
-						html += '<li style="padding:2px 0;">Rating: <span id="tt2_stats_current_rating" style="float:right;display:inline;text-align:right">0</span></li>';
+						html += '<li style="padding:2px 0;border-top:1px dotted #222;">Votes: <span id="tt2_stats_current_downvotes" style="float:right;display:inline;text-align:right">0</span><ul id="tt2_stats_current_votes" style="max-height: 200px;overflow-x:hidden;overflow-y:auto"></ul></li>';
 						html += '<li style="padding:2px 0;border-top:1px dotted #222;">Upvotes: <span id="tt2_stats_current_upvotes" style="float:right;display:inline;text-align:right">0</span><ul id="tt2_stats_current_upvoters" style="max-height: 200px;overflow-x:hidden;overflow-y:auto"></ul></li>';
 						html += '<li style="padding:2px 0;border-top:1px dotted #222;">Downvotes: <span id="tt2_stats_current_downvotes" style="float:right;display:inline;text-align:right">0</span><ul id="tt2_stats_current_downvoters" style="max-height: 200px;overflow-x:hidden;overflow-y:auto"></ul></li>';
+						html += '<li style="padding:2px 0;">Rating: <span id="tt2_stats_current_rating" style="float:right;display:inline;text-align:right">0</span></li>';
 						html += '</ul>';
 					html += '</div>';
 
@@ -1093,6 +1097,8 @@ function getSimilarTracks(artist, song, album) {
 					_log('buy url data');
 					_log(data);
 				});
+			} else {
+				html += '<td>&nbsp;</td>';
 			}
 			//if (item.artist.mbid.length) {
 			//	html += '<p><a href="#" style="display:block">View Artist Details</a>';
@@ -1105,8 +1111,6 @@ function getSimilarTracks(artist, song, album) {
 			// append html
 			$('#similarTracks').find('table tbody').html(html);
 			$('#similarTracks').show();
-		} else {
-			$('#similarTracks').hide();
 		}
 	});
 }
@@ -1130,7 +1134,7 @@ function handleItunesResults(arg) {
 			if ($caholder.find('img').length == 0 && results[i].artworkUrl100) {
 				var alt = escape(results[i].artistName) + ' - ' + escape(results[i].trackName) + ' (' + escape(results[i].collectionName) + ')';
 				var img = '<img src="' + results[i].artworkUrl100 + '" width="100" height="100" alt="' + alt + '" style="float:left;display:inline;margin: 0 10px 10px 0;border:4px solid #222;" />';
-				$caholder.find('#tt2_stats_current_coverart .img').remove();
+				$caholder.find('#tt2_stats_current_coverart .img').eq(0).remove();
 				$caholder.find('#tt2_stats_current_coverart').prepend(img);
 			}
 
