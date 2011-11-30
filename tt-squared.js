@@ -373,6 +373,9 @@ p=/[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u20
 	 * Reset vote counters on a new song.
 	 */
 	function resetVotes(e) {
+		// initially hide similar tracks
+		$('#similarTracks').hide();
+
 		// reset current vote counter
 		votes.current.score = votes.current.votes = 0;
 		votes.current.upvoters = [];
@@ -524,9 +527,6 @@ p=/[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u20
 	 * Keeps internal track of voting for each new song played.
 	 */
 	function updateVotes(e) {
-		// initially hide similar tracks
-		$('#similarTracks').hide();
-
 		// retrieve song data
 		var song_id = _room.currentSong._id;
 		var song = _room.currentSong.metadata;
@@ -748,7 +748,7 @@ p=/[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u20
 
 		// create tt2 container
 		var html = '<div id="tt2_container" style="position:absolute;top:10px;right:10px;width:' + (tt2_size.width-20) + 'px;height:' + (tt2_size.height-20) + 'px;margin:0;padding:0;background:#333;color:#FFF;font-size:12px;line-height:18px;overflow-x:hidden;overflow-y:auto;">';
-			html += '<h3 style="padding:4px 10px;margin:0;font-size:22px;line-height:22px;font-weight:bold;background:#44D2E5;color:#000;">Turntable.FM Squared</h3>';
+			html += '<h3 style="padding:4px 10px;margin:0;font-size:22px;line-height:22px;font-weight:bold;background:#9cba9e;color:#000;">Turntable.FM Squared</h3>';
 
 			// currently playing container
 			html += '<div id="tt2_playing" style="margin-bottom:10px">';
@@ -1062,6 +1062,7 @@ function getSimilarTracks(artist, song, album) {
 		_log(data.similartracks);
 
 		if (typeof data.similartracks.track == 'string') {
+			_log('Hiding similar tracks due to no string match.');
 			$('#similarTracks').hide();
 			return false;
 		}
