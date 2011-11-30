@@ -1081,12 +1081,12 @@ function getSimilarTracks(artist, song, album) {
 
 			html += '<tr ' + (alt ? 'style="background-color:#292929";' : '') + '>';
 			if (item.image && item.image[1] && item.image[1]['#text'].length) {
-				html += '<td style="padding:2px"><img src="' + item.image[1]['#text'] + '" height="16" width="16" /></td>';
+				html += '<td style="height: 32px; padding:2px"><img src="' + item.image[1]['#text'] + '" height="32" width="32" /></td>';
 			} else {
-				html += '<td style="padding:2px"><div style="width:16px;height:16px;background:#222;"></div></td>';
+				html += '<td style="height: 32px; padding:2px"><div style="width:32px;height:32px;background:#222;"></div></td>';
 			}
-			html += '<td style="padding:2px">' + item.artist.name + '</td>';
-			html += '<td style="padding:2px">' + item.name + '</td>';
+			html += '<td style="height: 32px; padding:2px">' + item.artist.name + '</td>';
+			html += '<td style="height: 32px; padding:2px">' + item.name + '</td>';
 
 			if (item.mbid.length) {
 				html += '<td style="padding:2px"><a href="#" style="display:block">Preview &amp; Buy Track</a></td>';
@@ -1098,7 +1098,7 @@ function getSimilarTracks(artist, song, album) {
 					_log(data);
 				});
 			} else {
-				html += '<td>&nbsp;</td>';
+				html += '<td style="height: 32px; padding:2px">&nbsp;</td>';
 			}
 			//if (item.artist.mbid.length) {
 			//	html += '<p><a href="#" style="display:block">View Artist Details</a>';
