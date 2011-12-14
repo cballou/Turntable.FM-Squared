@@ -755,7 +755,7 @@ document.head.appendChild(s);
 		$('#footer').css({ 'text-align': 'left' });
 
 		// create tt2 container
-		var html = '<div id="tt2_container" style="width:' + (tt2_size.width-20) + 'px;height:' + (tt2_size.height-20) + 'px;">';
+		var html = '<div id="tt2_container" style="display: block; width:' + (tt2_size.width-20) + 'px;height:' + (tt2_size.height-20) + 'px;">';
 			html += '<h3>Turntable.FM Squared</h3>';
 
 			// currently playing container
