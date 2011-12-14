@@ -1,0 +1,38 @@
+{
+  "name": "Turntable.FM Squared",
+  "version": "1.0",
+  "description": "Unique problems and analytics tool for TT.FM.",
+  "browser_action": {
+    "default_title": "TT.FM Squared",
+    //"background_page": "tt-squared.html",
+    "default_popup": "tt-squared.html",
+    "default_icon": "icon.png"
+  },
+  /*
+  "icons": {
+    "16": "icon16.png",
+    "48": "icon48.png",
+    "128": "icon128.png"
+  },
+  */
+  "content_scripts": [{
+    "matches": [
+      "http://turntable.fm/*"
+    ],
+    "exclude_matches": [
+      "http://turntable.fm/lobby",
+      "http://turntable.fm/jobs",
+      "http://turntable.fm/about",
+      "http://turntable.fm/terms",
+      "http://turntable.fm/copyright",
+      "http://turntable.fm/privacy",
+      "http://turntable.fm/static*"
+    ],
+    "js": ["tt-squared.js"],
+    "run_at": "document_end",
+    "all_frames": true
+  }],
+  "permissions": [
+    "tabs", "http://turntable.fm/*"
+  ]
+}
