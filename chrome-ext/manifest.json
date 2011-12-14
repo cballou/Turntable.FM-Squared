@@ -28,6 +28,7 @@
       "http://turntable.fm/privacy",
       "http://turntable.fm/static*"
     ],
+    "css": ["tt-squared.css"],
     "js": ["tt-squared.js"],
     "run_at": "document_end",
     "all_frames": true

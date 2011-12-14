@@ -1,0 +1,47 @@
+/* TT.FM Squared Container */
+#tt2_container { position:absolute; top: 10px; right: 10px; margin: 0; padding: 0; background: #333; color: #FFF; font-size: 12px; line-height: 18px; overflow-x: hidden; overflow-y: auto; }
+#tt2_container h3 { padding: 4px 10px; margin: 0; font-size: 22px; line-height: 22px; font-weight: bold; background: #9cba9e; color: #000; }
+#tt2_container h4 { padding: 4px 10px; margin-bottom: 0; font-size: 18px; line-height: 18px; font-weight: bold; background: #5C755E; color: #FFF; }
+#tt2_container h5 { padding: 4px 10px; margin: 0; font-size: 14px; line-height: 14px; font-weight: bold; background: #222; }
+#tt2_container ul.stats { padding: 0 10px; }
+#tt2_container ul.stats li { padding: 2px 0; border-top: 1px dotted #222; }
+#tt2_container ul.stats li:first-child { border-top: none; }
+#tt2_container ul.stats li span { float: right; display: inline; text-align: right; }
+
+#tt2_container .toggleAccordion { cursor: pointer; }
+#tt2_container .accordion { padding: 10px 10px 0; }
+#tt2_container .hidden { display: none; }
+
+/* cover art */
+#tt2_stats_current_coverart { overflow: hidden; padding: 10px 10px 0; }
+#tt2_stats_current_coverart .songinfo { }
+#tt2_stats_current_coverart .songinfo p { margin: 0; }
+#tt2_stats_current_coverart .songinfo p span { float:left; display:inline; width:100px; }
+#tt2_stats_current_coverart .songinfo p strong { font-weight: bold; }
+#tt2_stats_current_coverart img,
+#tt2_stats_current_coverart .img { float: left; display: inline; width: 150px; height: 150px; margin: 0 10px 10px 0; background: #222; border: 4px solid #222; }
+#tt2_stats_current_coverart .img100 { width: 100px; height: 100px; }
+#tt2_stats_current_coverart .purchaseinfo a { display: block; padding: 2px 0; color: #fff; }
+
+/* options */
+#tt2_options .accordion div { margin-bottom: 8px; }
+#tt2_options .accordion div input.checkbox { background: #fff; border: 1px solid #999; }
+#tt2_options .accordion div input,
+#tt2_options .accordion div textarea { font-size: 11px; line-height: 11px; background: #fff; color: #222; border: 1px solid #999; margin: 0; }
+#tt2_options .accordion div textarea { height: 36px; }
+
+/* similar tracks */
+#similarTracks { display: none; clear: both; margin-top: 10px; }
+#similarTracks .scroller { overflow-x: hidden; overflow-y: auto; max-height: 200px; }
+#similarTracks table { width: 100%; margin: 10px 10px 0 0; border-collapse: collapse; border: none; border-spacing: 0; line-height: 12px; }
+#similarTracks table thead th { padding: 8px 4px; text-align: left; }
+#similarTracks table tbody tr { background: #2c2c2c; }
+#similarTracks table tbody tr.alt { background: #292929; }
+#similarTracks table tbody tr td { border: 1px solid #222; height: 32px; padding: 4px; }
+#similarTracks table tbody tr td a { display: block; }
+#similarTracks table tbody tr td img,
+#similarTracks table tbody tr td .img { width: 32px; height: 32px; background: #222; }
+
+/* TT.FM overrides */
+#outer { margin: 0 !important; }
+#footer { text-align: left !important; }
