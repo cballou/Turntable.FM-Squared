@@ -15,15 +15,6 @@ p=/[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u20
 "]").replace(/(?:^|:|,)(?:\s*\[)+/g,""))){h=eval("("+a+")");return typeof c==="function"?d({"":h},""):h}throw new SyntaxError("JSON.parse");}})();
 
 /**
- * Header injection for styling.
- */
-var s = document.createElement('link');
-s.setAttribute('rel', 'stylesheet');
-s.setAttribute('type', 'text/css');
-s.setAttribute('href', 'https://raw.github.com/cballou/Turntable.FM-Anti-Idle-Autoresponder/master/tt-squared.css');
-document.head.appendChild(s);
-
-/**
  * A subset of Turntable.fm Chat Bot with a ton of additions and improvements.
  * https://github.com/dnephin/Turntable.fm-chat-bot
  */
