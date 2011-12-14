@@ -73,14 +73,14 @@ Url: javascript:(function(){$('body').append('<script src="https://raw.github.co
 
 Step 4. When in a Turntable.FM room, click on your new bookmarklet.
 
-Todo
-=======
+Change Log
+==========
 
-* Add support for LocalStorage for configuration options.
+* Added LocalStorage support for saving a user's configuration preferences.
 
 Credits
 =======
-This was made possible by a mashup of AutoAwesome and Turntable.fm Chat Bot. There's a ton of additions, modifications, and UI improvements:
+This was made possible by initial anaylsis of AutoAwesome and the Turntable.fm Chat Bot.
 
 https://github.com/michaelmwu/turntable.fm/
 https://github.com/dnephin/Turntable.fm-chat-bot/
