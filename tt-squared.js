@@ -17,9 +17,10 @@ p=/[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u20
 /**
  * Header injection for styling.
  */
-var s = document.createElement('style');
-s.setAttribute('src', 'https://raw.github.com/cballou/Turntable.FM-Anti-Idle-Autoresponder/master/tt-squared.css');
+var s = document.createElement('link');
+s.setAttribute('rel', 'stylesheet');
 s.setAttribute('type', 'text/css');
+s.setAttribute('href', 'https://raw.github.com/cballou/Turntable.FM-Anti-Idle-Autoresponder/master/tt-squared.css');
 document.head.appendChild(s);
 
 /**
