@@ -58,7 +58,7 @@
 #tt2_chat_box .chat-container { position: relative !important; top: auto !important; height: auto; }
 #tt2_chat_box .chat-container .messages .message { width: 100%; }
 #tt2_chat_box .chat-container .input-box { width: 100%; background: transparent; }
-#tt2_chat_box .chat-container .input-box input { height: 24px; position: relative; top: 9px; left: 0; background: #fff;  }
+#tt2_chat_box .chat-container .input-box input { position: relative; height: 24px !important; top: 9px !important; left: 0 !important; width: 100% !important; background: #fff; border-radius: 3px; -moz-border-radius: 3px; -webkit-border-radius: 3px; }
 
 /* TT.FM overrides */
 #outer { margin: 0 !important; }
