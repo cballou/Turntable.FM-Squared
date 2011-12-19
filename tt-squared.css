@@ -55,7 +55,7 @@
 #similarTracks table tbody tr td .img { width: 32px; height: 32px; background: #222; }
 
 /* fix chat container styling */
-#tt2_chat_box .chat-container { position: relative; top: auto; height: auto; }
+#tt2_chat_box .chat-container { position: relative !important; top: auto !important; height: auto !important; }
 #tt2_chat_box .chat-container .messages .message { width: 100%; }
 #tt2_chat_box .chat-container .input-box { width: 100%; background: transparent; }
 #tt2_chat_box .chat-container .input-box input { height: 24px; position: relative; top: 9px; left: 0; background: #fff;  }
