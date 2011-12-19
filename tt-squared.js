@@ -880,6 +880,7 @@ p=/[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u20
 		$chat_container.appendTo($('#tt2_chat_box'));
 		$songlist.css('height', songlist_height + old_chat_height);
 
+		_log($songlist.length);
 		_log('songlist height: ' + songlist_height);
 		_log('old chat height: ' + old_chat_height);
 
