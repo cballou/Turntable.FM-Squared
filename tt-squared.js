@@ -879,6 +879,7 @@ p=/[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u20
 
 		// get the chat container height
 		var $chat_container = $('#right-panel').find('.chat-container');
+		$chat_container.find('.chatResizeIcon').hide();
 		var chat_height = $chat_container.height();
 
 		// get the current songlist height
