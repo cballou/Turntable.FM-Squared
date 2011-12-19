@@ -918,7 +918,7 @@ p=/[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u20
 		});
 
 		$('#tt2_chat_box').find('.chat-container .messages').css({
-			height: '100%',
+			height: '' + (tt2_size.height - tt2_playing_size.height - title_height - 20) + 'px !important',
 			'overflow-x': 'none !important',
 			'overflow-y': 'auto !important'
 		});
