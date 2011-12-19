@@ -878,6 +878,7 @@ p=/[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u20
 
 		// move the chat container
 		$chat_container.appendTo($('#tt2_chat_box'));
+		$('#right-panel').find('.mainPane').css('height', songlist_height + old_chat_height);
 		$songlist.css('height', songlist_height + old_chat_height);
 
 		_log($songlist.length);
