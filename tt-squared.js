@@ -889,15 +889,10 @@ p=/[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u20
 		// fix songlist height within queue
 		$('#right-panel').find('.queueView .songlist').css('height', songlist_height + chat_height);
 		$('#right-panel').find('.searchView .songlist').css('height', songlist_height + chat_height);
+		$('#right-panel').find('.addSongsView').css('height', queue_height + chat_height);
 
 		// set container height to full
 		$('#right-panel').find('.playlist-container').css('height', queue_height + chat_height + title_height);
-
-		// fix each pane
-		// $('#right-panel').find('.mainPane').css('height', '100%');
-
-		// fix song list
-		// $songlist.css('height', '100%');
 
 		// fix chat window size
 		var tt2_playing_size = {
@@ -906,14 +901,14 @@ p=/[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u20
 		};
 
 		// fix chat sizing in TT2
-		$('#tt2_chat_box').find('.chat_container').css('cssText',
-			'height: ' + (tt2_size.height - tt2_playing_size.height) + 'px !important; ' +
-			'width: ' + (tt2_size.width - tt2_playing_size.width) + 'px !important; ' +
-			'top: 0 !important; ' +
-			'left: 0 !important; ' +
-			'overflow-x: none !important; ' +
-			'overflow-y: auto !important;'
-		);
+		$('#tt2_chat_box').find('.chat_container').css({
+			height: (tt2_size.height - tt2_playing_size.height) + 'px !important',
+			width: (tt2_size.width - tt2_playing_size.width) + 'px !important',
+			top: '0 !important',
+			left: '0 !important',
+			'overflow-x': 'none !important',
+			'overflow-y': 'auto !important'
+		});
 
 		// reference all config options just once
 		var $options = $('#tt2_stats');
