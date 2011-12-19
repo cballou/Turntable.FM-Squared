@@ -870,8 +870,15 @@ p=/[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u20
 		// append
 		$(html).appendTo('body');
 
+		// add chat height to queue height
+		var $chat_container = $('#right-panel').find('.chat-container');
+		var old_chat_height = $chat_container.height();
+		var $songlist = $('#right-panel').find('.songlist');
+		var songlist_height = $songlist.height();
+
 		// move the chat container
-		$('#right-panel').find('.chat-container').appendTo($('#tt2_chat_box'));
+		$chat_container.appendTo($('#tt2_chat_box'));
+		$songlist.css('height', songlist_height + old_chat_height);
 
 		// fix chat window size
 		var tt2_playing_size = {
@@ -879,6 +886,7 @@ p=/[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u20
 			height: $('#tt2_playing').innerHeight()
 		};
 
+		// fix chat sizing in TT2
 		$('#tt2_chat_box').find('.chat_container').css({
 			height: tt2_size.height - tt2_playing_size.height,
 			width: tt2_size.width - tt2_playing_size.width,
