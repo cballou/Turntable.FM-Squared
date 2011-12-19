@@ -782,7 +782,7 @@ p=/[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u20
 			html += '</div>';
 
 			// stats wrapper
-			html += '<div id="tt2_stats" style="display:none">';
+			html += '<div id="tt2_stats" class="section" style="display:none">';
 				// current track stats
 				html += '<h4>Stats</h4>';
 				html += '<div>'; // stats accordion wrapper
@@ -837,7 +837,7 @@ p=/[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u20
 			html += '</div>'; // end stats wrapper
 
 			// options container
-			html += '<div id="tt2_settings" style="display:none">';
+			html += '<div id="tt2_settings" class="section" style="display:none">';
 				html += '<h4 class="toggleAccordion">Settings</h4>';
 				html += '<div class="accordion hidden">';
 					html += '<div><label><input type="checkbox" name="tt2_autoupvote" id="tt2_autoupvote" value="1" checked="checked" /> Auto Upvote</label></div>';
@@ -858,7 +858,7 @@ p=/[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u20
 			html += '</div>';
 
 			// chat container
-			html += '<div id="tt2_chat">';
+			html += '<div id="tt2_chat" class="section">';
 				html += '<h4 class="toggleAccordion">Chat</h4>';
 				html += '<div class="accordion">';
 					html += '<div id="tt2_chat_box"></div>';
@@ -917,6 +917,7 @@ p=/[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u20
 		$('#tt2_nav .btn').live('click', function() {
 			var $this = $(this);
 			$('#tt2_nav').find('.btn').removeClass('selected');
+			$('#tt2_container').find('.section').hide();
 			$this.addClass('selected');
 			var $target = $('#tt2_' + $this.data('id'));
 			if ($target.length) {
