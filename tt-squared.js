@@ -761,7 +761,7 @@ p=/[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u20
 			html += '<h3>';
 			html += '<span class="floatleft">Turntable.FM Squared</span>';
 			html += '<ul id="tt2_nav" class="floatright">';
-			html += '<li><a href="#" class="btn" data-id="chat">chat</a></li>';
+			html += '<li><a href="#" class="btn selected" data-id="chat">chat</a></li>';
 			html += '<li><a href="#" class="btn" data-id="stats">stats</a></li>';
 			html += '<li><a href="#" class="btn" data-id="settings">settings</a></li>';
 			html += '</ul>';
@@ -858,7 +858,7 @@ p=/[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u20
 			html += '</div>';
 
 			// chat container
-			html += '<div id="tt2_chat" style="display:none">';
+			html += '<div id="tt2_chat">';
 				html += '<h4 class="toggleAccordion">Chat</h4>';
 				html += '<div class="accordion">';
 					html += '<div id="tt2_chat_box"></div>';
