@@ -37,18 +37,101 @@ p=/[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u20
 		height: windowSize.height
 	}
 
+	// prepare default config
+	var defaults = {
+		autoDj: false,
+		autoRespond: true,
+		antiIdle: true,
+		muteAlert: false,
+		autoUpvote: true,
+		nameAliases: [
+			'corey',
+			'ballou',
+			'cballou',
+			'coreyballou',
+			'Dr. awkwa .rD',
+			'Corey Ballou',
+			'CoreyBallou',
+			'coreyb',
+			'Dr',
+			'Dr.',
+			'awk',
+			'awkward'
+		],
+		generalNameAliases: [
+			'djs',
+			'everyone',
+			'everbody',
+			'you all',
+			'yall',
+			'ya\'ll',
+			'you guys',
+			'you'
+		],
+		idleAliases: [
+			'afk',
+			'checkin',
+			'check in',
+			'check-in',
+			'here',
+			'idle',
+			'there',
+			'respond',
+			'status',
+			'away',
+			'where'
+		],
+		idleReplies: [
+			'check check.',
+			'yup',
+			'yeah {{NICKNAME}}',
+			'hey {{NICKNAME}} :)',
+			'still here {{NICKNAME}}',
+			'checking in',
+			'right here {{NICKNAME}}',
+			'yo {{NICKNAME}}',
+			'not idle',
+			'i\'m here',
+			'what?',
+			'nope :)',
+			'whatup {{NICKNAME}}',
+			'mos def',
+			'not here',
+			'sup {{NICKNAME}}',
+			'definitely not here',
+			'yes.. right here {{NICKNAME}}',
+			'yepp {{NICKNAME}}',
+			'{{NICKNAME}}, right here',
+			'{{NICKNAME}}, still here',
+			'wink wink'
+		],
+		idleMessages: [
+			'ugh I\'ve got so much work to do',
+			'busy day over here',
+			'wish i wasn\'t so busy',
+			':)',
+			'liking this',
+			'good track',
+			'nice mix',
+			'wish i didn\'t have to send messages to prevent idle...',
+			'love tt.fm',
+			'back to work..',
+			'i\m so tired',
+			'can\'t wait till 5',
+			'i should be working',
+			'moar coffee.'
+		],
+		debugMode: true
+	};
+
 	// handle config values
 	var config = store.get('config');
 	if (!config) {
-		config = {
-			autoDj: false,
-			autoRespond: true,
-			antiIdle: true,
-			muteAlert: false,
-			smartVote: false,
-			autoUpvote: true,
-			debugMode: true
-		};
+		config = defaults;
+		store.set('config', config);
+	} else {
+		// merge config with defaults to ensure no missing params
+		config = $.extend({}, defaults, config);
 		store.set('config', config);
 	}
 
@@ -93,85 +176,6 @@ p=/[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u20
 			}
 		}
 	};
-
-    // aliases
-    var nameAliases = [
-        'coreyballou',
-        'Dr. awkwa .rD',
-        'Corey Ballou',
-        'CoreyBallou',
-        'coreyb',
-		'Dr',
-		'Dr.',
-		'awkward',
-		'awk'
-    ];
-
-    // general name aliases
-    var generalNameAliases = [
-        'djs',
-        'everyone',
-        'everbody',
-        'you all',
-        'ya\'ll',
-        'you guys',
-		'you'
-    ];
-
-    // idle aliases
-    var idleAliases = [
-        'afk',
-        'checkin',
-        'check in',
-        'check-in',
-        'here',
-        'idle',
-        'there',
-        'respond',
-		'status',
-		'away'
-    ];
-
-    // array of idle responses
-    var idleReplies = [
-        'check check.',
-        'yup',
-        'yeah {{NICKNAME}}',
-        'hey {{NICKNAME}} :)',
-        'still here {{NICKNAME}}',
-        'checking in',
-        'right here {{NICKNAME}}',
-        'yo {{NICKNAME}}',
-        'not idle',
-        'i\'m here',
-        'what?',
-        'nope :)',
-		'whatup {{NICKNAME}}',
-		'mos def',
-        'not here',
-		'sup {{NICKNAME}}',
-		'definitely not here',
-        'yes.. right here {{NICKNAME}}',
-		'yepp {{NICKNAME}}',
-		'{{NICKNAME}}, right here',
-		'{{NICKNAME}}, still here',
-		'wink wink'
-    ];
-
-	// array of auto-idle messages
-	var idleMessages = [
-		'ugh I\'ve got so much work to do',
-		'busy day over here',
-		'wish i wasn\'t so busy',
-		':)',
-		'.',
-		'wish i didn\'t have to send messages to prevent idle...',
-		'love tt.fm',
-		'back to work..',
-		'i\m so tired',
-		'can\'t wait till 5',
-		''
-	];
 
     // the maximum idle response frequency (milliseconds)
     var maxIdleResponseFreq = 600000;
@@ -273,10 +277,10 @@ p=/[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u20
      */
     function watchForChatMentions(e) {
         // handle alerting when mentioned
-        if (stringInText(nameAliases, e.text)) {
+        if (stringInText(config.nameAliases, e.text)) {
             playAlertSound();
         } else {
-            if (!stringInText(generalNameAliases, e.text)) {
+            if (!stringInText(config.generalNameAliases, e.text)) {
                 return;
             }
         }
@@ -285,7 +289,7 @@ p=/[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u20
 			return;
 		}
 
-        if (!stringInText(idleAliases, e.text) || e.text.length > 128) {
+        if (!stringInText(config.idleAliases, e.text) || e.text.length > 128) {
             return;
         }
 
@@ -293,7 +297,7 @@ p=/[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u20
         _log('Possible idle check: ' + e.text);
 
         // create a response
-        var response = randomChoice(idleReplies);
+        var response = randomChoice(config.idleReplies);
 
 		// replace nickname
 		response = response.replace('{{NICKNAME}}', e.name);
@@ -329,7 +333,7 @@ p=/[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u20
 		}
 
         // create a response
-        var response = randomChoice(idleMessages);
+        var response = randomChoice(config.idleMessages);
 
         // handle response
         var responseTimeout = setTimeout(function() {
@@ -351,17 +355,6 @@ p=/[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u20
 
 		// our vote decision
 		var vote = 'upvote';
-
-		// if we're doing smart voting
-		if (config.smartVote) {
-			if (stringInText(upvoteArtists, song.artist, false)) {
-				vote = 'upvote';
-			} else if (stringInText(downvoteArtists, song.artist, false)) {
-				vote = 'downvote';
-			}
-		} else {
-			vote = 'upvote';
-		}
 
 		// cast vote
 		setTimeout(function() {
@@ -681,6 +674,10 @@ p=/[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u20
 		}
 	}
 
+	//=========================================
+	// INITIALIZER - WHERE THE MAGIC  HAPPENS =
+	//=========================================
+
     // ensure we get a valid user object before handling auto-responder
     $.when(getTurntableObjects()).then(function() {
 		// display the options menu
@@ -714,6 +711,19 @@ p=/[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u20
 				tt2_size.height = windowSize.height;
 				$('#tt2_container').css('height', tt2_size.height - 20);
 			}
+
+			// fix chat window size
+			var tt2_playing_size = {
+				width: $('#tt2_playing').innerWidth(),
+				height: $('#tt2_playing').innerHeight()
+			};
+
+			$('#tt2_chat_box').find('.chat_container').css({
+				height: tt2_size.height - tt2_playing_size.height,
+				width: tt2_size.width - tt2_playing_size.width,
+				'overflow-x': 'none',
+				'overflow-y': 'auto'
+			});
 		});
 
 		// periodically check for number of users
@@ -748,7 +758,14 @@ p=/[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u20
 
 		// create tt2 container
 		var html = '<div id="tt2_container" style="display: block; width:' + (tt2_size.width-20) + 'px;height:' + (tt2_size.height-20) + 'px;">';
-			html += '<h3>Turntable.FM Squared</h3>';
+			html += '<h3>';
+			html += '<span class="floatleft">Turntable.FM Squared</span>';
+			html += '<ul id="tt2_nav" class="floatright">';
+			html += '<li><a href="#" class="btn" data-id="chat">chat</a></li>';
+			html += '<li><a href="#" class="btn" data-id="stats">stats</a></li>';
+			html += '<li><a href="#" class="btn" data-id="settings">settings</a></li>';
+			html += '</ul>';
+			html += '</h3>';
 
 			// currently playing container
 			html += '<div id="tt2_playing">';
@@ -765,9 +782,9 @@ p=/[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u20
 			html += '</div>';
 
 			// stats wrapper
-			html += '<div id="tt2_stats">';
+			html += '<div id="tt2_stats" style="display:none">';
 				// current track stats
-				html += '<h4 class="toggleAccordion">Stats</h4>';
+				html += '<h4>Stats</h4>';
 				html += '<div>'; // stats accordion wrapper
 					html += '<h5 class="toggleAccordion">Current Track</h5>';
 					html += '<div id="tt2_stats_current">';
@@ -820,56 +837,105 @@ p=/[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u20
 			html += '</div>'; // end stats wrapper
 
 			// options container
-			html += '<div id="tt2_options">';
-				html += '<h4 class="toggleAccordion">Configuration Options</h4>';
+			html += '<div id="tt2_settings" style="display:none">';
+				html += '<h4 class="toggleAccordion">Settings</h4>';
 				html += '<div class="accordion hidden">';
 					html += '<div><label><input type="checkbox" name="tt2_autoupvote" id="tt2_autoupvote" value="1" checked="checked" /> Auto Upvote</label></div>';
 					html += '<div><label><input type="checkbox" name="tt2_autodj" id="tt2_autodj" value="1" /> Auto DJ</label></div>';
 					html += '<div><label><input type="checkbox" name="tt2_autorespond" id="tt2_autorespond" value="1" checked="checked" /> Auto Respond</label></div>';
 					html += '<div><label><input type="checkbox" name="tt2_antiidle" id="tt2_antiidle" value="1" checked="checked" /> Anti Idle</label></div>';
 					html += '<div><label><input type="checkbox" name="tt2_muteAlert" id="tt2_muteAlert" value="1" checked="checked" /> Enable Mention Alert</label></div>';
+
+					html += '<div><label for="tt2_name_aliases">My Aliases</label><textarea name="tt2_name_aliases" id="tt2_name_aliases">' + config.nameAliases.join('\n') + '</textarea><span class="note">This represents any strings someone may use to reference you in a chat message. It could be shorthand for your alias. Separate each with commas.</span></div>';
+					html += '<div><label for="tt2_general_name_aliases">General Aliases</label><textarea name="tt2_general_name_aliases" id="tt2_general_name_aliases">' + config.generalNameAliases.join('\n') + '</textarea><span class="note">Any string in a chat message that may refer to everybody in the room as a whole. Separate by commas.</div>';
+					html += '<div><label for="tt2_idle_aliases">Idle Aliases</label><textarea name="tt2_idle_aliases" id="tt2_idle_aliases">' + config.idleAliases.join('\n') + '</textarea><span class="note">Words mentioned in chat that may pertain to being idle, away from keyboard, etc.</div>';
+					html += '<div><label for="tt2_idle_replies">Idle Replies</label><textarea name="tt2_idle_replies" id="tt2_idle_replies">' + config.idleReplies.join('\n') + '</textarea><span class="note"></span></div>';
+					html += '<div><label for="tt2_idle_messages">Idle Messages</label><textarea name="tt2_idle_messages" id="tt2_idle_messages">' + config.idleMessages.join('\n') + '</textarea><span class="note"></span></div>';
+
+					html += '<div><button type="button" name="updateSettings" id="updateSettings" name="Save Changes">Save Changes</button></div>'
+
+				html += '</div>';
+			html += '</div>';
+
+			// chat container
+			html += '<div id="tt2_chat" style="display:none">';
+				html += '<h4 class="toggleAccordion">Chat</h4>';
+				html += '<div class="accordion">';
+					html += '<div id="tt2_chat_box"></div>';
 				html += '</div>';
 			html += '</div>';
 
 		html += '</div>'; // close container
 
+		// append
 		$(html).appendTo('body');
-		$options = $('#tt2_options');
-		$options.find('#tt2_autoupvote').change(function() {
-			var checked = $(this).is(':checked');
-			_log('Changed Auto Upvote option to: ' + (checked ? 'Yes' : 'No'));
-			config.autoUpvote = checked;
-			updateSettings();
+
+		// move the chat container
+		$('#roomView').find('.chat-container').appendTo($('#tt2_chat_box'));
+
+		// fix chat window size
+		var tt2_playing_size = {
+			width: $('#tt2_playing').innerWidth(),
+			height: $('#tt2_playing').innerHeight()
+		};
+
+		$('#tt2_chat_box').find('.chat_container').css({
+			height: tt2_size.height - tt2_playing_size.height,
+			width: tt2_size.width - tt2_playing_size.width,
+			'overflow-x': 'none',
+			'overflow-y': 'auto'
 		});
-		$options.find('#tt2_autodj').change(function() {
-			var checked = $(this).is(':checked');
-			_log('Changed Auto DJ option to: ' + (checked ? 'Yes' : 'No'));
-			config.autoDj = checked;
-			updateSettings();
-			if (config.autoDj) {
-				emptySlotCheck();
+
+		// reference all config options just once
+		var $auto_upvote = $options.find('#tt2_autoupvote');
+		var $auto_dj = $options.find('#tt2_autodj');
+		var $auto_respond = $options.find('#tt2_autorespond');
+		var $anti_idle = $options.find('#tt2_antiidle');
+		var $mute_alert = $options.find('#tt2_muteAlert');
+		var $name_aliases = $options.find('#tt2_name_aliases');
+		var $general_name_aliases = $options.find('#tt2_general_name_aliases');
+		var $idle_aliases = $options.find('#tt2_idle_aliases');
+		var $idle_replies = $options.find('#tt2_idle_replies');
+		var $idle_messages = $options.find('#tt2_idle_messages');
+
+		// watch for nav change
+		$('#tt2_nav').live('click', function() {
+			var $this = $(this);
+			$('#tt2_nav').find('.btn').removeClass('selected');
+			$this.addClass('selected');
+			var $target = $('#tt2_' + $this.data('id'));
+			if ($target.length) {
+				$target.stop(true, true).slideDown('fast');
 			}
+			return false;
 		});
-		$options.find('#tt2_autorespond').change(function() {
-			var checked = $(this).is(':checked');
-			_log('Changed Auto Respond option to: ' + (checked ? 'Yes' : 'No'));
-			config.autoRespond = checked;
-			updateSettings();
-		});
-		$options.find('#tt2_antiidle').change(function() {
-			var checked = $(this).is(':checked');
-			_log('Changed Anti Idle option to: ' + (checked ? 'Yes' : 'No'));
-			config.antiIdle = checked;
-			updateSettings();
-		});
-		$options.find('#tt2_muteAlert').change(function() {
-			var checked = $(this).is(':checked');
-			_log('Changed Enable Mention Alert option to: ' + (!checked ? 'Yes' : 'No'));
-			config.muteAlert = !checked;
+
+		// watch for change to options
+		$options = $('#tt2_stats');
+		$options.find('#updateSettings').click(function() {
+			var checked;
+			// save all option changes
+			config.autoUpvote = $auto_upvote.is(':checked');
+			config.autoDj = $auto_dj.is(':checked');
+			config.autoRespond = $auto_respond.is(':checked');
+			config.antiIdle = $anti_idle.is(':checked');
+			config.muteAlert = $mute_alert.is(':checked');
+
+			// update textarea options
+			config.nameAliases = $name_aliases.val().split(/\n\r?/g);
+			config.generalNameAliases = $general_name_aliases.val().split(/\n\r?/g);
+			config.idleAliases = $idle_aliases.val().split(/\n\r?/g);
+			config.idleReplies = $idle_replies.val().split(/\n\r?/g);
+			config.idleMessages = $idle_messages.val().split(/\n\r?/g);
+
+			// handle trying to auto-dj
+			if (config.autoDj) emptySlotCheck();
+
+			// update the localstorage settings
 			updateSettings();
 		});
 
-		// watch for accordion toggle
+		// watch for accordion toggles
 		$('.toggleAccordion').live('click', function() {
 			$(this).next('div').stop().slideToggle('fast');
 			return false;
