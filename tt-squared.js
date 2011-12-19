@@ -882,6 +882,7 @@ p=/[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u20
 		var $chat_container = $('#right-panel').find('.chat-container');
 		$chat_container.find('.chatResizeIcon').hide();
 		var chat_height = $chat_container.height();
+		var message_height = $chat_container.find('.input-box').height();
 
 		// get the current songlist height
 		var songlist_height = $('#right-panel').find('.queueView .songlist').height();
@@ -918,7 +919,7 @@ p=/[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u20
 		});
 
 		$('#tt2_chat_box').find('.chat-container .messages').css({
-			height: '' + (tt2_size.height - tt2_playing_size.height - title_height - 40) + 'px !important',
+			height: '' + (tt2_size.height - tt2_playing_size.height - title_height - message_height - 40) + 'px !important',
 			'overflow-x': 'none !important',
 			'overflow-y': 'auto !important'
 		});
