@@ -903,8 +903,11 @@ p=/[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u20
 		// fix chat window size
 		var tt2_playing_size = {
 			width: $('#tt2_playing').innerWidth(),
-			height: $('#tt2_playing').innerHeight()
+			height: $('#tt2_playing').outerHeight()
 		};
+
+		// fix for min-height
+		if (tt2_playing_size.height < 204) tt_playing_size.height = 204;
 
 		// fix chat sizing in TT2
 		$('#tt2_chat_box').find('.chat-container').css({
