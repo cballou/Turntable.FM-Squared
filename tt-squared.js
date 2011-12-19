@@ -683,7 +683,7 @@ p=/[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u20
 
 		// unbind some initial crap
 		$(document.body).unbind("mousemove mouseup mouseout");
-		$('#right-panel').find(".chatHeader").unbind('mousedown');
+		$('#right-panel').find(".chatHeader").unbind('mousedown').css('cursor', 'default');
 
 		// display the options menu
 		_log('Displaying the options menu.');
