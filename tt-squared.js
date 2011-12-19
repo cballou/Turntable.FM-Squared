@@ -871,7 +871,7 @@ p=/[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u20
 		$(html).appendTo('body');
 
 		// move the chat container
-		$('#roomView').find('.chat-container').appendTo($('#tt2_chat_box'));
+		$('#right-panel').find('.chat-container').appendTo($('#tt2_chat_box'));
 
 		// fix chat window size
 		var tt2_playing_size = {
@@ -900,7 +900,7 @@ p=/[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u20
 		var $idle_messages = $options.find('#tt2_idle_messages');
 
 		// watch for nav change
-		$('#tt2_nav').live('click', function() {
+		$('#tt2_nav').find('.btn').live('click', function() {
 			var $this = $(this);
 			$('#tt2_nav').find('.btn').removeClass('selected');
 			$this.addClass('selected');
