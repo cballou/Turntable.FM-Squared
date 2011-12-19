@@ -785,7 +785,7 @@ p=/[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u20
 			html += '<div id="tt2_stats" class="section" style="display:none">';
 				// current track stats
 				html += '<h4>Stats</h4>';
-				html += '<div>'; // stats accordion wrapper
+				html += '<div class="accordion">'; // stats accordion wrapper
 					html += '<h5 class="toggleAccordion">Current Track</h5>';
 					html += '<div id="tt2_stats_current">';
 						html += '<ul class="stats">';
@@ -839,7 +839,7 @@ p=/[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u20
 			// options container
 			html += '<div id="tt2_settings" class="section" style="display:none">';
 				html += '<h4 class="toggleAccordion">Settings</h4>';
-				html += '<div class="accordion hidden">';
+				html += '<div class="accordion">';
 					html += '<div><label><input type="checkbox" name="tt2_autoupvote" id="tt2_autoupvote" value="1" checked="checked" /> Auto Upvote</label></div>';
 					html += '<div><label><input type="checkbox" name="tt2_autodj" id="tt2_autodj" value="1" /> Auto DJ</label></div>';
 					html += '<div><label><input type="checkbox" name="tt2_autorespond" id="tt2_autorespond" value="1" checked="checked" /> Auto Respond</label></div>';

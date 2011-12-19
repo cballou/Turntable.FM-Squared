@@ -41,7 +41,7 @@
 #tt2_settings .accordion div input,
 #tt2_settings .accordion div textarea { font-size: 11px; line-height: 11px; background: #fff; color: #222; border: 1px solid #999; margin: 0; }
 #tt2_settings .accordion div textarea { display: block; height: 72px; width: 100%; }
-#tt2_settings .accordion div .note { display: block; font-style: italic; margin-bottom: 4px; }
+#tt2_settings .accordion div .note { display: block; font-size: 10px; color: #999; padding: 4px; }
 
 /* similar tracks */
 #similarTracks { display: none; clear: both; margin-top: 10px; }
