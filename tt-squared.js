@@ -877,15 +877,14 @@ p=/[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u20
 		var $chat_container = $('#right-panel').find('.chat-container');
 		var chat_height = $chat_container.height();
 
-		// get the current songlist height
-		var $songlist = $('#right-panel').find('.songlist');
-		var songlist_height = $songlist.height();
+		// get the current queue height
+		var queue_height = $('#right-panel').find('.queueView').height();
 
 		// move the chat container
 		$chat_container.appendTo($('#tt2_chat_box'));
 
 		// set container height to full
-		$('#right-panel').find('.playlist-container').css('height', songlist_height + chat_height + title_height);
+		$('#right-panel').find('.playlist-container').css('height', queue_height + chat_height + title_height);
 
 		// fix each pane
 		// $('#right-panel').find('.mainPane').css('height', '100%');
