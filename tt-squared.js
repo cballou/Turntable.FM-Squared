@@ -885,7 +885,7 @@ p=/[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u20
 		$chat_container.appendTo($('#tt2_chat_box'));
 
 		// set container height to full
-		$('#right-panel').find('.playlist-container').css('height', songlist_height + old_chat_height + title_height);
+		$('#right-panel').find('.playlist-container').css('height', songlist_height + chat_height + title_height);
 
 		// fix each pane
 		// $('#right-panel').find('.mainPane').css('height', '100%');
