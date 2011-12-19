@@ -870,17 +870,28 @@ p=/[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u20
 		// append
 		$(html).appendTo('body');
 
-		// add chat height to queue height
+		// get title height
+		var title_height = $('#right-panel').find('.black-right-header').height();
+
+		// get the chat container height
 		var $chat_container = $('#right-panel').find('.chat-container');
-		var old_chat_height = $chat_container.height();
+		var chat_height = $chat_container.height();
+
+		// get the current songlist height
 		var $songlist = $('#right-panel').find('.songlist');
 		var songlist_height = $songlist.height();
 
 		// move the chat container
 		$chat_container.appendTo($('#tt2_chat_box'));
-		$('#right-panel').find('.playlist-container').css('height', songlist_height + old_chat_height);
-		$('#right-panel').find('.mainPane').css('height', '100%');
-		$songlist.css('height', '100%');
+
+		// set container height to full
+		$('#right-panel').find('.playlist-container').css('height', songlist_height + old_chat_height + title_height);
+
+		// fix each pane
+		// $('#right-panel').find('.mainPane').css('height', '100%');
+
+		// fix song list
+		// $songlist.css('height', '100%');
 
 		// fix chat window size
 		var tt2_playing_size = {
