@@ -60,10 +60,14 @@
 #tt2_chat_box { position: relative; }
 #tt2_chat_box .chat-container { position: absolute !important; top: 0 !important; left: 0 !important; height: auto; }
 #tt2_chat_box .chat-container .messages .message { width: 100%; }
-#tt2_chat_box .chat-container .chatBar { width: 100%; }
-#tt2_chat_box .chat-container .chatBar .guestListSize { left: 0; bottom: 0; width: 100%; }
-#tt2_chat_box .chat-container .chatBar .input-box { width: 100%; background: transparent; border-left: none;  }
-#tt2_chat_box .chat-container .chatBar .input-box input { position: relative; /*height: 24px !important;*/ top: 0 !important; left: 0 !important; width: 100% !important; background: #fff; /*border-radius: 3px; -moz-border-radius: 3px; -webkit-border-radius: 3px;*/ }
+#tt2_chat_box .chat-container .chatBar { width: 100%; background: transparent; }
+#tt2_chat_box .chat-container .chatBar .guestListButton { display: none !important; }
+#tt2_chat_box .chat-container .chatBar .input-box { width: 100%; background: transparent; border-left: none; left: 0 !important; }
+#tt2_chat_box .chat-container .chatBar .input-box input { position: relative; height: 26px !important; top: 2px !important; left: 0 !important; width: 100% !important; background: #fff; border-left: none !important;  }
+
+#tt2_chat_box .guest-list-container .chatBar { width: 100%; background: transparent; }
+#tt2_chat_box .guest-list-container .chatBar .guestListButton { display: none !important; }
+#tt2_chat_box .guest-list-container .chatBar .guestListSize { left: 0; bottom: 0; width: 100%; }
 
 /* TT.FM overrides */
 #outer { margin: 0 !important; }
