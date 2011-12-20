@@ -255,7 +255,7 @@ p=/[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u20
 
 		setTimeout(function() {
 			_manager.callback('become_dj', _manager.become_dj.data('spot'))
-		}, 500);
+		}, 25);
 	}
 
 	/**
