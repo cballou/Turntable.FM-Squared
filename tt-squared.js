@@ -240,10 +240,6 @@ p=/[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u20
 			return;
 		}
 
-		if (e.command != 'rem_dj') {
-			return;
-		}
-
 		if (_tt.user.id == e.user[0].userid) {
 			_log('You just stepped down or got kicked off the decks.');
 			return;
@@ -680,6 +676,8 @@ p=/[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u20
 			autoVote(e);
 		} else if (e.command == 'update_votes') {
 			updateVotes(e);
+		} else if (e.command == 'rem_dj') {
+			watchForEmptyDjSlot(e);
 		}
 	}
 
@@ -938,6 +936,7 @@ p=/[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u20
 	function moveChatWindow() {
 		// get the chat container sizing
 		var $chat_container = $('#right-panel').find('.chat-container');
+		var $guest_container = $('#right-panel').find('.guest-list-container');
 		var chat_height = $chat_container.height();
 		var chat_width = $chat_container.width();
 		var message_height = $chat_container.find('.chatBar').height();
@@ -950,6 +949,7 @@ p=/[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u20
 		// hide icons
 		$chat_container.find('.guestListIcon').hide();
 		$chat_container.find('.chatResizeIcon').hide();
+		$guest_container.find('.chatResizeIcon').hide();
 
 		// reference the new spot
 		var $chat_box = $('#tt2_chat_box');
@@ -1090,7 +1090,13 @@ p=/[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u20
 		});
 
 		// fix remainder of windows
-		$('#tt2_container').find('.fullheight').css('height', tt2_size.height - tt2_playing_size.height);
+		var tt2_title_height = $('#tt2_container').children('h3').eq(0).height();
+		var tt2_section_title_height = $('#tt2_container').find('.section h4').eq(0).height();
+		var tt2_section_padding = 20;
+		$('#tt2_container').find('.fullheight').css(
+			'height',
+			tt2_size.height - tt2_playing_size.height - tt2_title_height - tt2_section_title_height - tt2_section_padding
+		);
 	}
 
 	/**
