@@ -24,6 +24,7 @@ p=/[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u20
 	var _tt = turntable;
 	var _room = null;
 	var _manager = null;
+	var _users = null;
 	var _k = null;
 
 	// sizing
@@ -31,6 +32,7 @@ p=/[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u20
 		width: $(window).width(),
 		height: $(window).height()
 	};
+	var chat_user_width = 100;
 	var containerWidth = $('#outer').width();
 	var tt2_size = {
 		width: windowSize.width - containerWidth,
@@ -370,7 +372,7 @@ p=/[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u20
 	 */
 	function resetVotes(e) {
 		// initially hide similar tracks
-		$('#similarTracks').hide();
+		$('#similar_tracks').hide();
 
 		// reset current vote counter
 		votes.current.score = votes.current.votes = 0;
@@ -647,12 +649,19 @@ p=/[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u20
 	 * Update the number of current users in the room.
 	 */
 	function getUsersCount() {
-		// update the number of users in the room
-		var count = _room.numUsers();
-		if (stats.usersCount != count) {
-			stats.usersCount = count;
-			$('#tt2_stats_overall_users').text(count);
+		// keep track of count
+		var count = 0;
+
+		// the room users
+		var _users = _room.users;
+		for (var i in _users) {
+			// increment count
+			count++;
 		}
+
+		// update the number of users in the room
+		stats.usersCount = count;
+		$('#tt2_stats_overall_users').text(count);
 	}
 
 	/**
@@ -697,8 +706,8 @@ p=/[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u20
 		initCurrentlyPlaying();
 
 		// log the manager
-		_log(_room);
-		_log(_manager);
+		//_log(_room);
+		//_log(_manager);
 
 		// watch for window resize
 		$(window).bind('resize', function(e) {
@@ -725,10 +734,14 @@ p=/[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u20
 
 			$('#tt2_chat_box').find('.chat_container').css({
 				height: tt2_size.height - tt2_playing_size.height,
-				width: tt2_size.width - tt2_playing_size.width,
+				width: tt2_size.width - tt2_playing_size.width - chat_user_width,
 				'overflow-x': 'none',
 				'overflow-y': 'auto'
 			});
+
+			// fix remainder of window sizes
+			$('#tt2_chat_box').find('.fullheight').css('height', tt2_size.height - tt2_playing_size.height);
+
 		});
 
 		// periodically check for number of users
@@ -778,12 +791,6 @@ p=/[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u20
 				html += '<div id="tt2_stats_current_coverart">';
 					html += '<div class="songinfo"></div>';
 				html += '</div>';
-				html += '<div id="similarTracks">';
-					html += '<h4 class="toggleAccordion">Similar Tracks</h4>';
-					html += '<div class="scroller">';
-						html += '<table cellpadding="0" cellspacing="0"><thead><tr><th>&nbsp;</th><th>Artist</th><th>Song</th><th>&nbsp;</th></thead><tbody></tbody></table>';
-					html += '</div>';
-				html += '</div>';
 			html += '</div>';
 
 			// stats wrapper
@@ -791,44 +798,46 @@ p=/[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u20
 				// current track stats
 				html += '<h4>Stats</h4>';
 				html += '<div class="accordion">'; // stats accordion wrapper
-					html += '<h5 class="toggleAccordion">Current Track</h5>';
-					html += '<div id="tt2_stats_current">';
-						html += '<ul class="stats">';
-							html += '<li>Votes: <span id="tt2_stats_current_votes">0</span></li>';
-							html += '<li>Upvotes: <span id="tt2_stats_current_upvotes">0</span></li>';
-							html += '<li>Downvotes: <span id="tt2_stats_current_downvotes">0</span></li>';
-							html += '<li>Rating: <span id="tt2_stats_current_rating">0</span></li>';
-						html += '</ul>';
-					html += '</div>';
+					html += '<div class="fullheight">';
+						html += '<h5 class="toggleAccordion">Current Track</h5>';
+						html += '<div id="tt2_stats_current">';
+							html += '<ul class="stats">';
+								html += '<li>Votes: <span id="tt2_stats_current_votes">0</span></li>';
+								html += '<li>Upvotes: <span id="tt2_stats_current_upvotes">0</span></li>';
+								html += '<li>Downvotes: <span id="tt2_stats_current_downvotes">0</span></li>';
+								html += '<li>Rating: <span id="tt2_stats_current_rating">0</span></li>';
+							html += '</ul>';
+						html += '</div>';
 
-					// personal stats
-					html += '<h5 class="toggleAccordion">My Stats</h5>';
-					html += '<div id="tt2_stats_mine">';
-						html += '<ul class="stats">';
-							html += '<li>Songs Played: <span id="tt2_stats_mine_totalSongs">0</span></li>';
-							html += '<li>Votes: <span id="tt2_stats_mine_votes">0</span></li>';
-							html += '<li>Upvotes: <span id="tt2_stats_mine_upvotes">0</span></li>';
-							html += '<li>Downvotes: <span id="tt2_stats_mine_downvotes">0</span></li>';
-							html += '<li>Rating: <span id="tt2_stats_mine_rating">0</span></li>';
-						html += '</ul>';
-					html += '</div>';
+						// personal stats
+						html += '<h5 class="toggleAccordion">My Stats</h5>';
+						html += '<div id="tt2_stats_mine">';
+							html += '<ul class="stats">';
+								html += '<li>Songs Played: <span id="tt2_stats_mine_totalSongs">0</span></li>';
+								html += '<li>Votes: <span id="tt2_stats_mine_votes">0</span></li>';
+								html += '<li>Upvotes: <span id="tt2_stats_mine_upvotes">0</span></li>';
+								html += '<li>Downvotes: <span id="tt2_stats_mine_downvotes">0</span></li>';
+								html += '<li>Rating: <span id="tt2_stats_mine_rating">0</span></li>';
+							html += '</ul>';
+						html += '</div>';
 
-					// overall stats
-					html += '<h5 class="toggleAccordion">Overall Room Stats</h5>';
-					html += '<div id="tt2_stats_overall">';
-						html += '<ul class="stats">';
-							html += '<li>Total Users: <span id="tt2_stats_overall_users">0</span></li>';
-							html += '<li>Songs Played: <span id="tt2_stats_overall_totalSongs">0</span></li>';
-							html += '<li>Upvotes: <span id="tt2_stats_overall_upvotes">0</span></li>';
-							html += '<li>Downvotes: <span id="tt2_stats_overall_downvotes">0</span></li>';
-							html += '<li>Rating: <span id="tt2_stats_overall_rating">0</span></li>';
-						html += '</ul>';
-					html += '</div>';
+						// overall stats
+						html += '<h5 class="toggleAccordion">Overall Room Stats</h5>';
+						html += '<div id="tt2_stats_overall">';
+							html += '<ul class="stats">';
+								html += '<li>Total Users: <span id="tt2_stats_overall_users">0</span></li>';
+								html += '<li>Songs Played: <span id="tt2_stats_overall_totalSongs">0</span></li>';
+								html += '<li>Upvotes: <span id="tt2_stats_overall_upvotes">0</span></li>';
+								html += '<li>Downvotes: <span id="tt2_stats_overall_downvotes">0</span></li>';
+								html += '<li>Rating: <span id="tt2_stats_overall_rating">0</span></li>';
+							html += '</ul>';
+						html += '</div>';
 
-					// user stats
-					html += '<h5 class="toggleAccordion">User Stats</h5>';
-					html += '<div id="tt2_stats_user" style="display:none">';
-						html += '<ul></ul>';
+						// user stats
+						html += '<h5 class="toggleAccordion">User Stats</h5>';
+						html += '<div id="tt2_stats_user" style="display:none">';
+							html += '<ul></ul>';
+						html += '</div>';
 					html += '</div>';
 
 					/*
@@ -845,20 +854,21 @@ p=/[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u20
 			html += '<div id="tt2_settings" class="section" style="display:none">';
 				html += '<h4 class="toggleAccordion">Settings</h4>';
 				html += '<div class="accordion">';
-					html += '<div><label><input type="checkbox" name="tt2_autoupvote" id="tt2_autoupvote" value="1" checked="checked" /> Auto Upvote</label></div>';
-					html += '<div><label><input type="checkbox" name="tt2_autodj" id="tt2_autodj" value="1" /> Auto DJ</label></div>';
-					html += '<div><label><input type="checkbox" name="tt2_autorespond" id="tt2_autorespond" value="1" checked="checked" /> Auto Respond</label></div>';
-					html += '<div><label><input type="checkbox" name="tt2_antiidle" id="tt2_antiidle" value="1" checked="checked" /> Anti Idle</label></div>';
-					html += '<div><label><input type="checkbox" name="tt2_muteAlert" id="tt2_muteAlert" value="1" checked="checked" /> Enable Mention Alert</label></div>';
+					html += '<div class="fullheight">';
+						html += '<div><label><input type="checkbox" name="tt2_autoupvote" id="tt2_autoupvote" value="1" checked="checked" /> Auto Upvote</label></div>';
+						html += '<div><label><input type="checkbox" name="tt2_autodj" id="tt2_autodj" value="1" /> Auto DJ</label></div>';
+						html += '<div><label><input type="checkbox" name="tt2_autorespond" id="tt2_autorespond" value="1" checked="checked" /> Auto Respond</label></div>';
+						html += '<div><label><input type="checkbox" name="tt2_antiidle" id="tt2_antiidle" value="1" checked="checked" /> Anti Idle</label></div>';
+						html += '<div><label><input type="checkbox" name="tt2_muteAlert" id="tt2_muteAlert" value="1" checked="checked" /> Enable Mention Alert</label></div>';
 
-					html += '<div><label for="tt2_name_aliases">My Aliases</label><textarea name="tt2_name_aliases" id="tt2_name_aliases">' + config.nameAliases.join('\n') + '</textarea><span class="note">This represents any strings someone may use to reference you in a chat message. It could be shorthand for your alias. Separate each with commas.</span></div>';
-					html += '<div><label for="tt2_general_name_aliases">General Aliases</label><textarea name="tt2_general_name_aliases" id="tt2_general_name_aliases">' + config.generalNameAliases.join('\n') + '</textarea><span class="note">Any string in a chat message that may refer to everybody in the room as a whole. Separate by commas.</div>';
-					html += '<div><label for="tt2_idle_aliases">Idle Aliases</label><textarea name="tt2_idle_aliases" id="tt2_idle_aliases">' + config.idleAliases.join('\n') + '</textarea><span class="note">Words mentioned in chat that may pertain to being idle, away from keyboard, etc.</div>';
-					html += '<div><label for="tt2_idle_replies">Idle Replies</label><textarea name="tt2_idle_replies" id="tt2_idle_replies">' + config.idleReplies.join('\n') + '</textarea><span class="note"></span></div>';
-					html += '<div><label for="tt2_idle_messages">Idle Messages</label><textarea name="tt2_idle_messages" id="tt2_idle_messages">' + config.idleMessages.join('\n') + '</textarea><span class="note"></span></div>';
+						html += '<div><label for="tt2_name_aliases">My Aliases</label><textarea name="tt2_name_aliases" id="tt2_name_aliases">' + config.nameAliases.join('\n') + '</textarea><span class="note">This represents any strings someone may use to reference you in a chat message. It could be shorthand for your alias. Separate each with commas.</span></div>';
+						html += '<div><label for="tt2_general_name_aliases">General Aliases</label><textarea name="tt2_general_name_aliases" id="tt2_general_name_aliases">' + config.generalNameAliases.join('\n') + '</textarea><span class="note">Any string in a chat message that may refer to everybody in the room as a whole. Separate by commas.</div>';
+						html += '<div><label for="tt2_idle_aliases">Idle Aliases</label><textarea name="tt2_idle_aliases" id="tt2_idle_aliases">' + config.idleAliases.join('\n') + '</textarea><span class="note">Words mentioned in chat that may pertain to being idle, away from keyboard, etc.</div>';
+						html += '<div><label for="tt2_idle_replies">Idle Replies</label><textarea name="tt2_idle_replies" id="tt2_idle_replies">' + config.idleReplies.join('\n') + '</textarea><span class="note"></span></div>';
+						html += '<div><label for="tt2_idle_messages">Idle Messages</label><textarea name="tt2_idle_messages" id="tt2_idle_messages">' + config.idleMessages.join('\n') + '</textarea><span class="note"></span></div>';
 
-					html += '<div><button type="button" name="updateSettings" id="updateSettings" name="Save Changes">Save Changes</button></div>'
-
+						html += '<div><button type="button" name="updateSettings" id="updateSettings" name="Save Changes">Save Changes</button></div>'
+					html += '</div>';
 				html += '</div>';
 			html += '</div>';
 
@@ -866,7 +876,17 @@ p=/[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u20
 			html += '<div id="tt2_chat" class="section">';
 				html += '<h4 class="toggleAccordion">Chat</h4>';
 				html += '<div class="accordion">';
-					html += '<div id="tt2_chat_box"></div>';
+					html += '<div id="tt2_chat_box" class="fullheight"></div>';
+				html += '</div>';
+			html += '</div>';
+
+			// similar tracks container
+			html += '<div id="similar_tracks" class="section" style="display:none">';
+				html += '<h4 class="toggleAccordion">Similar Tracks</h4>';
+				html += '<div class="accordion">';
+					html += '<div class="fullheight">';
+					html += '<table cellpadding="0" cellspacing="0"><thead><tr><th>&nbsp;</th><th>Artist</th><th>Song</th><th>&nbsp;</th></thead><tbody></tbody></table>';
+					html += '</div>';
 				html += '</div>';
 			html += '</div>';
 
@@ -882,7 +902,7 @@ p=/[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u20
 		var $chat_container = $('#right-panel').find('.chat-container');
 		$chat_container.find('.chatResizeIcon').hide();
 		var chat_height = $chat_container.height();
-		var message_height = $chat_container.find('.input-box').height();
+		var message_height = $chat_container.find('.chatBar').height();
 
 		// get the current songlist height
 		var songlist_height = $('#right-panel').find('.queueView .songlist').height();
@@ -922,6 +942,11 @@ p=/[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u20
 			height: '' + (tt2_size.height - tt2_playing_size.height - title_height - message_height - 90) + 'px !important',
 			'overflow-x': 'none !important',
 			'overflow-y': 'auto !important'
+		});
+
+		// fix remainder of windows
+		$('#tt2_container').find('.fullheight').css({
+
 		});
 
 		// reference all config options just once
@@ -981,15 +1006,16 @@ p=/[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u20
 		});
 
 		// watch for similar track click
-		/*
-		$('.similarTracks').live('click', function() {
-			var $this = $(this);
-			var artist = $this.data('artist');
-			var song = $this.data('song');
-			getSimilarTracks(artist, song);
+		$('#similarTracksBtn').live('click', function() {
+			// show similar
+			$('#tt2_nav').find('.btn').removeClass('selected');
+			$('#tt2_container').find('.section').hide();
+			var $target = $('#similar_tracks');
+			if ($target.length) {
+				$target.stop(true, true).slideDown('fast');
+			}
 			return false;
 		});
-		*/
 	}
 
 	/**
@@ -1160,18 +1186,11 @@ function getSimilarTracks(artist, song, album) {
 	var url = 'http://ws.audioscrobbler.com/2.0/?method=track.getsimilar&autocorrect=1&artist=' + encodeURIComponent(artist) + '&track=' + encodeURIComponent(song) + '&api_key=d1b14c712954973f098a226d80d6b5c2&format=json&callback=?';
 	$.getJSON(url, function(data) {
 		var html = '';
+
+
 		if (!data || !data.similartracks || !data.similartracks.track) {
-			return;
-		}
-
-		// log similar tracks until we're happy
-		_log('Similar tracks');
-		_log(data);
-		_log(data.similartracks);
-
-		if (typeof data.similartracks.track == 'string') {
-			_log('Hiding similar tracks due to no string match.');
-			$('#similarTracks').hide();
+			return false;
+		} else if (typeof data.similartracks.track == 'string') {
 			return false;
 		}
 
@@ -1218,8 +1237,9 @@ function getSimilarTracks(artist, song, album) {
 
 		if (html.length) {
 			// append html
-			$('#similarTracks').find('table tbody').html(html);
-			$('#similarTracks').show();
+			$('#similar_tracks').find('table tbody').html(html);
+			// show similar tracks button
+			$('<a href="#" class="btn" id="similarTracksBtn">Show Similar Tracks</a>').appendTo($('#tt2_stats_current_coverart .purchaseinfo'));
 		}
 	});
 }
