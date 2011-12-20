@@ -65,7 +65,7 @@
 #tt2_chat_box .chat-container .chatBar .input-box { width: 100%; background: transparent; border-left: none; left: 0 !important; }
 #tt2_chat_box .chat-container .chatBar .input-box input { position: relative; height: 26px !important; top: 2px !important; left: 0 !important; width: 100% !important; background: #fff; border-left: none !important;  }
 
-#tt2_chat_box .guest-list-container .chatBar { width: 100%; background: transparent; }
+#tt2_chat_box .guest-list-container .chatBar { width: 100%; }
 #tt2_chat_box .guest-list-container .chatBar .guestListButton { display: none !important; }
 #tt2_chat_box .guest-list-container .chatBar .guestListSize { left: 0; bottom: 0; width: 100%; }
 
