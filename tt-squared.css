@@ -23,6 +23,7 @@
 #tt2_container .toggleAccordion { cursor: pointer; }
 #tt2_container .accordion { padding: 10px 10px 0; }
 #tt2_container .hidden { display: none; }
+#tt2_container .fullheight { overflow-x: hidden; overflow-y: auto; }
 
 /* cover art */
 #tt2_stats_current_coverart { overflow: hidden; padding: 10px 10px 0; }

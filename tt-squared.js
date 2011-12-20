@@ -945,9 +945,7 @@ p=/[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u20
 		});
 
 		// fix remainder of windows
-		$('#tt2_container').find('.fullheight').css({
-
-		});
+		$('#tt2_container').find('.fullheight').css('height', tt2_size.height - tt2_playing_size.height);
 
 		// reference all config options just once
 		var $options = $('#tt2_stats');
