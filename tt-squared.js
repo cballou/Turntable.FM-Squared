@@ -24,8 +24,8 @@ p=/[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u20
 	var _tt = turntable;
 	var _room = null;
 	var _manager = null;
-	var _users = null;
 	var _k = null;
+	var _lastUserActions = {};
 
 	// sizing
 	var windowSize = {
@@ -150,11 +150,13 @@ p=/[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u20
 		votes: 0,
 		upvotes: 0,
 		downvotes: 0,
+		hearts: 0,
 
 		// for the current song
 		current: {
 			score: 0,
 			votes: 0,
+			hearts: 0,
 			upvoters: [],
 			downvoters: []
 		},
@@ -167,14 +169,18 @@ p=/[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u20
 			totalSongs: 0,
 			score: 0,
 			votes: 0,
+			hearts: 0,
 			upvotes: 0,
 			downvotes: 0,
 			songs: {
+			/*
 				score: 0,
 				votes: 0,
+				hearts: 0,
 				upvoters: [],
 				downvoters: [],
-				song: []
+				info: []
+			*/
 			}
 		}
 	};
@@ -274,6 +280,9 @@ p=/[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u20
      * Periodically check if you get mentioned in the chat room.
      */
     function watchForChatMentions(e) {
+		// new chat mention
+		_log(e);
+
         // handle alerting when mentioned
         if (stringInText(config.nameAliases, e.text)) {
             playAlertSound();
@@ -338,6 +347,13 @@ p=/[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u20
             _log('Preventing idle: ' + response);
             say(response);
         }, randomDelay(2, 8));
+	}
+
+	/**
+	 * Update the last user action
+	 */
+	function updateLastUserAction(user_id) {
+		_lastUserActions[user_id] = new Date().getTime();
 	}
 
 	/**
@@ -438,8 +454,8 @@ p=/[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u20
 			$('#tt2_stats_mine_totalSongs').text(votes.mine.totalSongs);
 
 			// handle individual song tracking
-			if (!votes.mine.songs.song[song_id]) {
-				votes.mine.songs.song[song_id] = {
+			if (!votes.mine.songs[song_id]) {
+				votes.mine.songs[song_id] = {
 					artist: song.artist,
 					title: song.song,
 					album: song.album,
@@ -518,6 +534,39 @@ p=/[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u20
 	}
 
 	/**
+	 * A new snag was recorded. Track it.
+	 */
+	function updateHearts(e) {
+		if (!_room.currentSong || !_room.currentSong._id) {
+			return false;
+		}
+
+		// retrieve song data
+		var song_id = _room.currentSong._id;
+		var song = _room.currentSong.metadata;
+
+		// add to current song
+		votes.current.hearts += 1;
+
+		// add to song history
+		votes.songs[song_id].hearts += 1;
+
+		// add to overall hearts
+		votes.hearts += 1;
+
+		// if I'm currently playing, add to mine
+		if (isCurrentDj()) {
+			votes.mine.hearts += 1;
+			votes.mine.songs[song_id].hearts += 1;
+			$('#tt2_stats_mine_hearts').text(votes.mine.votes);
+		}
+
+		// update stats
+		$('#tt2_stats_current_hearts').text(votes.current.hearts);
+		$('#tt2_stats_overall_hearts').text(votes.hearts);
+	}
+
+	/**
 	 * Keeps internal track of voting for each new song played.
 	 */
 	function updateVotes(e) {
@@ -591,7 +640,7 @@ p=/[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u20
 					votes.mine.score = Math.round(10000 * (votes.mine.upvotes / (votes.mine.downvotes + votes.mine.upvotes))) / 100;
 
 					// add upvoter to my song
-					votes.mine.songs.song[song_id].upvoters[uid] = users[uid].name;
+					votes.mine.songs[song_id].upvoters[uid] = users[uid].name;
 				}
 			} else {
 				// add to current downvoters
@@ -616,7 +665,7 @@ p=/[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u20
 					votes.mine.score = votes.mine.upvotes / (votes.mine.downvotes + votes.mine.upvotes);
 
 					// add downvoter to my song
-					votes.mine.songs.song[song_id].downvoters[uid] = users[uid].name;
+					votes.mine.songs[song_id].downvoters[uid] = users[uid].name;
 				}
 			}
 		}
@@ -648,11 +697,18 @@ p=/[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u20
 		// keep track of count
 		var count = 0;
 
+		// the current time
+		var curTime = new Date().getTime();
+
 		// the room users
 		var _users = _room.users;
 		for (var i in _users) {
 			// increment count
 			count++;
+			// if no previous action, set
+			if (typeof _lastUserActions[i] == 'undefined') {
+				_lastUserActions[i] = curTime;
+			}
 		}
 
 		// update the number of users in the room
@@ -671,6 +727,7 @@ p=/[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u20
 		// handle chat messages
 		if (e.command == 'speak' && e.userid) {
 			watchForChatMentions(e);
+			updateLastUserAction(e.userid);
 		} else if (e.command == 'newsong') {
 			resetVotes(e);
 			autoVote(e);
@@ -678,6 +735,16 @@ p=/[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u20
 			updateVotes(e);
 		} else if (e.command == 'rem_dj') {
 			watchForEmptyDjSlot(e);
+			updateLastUserAction(e.user[0].userid);
+		} else if (e.command == 'add_dj') {
+			updateLastUserAction(e.user[0].userid);
+		} else if (e.command == 'registered') {
+			for (var i in e.user) {
+				var userinfo = m.user[userIndex];
+				updateLastUserAction(userinfo.userid);
+			}
+		} else if (e.command == 'snagged') {
+			updateHearts(e);
 		}
 	}
 
@@ -695,6 +762,12 @@ p=/[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u20
 		// display the options menu
 		_log('Displaying the options menu.');
 		displayOptionsMenu();
+
+		// initialize user idle times
+		var curTime = new Date().getTime();
+		for (var user_id in _room.users) {
+			_lastUserActions[user_id] = curTime;
+		}
 
         // begin event listeners
         _log('Initiating the event listener.');
@@ -772,6 +845,7 @@ p=/[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u20
 								html += '<li>Upvotes: <span id="tt2_stats_current_upvotes">0</span></li>';
 								html += '<li>Downvotes: <span id="tt2_stats_current_downvotes">0</span></li>';
 								html += '<li>Rating: <span id="tt2_stats_current_rating">0</span></li>';
+								html += '<li>Hearts: <span id="tt2_stats_current_hearts">0</span></li>';
 							html += '</ul>';
 						html += '</div>';
 
@@ -784,6 +858,7 @@ p=/[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u20
 								html += '<li>Upvotes: <span id="tt2_stats_mine_upvotes">0</span></li>';
 								html += '<li>Downvotes: <span id="tt2_stats_mine_downvotes">0</span></li>';
 								html += '<li>Rating: <span id="tt2_stats_mine_rating">0</span></li>';
+								html += '<li>Hearts: <span id="tt2_stats_mine_hearts">0</span></li>';
 							html += '</ul>';
 						html += '</div>';
 
@@ -796,6 +871,7 @@ p=/[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u20
 								html += '<li>Upvotes: <span id="tt2_stats_overall_upvotes">0</span></li>';
 								html += '<li>Downvotes: <span id="tt2_stats_overall_downvotes">0</span></li>';
 								html += '<li>Rating: <span id="tt2_stats_overall_rating">0</span></li>';
+								html += '<li>Hearts: <span id="tt2_stats_overall_hearts">0</span></li>';
 							html += '</ul>';
 						html += '</div>';
 
@@ -883,9 +959,21 @@ p=/[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u20
 			$('#tt2_nav').find('.btn').removeClass('selected');
 			$('#tt2_container').find('.section').hide();
 			$this.addClass('selected');
-			var $target = $('#tt2_' + $this.data('id'));
+			var target = $this.data('id');
+			var $target = $('#tt2_' + target);
 			if ($target.length) {
 				$target.stop(true, true).slideDown('fast');
+				$target.attr({
+					scrollTop: $target.attr('scrollHeight')
+				});
+
+				// fix chat scroll when necessary
+				if (target == 'chat') {
+					var $messagebox = $('#tt2_chat_box').find('.chat-container .messages');
+					$messagebox.attr({
+						scrollTop: $messagebox.attr('scrollHeight')
+					});
+				}
 			}
 			return false;
 		});
@@ -1237,6 +1325,30 @@ p=/[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u20
 			}
 		}
 		return false
+	}
+
+	function formatDate(date, levels) {
+		var DATE_CONVERSIONS = {'year':31536000,'month':2678400,'week':604800,'day':86400,'hour':3600,'minute':60,'second':1};
+		var curdate = new Date().getTime();
+		curdate = Math.round(curdate / 1000);
+		if (date.length == 10) date = parseInt(date);
+		else date = Math.round(Date.parse(date) / 1000);
+		levels = levels || 2;
+
+		var diff = Math.abs(date - curdate);
+		var current_level = 1;
+		var result = [];
+		for (var timeframe in DATE_CONVERSIONS) {
+			if (current_level > levels) break;
+			if ((diff / DATE_CONVERSIONS[timeframe]) >= 1) {
+				var amount = Math.floor(diff / DATE_CONVERSIONS[timeframe]);
+				var plural = (amount > 1) ? 's' : '';
+				result.push(amount + ' ' + timeframe + plural);
+				diff -= amount * DATE_CONVERSIONS[timeframe];
+				++current_level;
+			}
+		}
+		return result.join(' ') + ' ago';
 	}
 
 	/**
