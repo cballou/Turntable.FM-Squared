@@ -705,8 +705,8 @@ p=/[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u20
 
 		// the room users
 		var _users = _room.users;
-		_log('Room Users:');
-		_log(_users);
+		//_log('Room Users:');
+		//_log(_users);
 
 		// get the real count
 		for (var i in _users) {
@@ -752,7 +752,7 @@ p=/[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u20
 			updateLastUserAction(e.user[0].userid);
 		} else if (e.command == 'registered') {
 			for (var i in e.user) {
-				var userinfo = m.user[userIndex];
+				var userinfo = m.user[i];
 				updateLastUserAction(userinfo.userid);
 			}
 		} else if (e.command == 'snagged') {
@@ -762,6 +762,7 @@ p=/[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u20
 
 	function displayIdleTimes() {
 		// iterate over each guest
+		_log('Updating idle times.');
 		$('#tt2_chat_box').find('.guest-list-container .guest').each(function() {
 			var $this = $(this);
 			var $name = $this.find('.guestName');
