@@ -763,17 +763,19 @@ p=/[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u20
 		_log(_usernameMappings);
 		_log(_lastUserActions);
 
-
 		$('#tt2_chat_box').find('.guest-list-container .guest').each(function() {
+			_log('Found guest.');
 			var $this = $(this);
 			var $name = $this.find('.guestName');
 			var username = $name.text();
 			if (typeof _usernameMappings[username] != 'undefined') {
+				_log('Found matching username.');
 				var user_id = _usernameMappings[username];
 				if (typeof _lastUserActions[user_id] != 'undefined') {
+					_log('Found matching user_id');
 					var lastIdle = formatDate(_lastUserActions[user_id]);
 					var $guestIdle = $this.find('.guestIdle');
-					if (!$this.find('.guestIdle')) {
+					if (!$guestIdle.length) {
 						$name.after('<div class="guestIdle">' + lastIdle + '</div>');
 					} else {
 						$guestIdle.html(lastIdle);
