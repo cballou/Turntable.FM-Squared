@@ -25,7 +25,10 @@ p=/[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u20
 	var _room = null;
 	var _manager = null;
 	var _k = null;
+
+	// some specific user monitors
 	var _lastUserActions = {};
+	var _usernameMappings = {};
 
 	// sizing
 	var windowSize = {
@@ -705,13 +708,19 @@ p=/[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u20
 		_log('Room Users:');
 		_log(_users);
 
+		// get the real count
 		for (var i in _users) {
 			// increment count
 			count++;
+
 			// if no previous action, set
 			if (typeof _lastUserActions[i] == 'undefined') {
 				_lastUserActions[i] = curTime;
 			}
+
+			// map names to ids
+			if (typeof _usernameMappings[ _users[i].name ] == 'undefined')
+			_usernameMappings[ _users[i].name ] = i;
 		}
 
 		// update the number of users in the room
@@ -749,6 +758,27 @@ p=/[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u20
 		} else if (e.command == 'snagged') {
 			updateHearts(e);
 		}
+	}
+
+	function displayIdleTimes() {
+		// iterate over each guest
+		$('#tt2_chat_box').find('.guest-list-container .guest').each(function() {
+			var $this = $(this);
+			var $name = $this.find('.guestName');
+			var username = $name.text();
+			if (typeof _usernameMappings[username] != 'undefined') {
+				var user_id = _usernameMappings[username];
+				if (typeof _lastUserActions[user_id] != 'undefined') {
+					var lastIdle = formatDate(_lastUserActions[user_id]);
+					var $guestIdle = $this.find('.guestIdle');
+					if (!$this.find('.guestIdle')) {
+						$name.after('<div class="guestIdle">' + lastIdle + '</div>');
+					} else {
+						$guestIdle.html(lastIdle);
+					}
+				}
+			}
+		});
 	}
 
 	//=========================================
@@ -795,6 +825,11 @@ p=/[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u20
 		setInterval(function() {
 			preventIdle();
 		}, 10100);
+
+		// update the idle times every 30 seconds
+		setInterval(function() {
+			displayIdleTimes();
+		}, 30000);
     });
 
 	//==========================================================================
