@@ -1366,30 +1366,33 @@ p=/[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u20
 		return false
 	}
 
-	function formatDate(date, levels) {
-		var DATE_CONVERSIONS = {'yr':31536000,'month':2678400,'wk':604800,'day':86400,'hr':3600,'min':60,'sec':1};
+	function formatDate(date) {
 		var curdate = new Date().getTime();
 		curdate = Math.round(curdate / 1000);
 		if (!date.length) date = date.toString();
 		if (date.length == 10) date = parseInt(date);
 		else if (date.length == 13) date = parseInt(parseInt(date) / 1000);
 		else date = Math.round(Date.parse(date) / 1000);
-		levels = levels || 2;
-
 		var diff = Math.abs(date - curdate);
-		var current_level = 1;
-		var result = [];
-		for (var timeframe in DATE_CONVERSIONS) {
-			if (current_level > levels) break;
-			if ((diff / DATE_CONVERSIONS[timeframe]) >= 1) {
-				var amount = Math.floor(diff / DATE_CONVERSIONS[timeframe]);
-				var plural = (amount > 1) ? 's' : '';
-				result.push(amount + ' ' + timeframe + plural);
-				diff -= amount * DATE_CONVERSIONS[timeframe];
-				++current_level;
-			}
+		// get minutes
+		if ((diff / 60) >= 1) {
+			var min = Math.floor(diff / 60);
+			diff -= min * 60;
+			var sec = diff - (min * 60);
+		} else {
+			var min = '00';
+			var sec = diff;
 		}
-		return result.join(' ') + ' ago';
+
+		min = min.toString();
+		sec = sec.toString();
+		if (min.length < 2) {
+			min = '0' + min;
+		}
+		if (sec.length < 2) {
+			sec = '0' + sec;
+		}
+		return min + ':' + sec;
 	}
 
 	/**
