@@ -283,9 +283,6 @@ p=/[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u20
      * Periodically check if you get mentioned in the chat room.
      */
     function watchForChatMentions(e) {
-		// new chat mention
-		_log(e);
-
         // handle alerting when mentioned
         if (stringInText(config.nameAliases, e.text)) {
             playAlertSound();
@@ -763,6 +760,10 @@ p=/[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u20
 	function displayIdleTimes() {
 		// iterate over each guest
 		_log('Updating idle times.');
+		_log(_usernameMappings);
+		_log(_lastUserActions);
+
+
 		$('#tt2_chat_box').find('.guest-list-container .guest').each(function() {
 			var $this = $(this);
 			var $name = $this.find('.guestName');
