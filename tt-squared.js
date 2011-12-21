@@ -1377,7 +1377,6 @@ p=/[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u20
 		// get minutes
 		if ((diff / 60) >= 1) {
 			var min = Math.floor(diff / 60);
-			diff -= min * 60;
 			var sec = diff - (min * 60);
 		} else {
 			var min = '00';
