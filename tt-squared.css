@@ -69,7 +69,7 @@
 #tt2_chat_box .guest-list-container .chatBar { width: 100%; }
 #tt2_chat_box .guest-list-container .chatBar .guestListButton { display: none !important; }
 #tt2_chat_box .guest-list-container .chatBar .guestListSize { left: 0; bottom: 0; width: 100%; }
-#tt2_chat_box .guest-list-container .guestIdle { position: absolute; top: 0; right: 20px; width: 50px; height: 20px; color: #bbb; overflow: hidden; }
+#tt2_chat_box .guest-list-container .guestIdle { position: absolute; top: 0; right: 20px; width: 50px; height: 24px; line-height: 24px; color: #bbb; overflow: hidden; text-align: right; }
 
 /* TT.FM overrides */
 #outer { margin: 0 !important; }
