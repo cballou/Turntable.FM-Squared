@@ -764,7 +764,6 @@ p=/[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u20
 		_log(_lastUserActions);
 
 		$('#tt2_chat_box').find('.guest-list-container .guest').each(function() {
-			_log('Found guest.');
 			var $this = $(this);
 			var $name = $this.find('.guestName');
 			var username = $name.text();
@@ -1368,12 +1367,12 @@ p=/[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u20
 	}
 
 	function formatDate(date, levels) {
-		_log(date.length);
 		var DATE_CONVERSIONS = {'year':31536000,'month':2678400,'week':604800,'day':86400,'hour':3600,'minute':60,'second':1};
 		var curdate = new Date().getTime();
 		curdate = Math.round(curdate / 1000);
+		if (!date.length) date = date.toString();
 		if (date.length == 10) date = parseInt(date);
-		else if (date.length == 13) date = parseInt(date / 1000);
+		else if (date.length == 13) date = parseInt(parseInt(date) / 1000);
 		else date = Math.round(Date.parse(date) / 1000);
 		levels = levels || 2;
 
