@@ -702,6 +702,9 @@ p=/[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u20
 
 		// the room users
 		var _users = _room.users;
+		_log('Room Users:');
+		_log(_users);
+
 		for (var i in _users) {
 			// increment count
 			count++;
