@@ -1377,6 +1377,9 @@ p=/[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u20
 		else date = Math.round(Date.parse(date) / 1000);
 		levels = levels || 2;
 
+		_log(date);
+		_log(levels);
+
 		var diff = Math.abs(date - curdate);
 		var current_level = 1;
 		var result = [];
