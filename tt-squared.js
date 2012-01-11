@@ -1,18 +1,8 @@
-/**
- * localStorage handler.
- *
- * Copyright (c) 2010-2011 Marcus Westin
- */
-var store=function(){var b={},g=window,m=g.document,f;b.disabled=false;b.set=function(){};b.get=function(){};b.remove=function(){};b.clear=function(){};b.transact=function(a,c){var d=b.get(a);if(typeof d=="undefined")d={};c(d);b.set(a,d)};b.serialize=function(a){return JSON.stringify(a)};b.deserialize=function(a){if(typeof a=="string")return JSON.parse(a)};var p;try{p="localStorage"in g&&g.localStorage}catch(i){p=false}if(p){f=g.localStorage;b.set=function(a,c){f.setItem(a,b.serialize(c))};b.get=
-function(a){return b.deserialize(f.getItem(a))};b.remove=function(a){f.removeItem(a)};b.clear=function(){f.clear()}}else{var n;try{n="globalStorage"in g&&g.globalStorage&&g.globalStorage[g.location.hostname]}catch(r){n=false}if(n){f=g.globalStorage[g.location.hostname];b.set=function(a,c){f[a]=b.serialize(c)};b.get=function(a){return b.deserialize(f[a]&&f[a].value)};b.remove=function(a){delete f[a]};b.clear=function(){for(var a in f)delete f[a]}}else if(m.documentElement.addBehavior){f=m.createElement("div");
-g=function(a){return function(){var c=Array.prototype.slice.call(arguments,0);c.unshift(f);m.body.appendChild(f);f.addBehavior("#default#userData");f.load("localStorage");c=a.apply(b,c);m.body.removeChild(f);return c}};b.set=g(function(a,c,d){a.setAttribute(c,b.serialize(d));a.save("localStorage")});b.get=g(function(a,c){return b.deserialize(a.getAttribute(c))});b.remove=g(function(a,c){a.removeAttribute(c);a.save("localStorage")});b.clear=g(function(a){var c=a.XMLDocument.documentElement.attributes;
-a.load("localStorage");for(var d=0,h;h=c[d];d++)a.removeAttribute(h.name);a.save("localStorage")})}}try{b.set("__storejs__","__storejs__");if(b.get("__storejs__")!="__storejs__")b.disabled=true;b.remove("__storejs__")}catch(o){b.disabled=true}return b}();if(!this.JSON)this.JSON={};
-(function(){function b(a){return a<10?"0"+a:a}function g(a){p.lastIndex=0;return p.test(a)?'"'+a.replace(p,function(c){var d=r[c];return typeof d==="string"?d:"\\u"+("0000"+c.charCodeAt(0).toString(16)).slice(-4)})+'"':'"'+a+'"'}function m(a,c){var d,h,k,q,l=i,j,e=c[a];if(e&&typeof e==="object"&&typeof e.toJSON==="function")e=e.toJSON(a);if(typeof o==="function")e=o.call(c,a,e);switch(typeof e){case "string":return g(e);case "number":return isFinite(e)?String(e):"null";case "boolean":case "null":return String(e);
-case "object":if(!e)return"null";i+=n;j=[];if(Object.prototype.toString.apply(e)==="[object Array]"){q=e.length;for(d=0;d<q;d+=1)j[d]=m(d,e)||"null";k=j.length===0?"[]":i?"[\n"+i+j.join(",\n"+i)+"\n"+l+"]":"["+j.join(",")+"]";i=l;return k}if(o&&typeof o==="object"){q=o.length;for(d=0;d<q;d+=1){h=o[d];if(typeof h==="string")if(k=m(h,e))j.push(g(h)+(i?": ":":")+k)}}else for(h in e)if(Object.hasOwnProperty.call(e,h))if(k=m(h,e))j.push(g(h)+(i?": ":":")+k);k=j.length===0?"{}":i?"{\n"+i+j.join(",\n"+i)+
-"\n"+l+"}":"{"+j.join(",")+"}";i=l;return k}}if(typeof Date.prototype.toJSON!=="function"){Date.prototype.toJSON=function(){return isFinite(this.valueOf())?this.getUTCFullYear()+"-"+b(this.getUTCMonth()+1)+"-"+b(this.getUTCDate())+"T"+b(this.getUTCHours())+":"+b(this.getUTCMinutes())+":"+b(this.getUTCSeconds())+"Z":null};String.prototype.toJSON=Number.prototype.toJSON=Boolean.prototype.toJSON=function(){return this.valueOf()}}var f=/[\u0000\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u2028-\u202f\u2060-\u206f\ufeff\ufff0-\uffff]/g,
-p=/[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u2028-\u202f\u2060-\u206f\ufeff\ufff0-\uffff]/g,i,n,r={"\u0008":"\\b","\t":"\\t","\n":"\\n","\u000c":"\\f","\r":"\\r",'"':'\\"',"\\":"\\\\"},o;if(typeof JSON.stringify!=="function")JSON.stringify=function(a,c,d){var h;n=i="";if(typeof d==="number")for(h=0;h<d;h+=1)n+=" ";else if(typeof d==="string")n=d;if((o=c)&&typeof c!=="function"&&(typeof c!=="object"||typeof c.length!=="number"))throw Error("JSON.stringify");return m("",
-{"":a})};if(typeof JSON.parse!=="function")JSON.parse=function(a,c){function d(k,q){var l,j,e=k[q];if(e&&typeof e==="object")for(l in e)if(Object.hasOwnProperty.call(e,l)){j=d(e,l);if(j!==undefined)e[l]=j;else delete e[l]}return c.call(k,q,e)}var h;a=String(a);f.lastIndex=0;if(f.test(a))a=a.replace(f,function(k){return"\\u"+("0000"+k.charCodeAt(0).toString(16)).slice(-4)});if(/^[\],:{}\s]*$/.test(a.replace(/\\(?:["\\\/bfnrt]|u[0-9a-fA-F]{4})/g,"@").replace(/"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g,
-"]").replace(/(?:^|:|,)(?:\s*\[)+/g,""))){h=eval("("+a+")");return typeof c==="function"?d({"":h},""):h}throw new SyntaxError("JSON.parse");}})();
+/* Copyright (c) 2010-2011 Marcus Westin */
+var lstore=function(){var b={},e=window,g=e.document,c;b.disabled=false;b.set=function(){};b.get=function(){};b.remove=function(){};b.clear=function(){};b.transact=function(a,d){var f=b.get(a);if(typeof f=="undefined")f={};d(f);b.set(a,f)};b.serialize=function(a){return JSON.stringify(a)};b.deserialize=function(a){if(typeof a=="string")return JSON.parse(a)};var h;try{h="localStorage"in e&&e.localStorage}catch(k){h=false}if(h){c=e.localStorage;b.set=function(a,d){c.setItem(a,b.serialize(d))};b.get=
+function(a){return b.deserialize(c.getItem(a))};b.remove=function(a){c.removeItem(a)};b.clear=function(){c.clear()}}else{var i;try{i="globalStorage"in e&&e.globalStorage&&e.globalStorage[e.location.hostname]}catch(l){i=false}if(i){c=e.globalStorage[e.location.hostname];b.set=function(a,d){c[a]=b.serialize(d)};b.get=function(a){return b.deserialize(c[a]&&c[a].value)};b.remove=function(a){delete c[a]};b.clear=function(){for(var a in c)delete c[a]}}else if(g.documentElement.addBehavior){c=g.createElement("div");
+e=function(a){return function(){var d=Array.prototype.slice.call(arguments,0);d.unshift(c);g.body.appendChild(c);c.addBehavior("#default#userData");c.load("localStorage");d=a.apply(b,d);g.body.removeChild(c);return d}};b.set=e(function(a,d,f){a.setAttribute(d,b.serialize(f));a.save("localStorage")});b.get=e(function(a,d){return b.deserialize(a.getAttribute(d))});b.remove=e(function(a,d){a.removeAttribute(d);a.save("localStorage")});b.clear=e(function(a){var d=a.XMLDocument.documentElement.attributes;
+a.load("localStorage");for(var f=0,j;j=d[f];f++)a.removeAttribute(j.name);a.save("localStorage")})}}try{b.set("__storejs__","__storejs__");if(b.get("__storejs__")!="__storejs__")b.disabled=true;b.remove("__storejs__")}catch(m){b.disabled=true}return b}();
 
 /**
  * A subset of Turntable.fm Chat Bot with a ton of additions and improvements.
@@ -23,6 +13,7 @@ p=/[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u20
     // TT.FM objects
 	var _tt = turntable;
 	var _room = null;
+	var _mods = [];
 	var _manager = null;
 	var _k = null;
 
@@ -130,14 +121,14 @@ p=/[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u20
 	};
 
 	// handle config values
-	var config = store.get('config');
+	var config = lstore.get('config');
 	if (!config) {
 		config = defaults;
-		store.set('config', config);
+		lstore.set('config', config);
 	} else {
 		// merge config with defaults to ensure no missing params
 		config = $.extend({}, defaults, config);
-		store.set('config', config);
+		lstore.set('config', config);
 	}
 
 	// stats monitoring
@@ -176,23 +167,20 @@ p=/[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u20
 			upvotes: 0,
 			downvotes: 0,
 			songs: {
-			/*
-				score: 0,
-				votes: 0,
-				hearts: 0,
-				upvoters: [],
-				downvoters: [],
-				info: []
-			*/
+				/* score: 0, votes: 0, hearts: 0, upvoters: [], downvoters: [], info: [] */
 			}
 		}
 	};
 
     // the maximum idle response frequency (milliseconds)
     var maxIdleResponseFreq = 600000;
+	var maxDjIdleTime = 600000;
 
     // the last idle response time
     var lastIdleResponse = new Date().getTime();
+
+	// the last time the guest list was updated
+	var lastIdleDOMUpdate = null;
 
     /**
      * Function to retrieve turntable objects.
@@ -209,6 +197,7 @@ p=/[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u20
                     if (_tt[o] !== null && _tt[o].creatorId) {
 						_log('Room found.');
                         _room = _tt[o];
+						_mods = _room.moderators || [];
 						_k = {};
 						_k[0] = o;
                         break;
@@ -254,7 +243,7 @@ p=/[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u20
 			return;
 		}
 
-		if (_room.isDj()) {
+		if (_room.isDj() || isDj()) {
 			_log('You are already on the decks.');
 		}
 
@@ -387,7 +376,9 @@ p=/[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u20
 		$('#similar_tracks').hide();
 
 		// reset current vote counter
-		votes.current.score = votes.current.votes = 0;
+		votes.current.score = 0;
+		votes.current.votes = 0;
+		votes.current.hearts = 0;
 		votes.current.upvoters = [];
 		votes.current.downvoters = [];
 
@@ -693,23 +684,13 @@ p=/[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u20
 	/**
 	 * Update the number of current users in the room.
 	 */
-	function getUsersCount() {
-		// keep track of count
-		var count = 0;
-
+	function updateRoomUsers() {
 		// the current time
 		var curTime = new Date().getTime();
 
 		// the room users
 		var _users = _room.users;
-		//_log('Room Users:');
-		//_log(_users);
-
-		// get the real count
 		for (var i in _users) {
-			// increment count
-			count++;
-
 			// if no previous action, set
 			if (typeof _lastUserActions[i] == 'undefined') {
 				_lastUserActions[i] = curTime;
@@ -719,10 +700,6 @@ p=/[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u20
 			if (typeof _usernameMappings[ _users[i].name ] == 'undefined')
 			_usernameMappings[ _users[i].name ] = i;
 		}
-
-		// update the number of users in the room
-		stats.usersCount = count;
-		$('#tt2_stats_overall_users').text(count);
 	}
 
 	/**
@@ -757,11 +734,18 @@ p=/[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u20
 		}
 	}
 
+	/**
+	 * Update the idle time display of each user.
+	 */
 	function displayIdleTimes() {
-		// iterate over each guest
+        // check if we recently repainted within the last second
+        var now = new Date().getTime();
+        if (now - lastIdleDOMUpdate < 10000) {
+			_log('Skipping idle time update.');
+            return true;
+        }
+
 		_log('Updating idle times.');
-		_log(_usernameMappings);
-		_log(_lastUserActions);
 
 		$('#tt2_chat_box').find('.guest-list-container .guest').each(function() {
 			var $this = $(this);
@@ -770,6 +754,16 @@ p=/[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u20
 			if (typeof _usernameMappings[username] != 'undefined') {
 				var user_id = _usernameMappings[username];
 				if (typeof _lastUserActions[user_id] != 'undefined') {
+					// update special highlighters
+					var modClass = isRoomModerator(user_id) ? ' isMod' : '';
+					var isDj = isDj(user_id);
+					modClass += isDj ? ' isDj' : '';
+					if (isDj && (now - _lastUserActions[user_id] < maxDjIdleTime)) {
+						modClass += ' isIdle';
+					}
+					$this.removeClass('isMod isDj isIdle').addClass(modClass);
+
+					// update idle time
 					var lastIdle = formatDate(_lastUserActions[user_id]);
 					var $guestIdle = $this.find('.guestIdle');
 					if (!$guestIdle.length) {
@@ -780,6 +774,9 @@ p=/[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u20
 				}
 			}
 		});
+
+		// update last idle DOM update time
+		lastIdleDOMUpdate = now;
 	}
 
 	//=========================================
@@ -817,9 +814,24 @@ p=/[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u20
 		// watch for window resize
 		$(window).bind('resize', resizeWindow);
 
+		// watch for changes to DOM nodes
+		$(document).bind('DOMNodeInserted', function(event) {
+			var $node = $(event.target);
+			// check if node references a chat guest
+			if ($node.hasClass('guest')) {
+				_log('New guest DOM node observed.');
+				_log('ID: ' + $node.attr('id'));
+				_log('CLASS: ' + $node.attr('class'));
+
+				// re-paint the idle times if we haven't done so recently
+
+				displayIdleTimes();
+			}
+		});
+
 		// periodically check for number of users
 		setInterval(function() {
-			getUsersCount();
+			updateRoomUsers();
 		}, 5000);
 
 		// periodically update turntable.lastMotionTime
@@ -841,7 +853,9 @@ p=/[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u20
 	 * Update settings by using localstorage.
 	 */
 	function updateSettings() {
-		store.set('config', config);
+		_log('Updating settings.');
+		_log(config);
+		lstore.set('config', config);
 	}
 
 	/**
@@ -979,19 +993,6 @@ p=/[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u20
 		// move the chat
 		moveChatWindow();
 
-		// reference all config options just once
-		var $options = $('#tt2_stats');
-		var $auto_upvote = $options.find('#tt2_autoupvote');
-		var $auto_dj = $options.find('#tt2_autodj');
-		var $auto_respond = $options.find('#tt2_autorespond');
-		var $anti_idle = $options.find('#tt2_antiidle');
-		var $mute_alert = $options.find('#tt2_muteAlert');
-		var $name_aliases = $options.find('#tt2_name_aliases');
-		var $general_name_aliases = $options.find('#tt2_general_name_aliases');
-		var $idle_aliases = $options.find('#tt2_idle_aliases');
-		var $idle_replies = $options.find('#tt2_idle_replies');
-		var $idle_messages = $options.find('#tt2_idle_messages');
-
 		// watch for nav change
 		$('#tt2_nav .btn').live('click', function() {
 			var $this = $(this);
@@ -999,6 +1000,7 @@ p=/[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u20
 			$('#tt2_container').find('.section').hide();
 			$this.addClass('selected');
 			var target = $this.data('id');
+			_log('Target button clicked, intended target: ' + '#tt2_' + target);
 			var $target = $('#tt2_' + target);
 			if ($target.length) {
 				$target.stop(true, true).slideDown('fast');
@@ -1017,9 +1019,21 @@ p=/[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u20
 			return false;
 		});
 
+		// reference all config options just once
+		var $options = $('#tt2_stats');
+		var $auto_upvote = $options.find('#tt2_autoupvote');
+		var $auto_dj = $options.find('#tt2_autodj');
+		var $auto_respond = $options.find('#tt2_autorespond');
+		var $anti_idle = $options.find('#tt2_antiidle');
+		var $mute_alert = $options.find('#tt2_muteAlert');
+		var $name_aliases = $options.find('#tt2_name_aliases');
+		var $general_name_aliases = $options.find('#tt2_general_name_aliases');
+		var $idle_aliases = $options.find('#tt2_idle_aliases');
+		var $idle_replies = $options.find('#tt2_idle_replies');
+		var $idle_messages = $options.find('#tt2_idle_messages');
+
 		// watch for change to options
 		$options.find('#updateSettings').click(function() {
-			var checked;
 			// save all option changes
 			config.autoUpvote = $auto_upvote.is(':checked');
 			config.autoDj = $auto_dj.is(':checked');
@@ -1035,7 +1049,9 @@ p=/[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u20
 			config.idleMessages = $idle_messages.val().split(/\n\r?/g);
 
 			// handle trying to auto-dj
-			if (config.autoDj) emptySlotCheck();
+			if (config.autoDj) {
+				emptySlotCheck();
+			}
 
 			// update the localstorage settings
 			updateSettings();
@@ -1060,6 +1076,21 @@ p=/[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u20
 		});
 	}
 
+	/**
+	 * Checks if the given user is a moderator.
+	 */
+	function isRoomModerator(user_id) {
+		for (var i in _mods) {
+			if (mods[i] == user_id) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Move the chat window on resize.
+	 */
 	function moveChatWindow() {
 		// get the chat container sizing
 		var $chat_container = $('#right-panel').find('.chat-container');
@@ -1264,11 +1295,15 @@ p=/[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u20
 	/**
 	 * Check if currently DJing.
 	 */
-	function isDj() {
+	function isDj(user_id) {
+		if (!user_id || typeof user_id == 'undefined') {
+			user_id = _room.selfId;
+		}
+
 		if (typeof _manager.djs != 'undefined') {
 			for (var i in _manager.djs) {
 				if (typeof _manager.djs[i] != 'undefined') {
-					if (_manager.djs[i][0] == _room.selfId) {
+					if (_manager.djs[i][0] == user_id) {
 						return true;
 					}
 				}

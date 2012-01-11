@@ -76,11 +76,13 @@ Step 4. When in a Turntable.FM room, click on your new bookmarklet.
 Change Log
 ==========
 
-* Added LocalStorage support for saving a user's configuration preferences.
+* 2012-01-10 - Adding handling for guest coloring.
+* 2012-01-10 - Added LocalStorage support for saving a user's configuration preferences.
 
 Credits
 =======
-This was made possible by initial anaylsis of AutoAwesome and the Turntable.fm Chat Bot.
+This was made possible (in part) by research, porting, and idea grabbing from the following sources:
 
 https://github.com/michaelmwu/turntable.fm/
 https://github.com/dnephin/Turntable.fm-chat-bot/
+https://github.com/MarkReeder/Turntable.fm-Extensions/
