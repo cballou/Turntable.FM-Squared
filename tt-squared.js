@@ -740,7 +740,7 @@ a.load("localStorage");for(var f=0,j;j=d[f];f++)a.removeAttribute(j.name);a.save
 	function displayIdleTimes() {
         // check if we recently repainted within the last second
         var now = new Date().getTime();
-        if (now - lastIdleDOMUpdate < 10000) {
+        if (lastIdleDOMUpdate && (now - lastIdleDOMUpdate < 10000)) {
 			_log('Skipping idle time update.');
             return true;
         }
@@ -756,9 +756,9 @@ a.load("localStorage");for(var f=0,j;j=d[f];f++)a.removeAttribute(j.name);a.save
 				if (typeof _lastUserActions[user_id] != 'undefined') {
 					// update special highlighters
 					var modClass = isRoomModerator(user_id) ? ' isMod' : '';
-					var isDj = isDj(user_id);
-					modClass += isDj ? ' isDj' : '';
-					if (isDj && (now - _lastUserActions[user_id] < maxDjIdleTime)) {
+					var isDjing = isDj(user_id);
+					modClass += isDjing ? ' isDj' : '';
+					if (isDjing && (now - _lastUserActions[user_id] < maxDjIdleTime)) {
 						modClass += ' isIdle';
 					}
 					$this.removeClass('isMod isDj isIdle').addClass(modClass);
