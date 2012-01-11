@@ -747,6 +747,7 @@ a.load("localStorage");for(var f=0,j;j=d[f];f++)a.removeAttribute(j.name);a.save
 
 		_log('Updating idle times.');
 
+		// update the chat box
 		$('#tt2_chat_box').find('.guest-list-container .guest').each(function() {
 			var $this = $(this);
 			var $name = $this.find('.guestName');
@@ -758,7 +759,7 @@ a.load("localStorage");for(var f=0,j;j=d[f];f++)a.removeAttribute(j.name);a.save
 					var modClass = isRoomModerator(user_id) ? ' isMod' : '';
 					var isDjing = isDj(user_id);
 					modClass += isDjing ? ' isDj' : '';
-					if (isDjing && (now - _lastUserActions[user_id] < maxDjIdleTime)) {
+					if (isDjing && (now - _lastUserActions[user_id] > maxDjIdleTime)) {
 						modClass += ' isIdle';
 					}
 					$this.removeClass('isMod isDj isIdle').addClass(modClass);
@@ -819,12 +820,6 @@ a.load("localStorage");for(var f=0,j;j=d[f];f++)a.removeAttribute(j.name);a.save
 			var $node = $(event.target);
 			// check if node references a chat guest
 			if ($node.hasClass('guest')) {
-				_log('New guest DOM node observed.');
-				_log('ID: ' + $node.attr('id'));
-				_log('CLASS: ' + $node.attr('class'));
-
-				// re-paint the idle times if we haven't done so recently
-
 				displayIdleTimes();
 			}
 		});
@@ -1020,7 +1015,7 @@ a.load("localStorage");for(var f=0,j;j=d[f];f++)a.removeAttribute(j.name);a.save
 		});
 
 		// reference all config options just once
-		var $options = $('#tt2_stats');
+		var $options = $('#tt2_settings');
 		var $auto_upvote = $options.find('#tt2_autoupvote');
 		var $auto_dj = $options.find('#tt2_autodj');
 		var $auto_respond = $options.find('#tt2_autorespond');
