@@ -1081,7 +1081,7 @@ a.load("localStorage");for(var f=0,j;j=d[f];f++)a.removeAttribute(j.name);a.save
 	 */
 	function isRoomModerator(user_id) {
 		for (var i in _mods) {
-			if (mods[i] == user_id) {
+			if (_mods[i] == user_id) {
 				return true;
 			}
 		}
