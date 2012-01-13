@@ -739,13 +739,15 @@ a.load("localStorage");for(var f=0,j;j=d[f];f++)a.removeAttribute(j.name);a.save
 	 * Update the idle time display of each user.
 	 */
 	function displayIdleTimes() {
-        // check if we recently repainted within the last second
+        // check if we recently repainted within the last two seconds
         var now = new Date().getTime();
-        if (lastIdleDOMUpdate && (now - lastIdleDOMUpdate < 10000)) {
-			_log('Skipping idle time update. Difference: ' + (now - lastIdleDOMUpdate));
+        if (lastIdleDOMUpdate && (now - lastIdleDOMUpdate < 2000)) {
+			//_log('Skipping idle time update. Difference: ' + (now - lastIdleDOMUpdate));
             return true;
         }
 
+		// update last idle DOM update time
+		lastIdleDOMUpdate = now;
 		_log('Updating idle times.');
 
 		// update the chat box
@@ -776,9 +778,6 @@ a.load("localStorage");for(var f=0,j;j=d[f];f++)a.removeAttribute(j.name);a.save
 				}
 			}
 		});
-
-		// update last idle DOM update time
-		lastIdleDOMUpdate = now;
 	}
 
 	//=========================================
@@ -821,7 +820,7 @@ a.load("localStorage");for(var f=0,j;j=d[f];f++)a.removeAttribute(j.name);a.save
 			var $node = $(event.target);
 			// check if node references a chat guest
 			if ($node.hasClass('guest')) {
-				displayIdleTimes();
+				displayIdleTimes(true);
 			}
 		});
 
@@ -837,7 +836,7 @@ a.load("localStorage");for(var f=0,j;j=d[f];f++)a.removeAttribute(j.name);a.save
 
 		// update the idle times every 30 seconds
 		setInterval(function() {
-			displayIdleTimes();
+			displayIdleTimes(false);
 		}, 30000);
     });
 
