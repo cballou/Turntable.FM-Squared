@@ -40,6 +40,7 @@ a.load("localStorage");for(var f=0,j;j=d[f];f++)a.removeAttribute(j.name);a.save
 		antiIdle: true,
 		muteAlert: false,
 		autoUpvote: true,
+		autoDjTimeout: 25,
 		nameAliases: [
 			'corey',
 			'ballou',
@@ -243,13 +244,14 @@ a.load("localStorage");for(var f=0,j;j=d[f];f++)a.removeAttribute(j.name);a.save
 			return;
 		}
 
-		if (_room.isDj() || isDj()) {
-			_log('You are already on the decks.');
+		if (isDj()) {
+			_log('You are already on the decks. Can\'t step up.');
 		}
 
+		// become dj
 		setTimeout(function() {
 			_manager.callback('become_dj', _manager.become_dj.data('spot'))
-		}, 25);
+		}, config.autoDjTimeout);
 	}
 
 	/**
@@ -365,7 +367,7 @@ a.load("localStorage");for(var f=0,j;j=d[f];f++)a.removeAttribute(j.name);a.save
 			if (!isDj() || !isCurrentDj()) {
 				_manager.callback('upvote');
 			}
-		}, randomDelay(3, 30))
+		}, randomDelay(3, 30));
 	}
 
 	/**
@@ -710,8 +712,10 @@ a.load("localStorage");for(var f=0,j;j=d[f];f++)a.removeAttribute(j.name);a.save
 			return;
 		}
 
-		// handle chat messages
-		if (e.command == 'speak' && e.userid) {
+		if (e.command == 'rem_dj') {
+			watchForEmptyDjSlot(e);
+			updateLastUserAction(e.user[0].userid);
+		} else if (e.command == 'speak' && e.userid) {
 			watchForChatMentions(e);
 			updateLastUserAction(e.userid);
 		} else if (e.command == 'newsong') {
@@ -719,9 +723,6 @@ a.load("localStorage");for(var f=0,j;j=d[f];f++)a.removeAttribute(j.name);a.save
 			autoVote(e);
 		} else if (e.command == 'update_votes') {
 			updateVotes(e);
-		} else if (e.command == 'rem_dj') {
-			watchForEmptyDjSlot(e);
-			updateLastUserAction(e.user[0].userid);
 		} else if (e.command == 'add_dj') {
 			updateLastUserAction(e.user[0].userid);
 		} else if (e.command == 'registered') {
@@ -741,7 +742,7 @@ a.load("localStorage");for(var f=0,j;j=d[f];f++)a.removeAttribute(j.name);a.save
         // check if we recently repainted within the last second
         var now = new Date().getTime();
         if (lastIdleDOMUpdate && (now - lastIdleDOMUpdate < 10000)) {
-			_log('Skipping idle time update.');
+			_log('Skipping idle time update. Difference: ' + (now - lastIdleDOMUpdate));
             return true;
         }
 
@@ -946,7 +947,7 @@ a.load("localStorage");for(var f=0,j;j=d[f];f++)a.removeAttribute(j.name);a.save
 				html += '<div class="accordion">';
 					html += '<div class="fullheight">';
 						html += '<div><label><input type="checkbox" name="tt2_autoupvote" id="tt2_autoupvote" value="1" checked="checked" /> Auto Upvote</label></div>';
-						html += '<div><label><input type="checkbox" name="tt2_autodj" id="tt2_autodj" value="1" /> Auto DJ</label></div>';
+						html += '<div><label><input type="checkbox" name="tt2_autodj" id="tt2_autodj" value="1" /> Auto DJ</label> <input type="text" name="tt2_autodj_timeout" id="tt2_autodj_timeout" value="' + parseInt(config.autoDjTimeout) + '" /></div>';
 						html += '<div><label><input type="checkbox" name="tt2_autorespond" id="tt2_autorespond" value="1" checked="checked" /> Auto Respond</label></div>';
 						html += '<div><label><input type="checkbox" name="tt2_antiidle" id="tt2_antiidle" value="1" checked="checked" /> Anti Idle</label></div>';
 						html += '<div><label><input type="checkbox" name="tt2_muteAlert" id="tt2_muteAlert" value="1" checked="checked" /> Enable Mention Alert</label></div>';
@@ -998,6 +999,7 @@ a.load("localStorage");for(var f=0,j;j=d[f];f++)a.removeAttribute(j.name);a.save
 			_log('Target button clicked, intended target: ' + '#tt2_' + target);
 			var $target = $('#tt2_' + target);
 			if ($target.length) {
+				// show the target and fix scroll
 				$target.stop(true, true).slideDown('fast');
 				$target.attr({
 					scrollTop: $target.attr('scrollHeight')
@@ -1005,10 +1007,12 @@ a.load("localStorage");for(var f=0,j;j=d[f];f++)a.removeAttribute(j.name);a.save
 
 				// fix chat scroll when necessary
 				if (target == 'chat') {
-					var $messagebox = $('#tt2_chat_box').find('.chat-container .messages');
-					$messagebox.attr({
-						scrollTop: $messagebox.attr('scrollHeight')
-					});
+					_log('Chat target found.');
+					var $messageBox = $('#tt2_chat_box').find('.chat-container .messages');
+					$messageBox.animate(
+						{ scrollTop: $messageBox[0].scrollHeight },
+						500
+					);
 				}
 			}
 			return false;
@@ -1018,6 +1022,7 @@ a.load("localStorage");for(var f=0,j;j=d[f];f++)a.removeAttribute(j.name);a.save
 		var $options = $('#tt2_settings');
 		var $auto_upvote = $options.find('#tt2_autoupvote');
 		var $auto_dj = $options.find('#tt2_autodj');
+		var $auto_dj_timeout = $options.find('#tt2_autodj_timeout');
 		var $auto_respond = $options.find('#tt2_autorespond');
 		var $anti_idle = $options.find('#tt2_antiidle');
 		var $mute_alert = $options.find('#tt2_muteAlert');
@@ -1032,6 +1037,7 @@ a.load("localStorage");for(var f=0,j;j=d[f];f++)a.removeAttribute(j.name);a.save
 			// save all option changes
 			config.autoUpvote = $auto_upvote.is(':checked');
 			config.autoDj = $auto_dj.is(':checked');
+			config.autoDjTimeout = parseInt($auto_dj_timeout.val()) || 25;
 			config.autoRespond = $auto_respond.is(':checked');
 			config.antiIdle = $anti_idle.is(':checked');
 			config.muteAlert = $mute_alert.is(':checked');
