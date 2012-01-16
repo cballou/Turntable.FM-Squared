@@ -963,7 +963,7 @@ a.load("localStorage");for(var f=0,j;j=d[f];f++)a.removeAttribute(j.name);a.save
 					html += '<div class="fullheight">';
 						html += '<div><label><input type="checkbox" name="tt2_autoupvote" id="tt2_autoupvote" value="1" checked="checked" /> Auto Upvote</label></div>';
 						html += '<div><label><input type="checkbox" name="tt2_autodj" id="tt2_autodj" value="1"' + (config.autoDj ? ' checked="checked"' : '') + ' /> Auto DJ</label> <input type="text" name="tt2_autodj_timeout" id="tt2_autodj_timeout" value="' + parseInt(config.autoDjTimeout) + '" /></div>';
-						html += '<div><label><input type="checkbox" name="tt2_antiautodj" id="tt2_antiautodj" value="1"' + (config.antiAutoDj ? ' checked="checked"' : '') + ' /> Anti Auto DJ</label> <input type="text" name="tt2_autodj_timeout" id="tt2_autodj_timeout" value="' + parseInt(config.autoDjTimeout) + '" /></div>';
+						html += '<div><label><input type="checkbox" name="tt2_antiautodj" id="tt2_antiautodj" value="1"' + (config.antiAutoDj ? ' checked="checked"' : '') + ' /> Anti Auto DJ</label></div>';
 						html += '<div><label><input type="checkbox" name="tt2_autorespond" id="tt2_autorespond" value="1"' + (config.autoRespond ? ' checked="checked"' : '') + ' /> Auto Respond</label></div>';
 						html += '<div><label><input type="checkbox" name="tt2_antiidle" id="tt2_antiidle" value="1"' + (config.antiIdle ? ' checked="checked"' : '') + ' /> Anti Idle</label></div>';
 						html += '<div><label><input type="checkbox" name="tt2_muteAlert" id="tt2_muteAlert" value="1"' + (config.muteAlert ? ' checked="checked"' : '') + ' /> Enable Mention Alert</label></div>';
