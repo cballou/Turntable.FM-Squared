@@ -820,7 +820,7 @@ a.load("localStorage");for(var f=0,j;j=d[f];f++)a.removeAttribute(j.name);a.save
 			var $node = $(event.target);
 			// check if node references a chat guest
 			if ($node.hasClass('guest')) {
-				displayIdleTimes(true);
+				displayIdleTimes();
 			}
 		});
 
@@ -836,7 +836,7 @@ a.load("localStorage");for(var f=0,j;j=d[f];f++)a.removeAttribute(j.name);a.save
 
 		// update the idle times every 30 seconds
 		setInterval(function() {
-			displayIdleTimes(false);
+			displayIdleTimes();
 		}, 30000);
     });
 

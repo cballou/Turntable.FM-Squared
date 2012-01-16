@@ -1,77 +1,33 @@
-Usage
-=====
+Note
+====
 
-Step 1. Clone this repository
-Step 2. Scroll down in autorespond.js and change the following vars to suit your needs:
+This script is in what I would consider "beta", so don't blame me if things break. This script is also not intended to be used
+in combination with other TT.FM modules or plugins you may have.
 
-```javascript
-    // whether to alert on mute
-    var muteAlert = false;
+Features
+========
+* Song stats, room stats, and user stats
+* Detailed song information, including album art and purchase links when available
+* Similar track listings for the current song when available
+* Heavily improved chat interface and users list
+* Color coded users list for DJs (green), idle DJs (red), and moderators (blue)
+* Auto Respond to messages
+* Anti-idle script to prevent you from going idle while djing
+* Auto DJ (to be removed, not for general public use)
+* Auto Upvote (autobop) while listening or DJing
+* Chat alert on mention of name aliases (configurable)
 
-    // aliases
-    var nameAliases = [
-        'coreyballou',
-        'Dr. awkwa .rD',
-        'Corey Ballou',
-        'CoreyBallou',
-        'coreyb'
-    ];
+Installation
+============
 
-    // general name aliases
-    var generalNameAliases = [
-        'djs',
-        'everyone',
-        'everbody',
-        'you all',
-        'ya\'ll',
-        'you guys'
-    ];
+This script only works for Firefox and Chrome.
+For Firefox, you must have Greasemonkey installed.
 
-    // idle aliases
-    var idleAliases = [
-        'afk',
-        'checkin',
-        'check in',
-        'check-in',
-        'here',
-        'idle',
-        'there',
-        'respond'
-    ];
+To install, simply navigate to https://github.com/cballou/Turntable.FM-Anti-Idle-Autoresponder/raw/master/chrome-ext/tt-squared.js
 
-    // array of idle responses
-    var idleResponses = [
-        'Check check',
-        'Yup',
-        'Yeah',
-        'Hey',
-        'Still here',
-        'Checking in',
-        'Right here',
-        'Yo',
-        'Not idle',
-        'I\'m here',
-        'What?',
-        'Huh?',
-        'Nope',
-        'Not here',
-        'Yes..'
-    ];
-
-    // max idle time that users will accept
-    var maxIdleTime = 6 * 60 * 1000;
-
-    // the maximum idle response frequency
-    var maxIdleResponseFreq = 15 * 1000;
-```
-Step 3. Create a bookmarklet in your web browser and enter the following (swapping out YOURUSERNAME):
-
-```
-Name: Turntable.FM Anti-Idle
-Url: javascript:(function(){$('body').append('<script src="https://raw.github.com/YOURUSERNAME/Turntable.FM-Anti-Idle-Autoresponder/master/autorespond.js"></script>');})();
-```
-
-Step 4. When in a Turntable.FM room, click on your new bookmarklet.
+After Installation
+==================
+When you enter a room, you'll notice TT.FM Squared on the right. Click on the settings tab to adjust your personal settings.
 
 Change Log
 ==========
@@ -86,3 +42,4 @@ This was made possible (in part) by research, porting, and idea grabbing from th
 https://github.com/michaelmwu/turntable.fm/
 https://github.com/dnephin/Turntable.fm-chat-bot/
 https://github.com/MarkReeder/Turntable.fm-Extensions/
+
