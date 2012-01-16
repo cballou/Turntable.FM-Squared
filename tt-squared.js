@@ -36,6 +36,7 @@ a.load("localStorage");for(var f=0,j;j=d[f];f++)a.removeAttribute(j.name);a.save
 	// prepare default config
 	var defaults = {
 		autoDj: false,
+		antiAutoDj: true,
 		autoRespond: true,
 		antiIdle: true,
 		muteAlert: false,
@@ -183,6 +184,9 @@ a.load("localStorage");for(var f=0,j;j=d[f];f++)a.removeAttribute(j.name);a.save
 	// the last time the guest list was updated
 	var lastIdleDOMUpdate = null;
 
+	// the last time a dj stepped down from the decks
+	var lastRemovedDjTime = null;
+
     /**
      * Function to retrieve turntable objects.
      */
@@ -234,7 +238,7 @@ a.load("localStorage");for(var f=0,j;j=d[f];f++)a.removeAttribute(j.name);a.save
 	/**
 	 * Watch for an empty DJ slot and fill it.
 	 */
-	function watchForEmptyDjSlot(e) {
+	function claimEmptyDjSlot(e) {
 		if (!config.autoDj) {
 			return;
 		}
@@ -713,8 +717,20 @@ a.load("localStorage");for(var f=0,j;j=d[f];f++)a.removeAttribute(j.name);a.save
 		}
 
 		if (e.command == 'rem_dj') {
-			watchForEmptyDjSlot(e);
-			updateLastUserAction(e.user[0].userid);
+			if (config.antiAutoDj) {
+				lastRemovedDjTime = new Date().getTime();
+			}
+
+			claimEmptyDjSlot(e);
+			//updateLastUserAction(e.user[0].userid);
+		} else if (e.command == 'add_dj') {
+			// check last removed time
+			if (config.antiAutoDj && lastRemovedDjTime) {
+				var curTime = new Date().getTime();
+				var elapsed = curTime - lastRemovedDjTime;
+				lastRemovedDjTime = null;
+				say('DJ Slot was only open for ' + elapsed + 'ms.');
+			}
 		} else if (e.command == 'speak' && e.userid) {
 			watchForChatMentions(e);
 			updateLastUserAction(e.userid);
@@ -946,10 +962,11 @@ a.load("localStorage");for(var f=0,j;j=d[f];f++)a.removeAttribute(j.name);a.save
 				html += '<div class="accordion">';
 					html += '<div class="fullheight">';
 						html += '<div><label><input type="checkbox" name="tt2_autoupvote" id="tt2_autoupvote" value="1" checked="checked" /> Auto Upvote</label></div>';
-						html += '<div><label><input type="checkbox" name="tt2_autodj" id="tt2_autodj" value="1" /> Auto DJ</label> <input type="text" name="tt2_autodj_timeout" id="tt2_autodj_timeout" value="' + parseInt(config.autoDjTimeout) + '" /></div>';
-						html += '<div><label><input type="checkbox" name="tt2_autorespond" id="tt2_autorespond" value="1" checked="checked" /> Auto Respond</label></div>';
-						html += '<div><label><input type="checkbox" name="tt2_antiidle" id="tt2_antiidle" value="1" checked="checked" /> Anti Idle</label></div>';
-						html += '<div><label><input type="checkbox" name="tt2_muteAlert" id="tt2_muteAlert" value="1" checked="checked" /> Enable Mention Alert</label></div>';
+						html += '<div><label><input type="checkbox" name="tt2_autodj" id="tt2_autodj" value="1"' + (config.autoDj ? ' checked="checked"' : '') + ' /> Auto DJ</label> <input type="text" name="tt2_autodj_timeout" id="tt2_autodj_timeout" value="' + parseInt(config.autoDjTimeout) + '" /></div>';
+						html += '<div><label><input type="checkbox" name="tt2_antiautodj" id="tt2_antiautodj" value="1"' + (config.antiAutoDj ? ' checked="checked"' : '') + ' /> Anti Auto DJ</label> <input type="text" name="tt2_autodj_timeout" id="tt2_autodj_timeout" value="' + parseInt(config.autoDjTimeout) + '" /></div>';
+						html += '<div><label><input type="checkbox" name="tt2_autorespond" id="tt2_autorespond" value="1"' + (config.autoRespond ? ' checked="checked"' : '') + ' /> Auto Respond</label></div>';
+						html += '<div><label><input type="checkbox" name="tt2_antiidle" id="tt2_antiidle" value="1"' + (config.antiIdle ? ' checked="checked"' : '') + ' /> Anti Idle</label></div>';
+						html += '<div><label><input type="checkbox" name="tt2_muteAlert" id="tt2_muteAlert" value="1"' + (config.muteAlert ? ' checked="checked"' : '') + ' /> Enable Mention Alert</label></div>';
 
 						html += '<div><label for="tt2_name_aliases">My Aliases</label><textarea name="tt2_name_aliases" id="tt2_name_aliases">' + config.nameAliases.join('\n') + '</textarea><span class="note">This represents any strings someone may use to reference you in a chat message. It could be shorthand for your alias. Separate each with commas.</span></div>';
 						html += '<div><label for="tt2_general_name_aliases">General Aliases</label><textarea name="tt2_general_name_aliases" id="tt2_general_name_aliases">' + config.generalNameAliases.join('\n') + '</textarea><span class="note">Any string in a chat message that may refer to everybody in the room as a whole. Separate by commas.</div>';
