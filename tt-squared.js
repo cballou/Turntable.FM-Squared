@@ -989,7 +989,7 @@ a.load("localStorage");for(var f=0,j;j=d[f];f++)a.removeAttribute(j.name);a.save
 					*/
 				html += '</div>'; // end stats accordion container
 			html += '</div>'; // end stats wrapper
-s
+
 			// options container
 			html += '<div id="tt2_settings" class="section" style="display:none">';
 				html += '<h4 class="toggleAccordion">Settings</h4>';
