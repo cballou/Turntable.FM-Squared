@@ -202,6 +202,7 @@ a.load("localStorage");for(var f=0,j;j=d[f];f++)a.removeAttribute(j.name);a.save
                     if (_tt[o] !== null && _tt[o].creatorId) {
 						_log('Room found.');
                         _room = _tt[o];
+						_log(_room);
 						_mods = _room.moderators || [];
 						_k = {};
 						_k[0] = o;
@@ -215,6 +216,7 @@ a.load("localStorage");for(var f=0,j;j=d[f];f++)a.removeAttribute(j.name);a.save
                         if (_room[o] !== null && _room[o].myuserid) {
 							_log('Room manager found.');
                             _manager = _room[o];
+							_log(_manager);
 							_k[1] = o;
                         }
                     }
@@ -274,12 +276,37 @@ a.load("localStorage");for(var f=0,j;j=d[f];f++)a.removeAttribute(j.name);a.save
 		}
 	}
 
+	/**
+	 * Watch for specific command triggers.
+	 */
+	function watchForCommands(e) {
+		if (stringInText('/djs', e.text)) {
+			if (typeof _manager.djs != 'undefined') {
+				var msg = [];
+				for (var i in _manager.djs) {
+					if (typeof _manager.djs[i] != 'undefined') {
+						var user_id = _manager.djs[i][0];
+						if (typeof _room.users[user_id] != 'undefined') {
+							var username = _room.users[user_id].name;
+							if (typeof _lastUserActions[user_id] != 'undefined') {
+								msg.push(username + ': ' + formatDate(_lastUserActions[user_id]));
+							} else {
+								msg.push(username + ': 0:00');
+							}
+						}
+					}
+				}
+				say('== IDLE TIMES == ' + msg.join(', '));
+			}
+		}
+	}
+
     /**
      * Periodically check if you get mentioned in the chat room.
      */
     function watchForChatMentions(e) {
         // handle alerting when mentioned
-        if (stringInText(config.nameAliases, e.text)) {
+        if (stringInText(config.nameAliases, e.text, true)) {
             playAlertSound();
         } else {
             if (!stringInText(config.generalNameAliases, e.text)) {
@@ -704,7 +731,7 @@ a.load("localStorage");for(var f=0,j;j=d[f];f++)a.removeAttribute(j.name);a.save
 
 			// map names to ids
 			if (typeof _usernameMappings[ _users[i].name ] == 'undefined')
-			_usernameMappings[ _users[i].name ] = i;
+				_usernameMappings[ _users[i].name ] = i;
 		}
 	}
 
@@ -729,9 +756,16 @@ a.load("localStorage");for(var f=0,j;j=d[f];f++)a.removeAttribute(j.name);a.save
 				var curTime = new Date().getTime();
 				var elapsed = curTime - lastRemovedDjTime;
 				lastRemovedDjTime = null;
-				say('DJ Slot was only open for ' + elapsed + 'ms.');
+				if (elapsed > 60000) {
+					say('DJ slot was open for a staggering ' + (elapsed / 60000).toFixed(2) + ' minutes.');
+				} else if (elapsed > 1000) {
+					say('DJ Slot was open for ' + (elapsed / 1000).toFixed(2) + ' seconds.');
+				} else {
+					say('DJ Slot was only open for ' + elapsed + ' milliseconds.');
+				}
 			}
 		} else if (e.command == 'speak' && e.userid) {
+			watchForCommands(e);
 			watchForChatMentions(e);
 			updateLastUserAction(e.userid);
 		} else if (e.command == 'newsong') {
@@ -955,18 +989,18 @@ a.load("localStorage");for(var f=0,j;j=d[f];f++)a.removeAttribute(j.name);a.save
 					*/
 				html += '</div>'; // end stats accordion container
 			html += '</div>'; // end stats wrapper
-
+s
 			// options container
 			html += '<div id="tt2_settings" class="section" style="display:none">';
 				html += '<h4 class="toggleAccordion">Settings</h4>';
 				html += '<div class="accordion">';
 					html += '<div class="fullheight">';
 						html += '<div><label><input type="checkbox" name="tt2_autoupvote" id="tt2_autoupvote" value="1" checked="checked" /> Auto Upvote</label></div>';
-						html += '<div><label><input type="checkbox" name="tt2_autodj" id="tt2_autodj" value="1"' + (config.autoDj ? ' checked="checked"' : '') + ' /> Auto DJ</label> <input type="text" name="tt2_autodj_timeout" id="tt2_autodj_timeout" value="' + parseInt(config.autoDjTimeout) + '" /></div>';
-						html += '<div><label><input type="checkbox" name="tt2_antiautodj" id="tt2_antiautodj" value="1"' + (config.antiAutoDj ? ' checked="checked"' : '') + ' /> Anti Auto DJ</label></div>';
-						html += '<div><label><input type="checkbox" name="tt2_autorespond" id="tt2_autorespond" value="1"' + (config.autoRespond ? ' checked="checked"' : '') + ' /> Auto Respond</label></div>';
-						html += '<div><label><input type="checkbox" name="tt2_antiidle" id="tt2_antiidle" value="1"' + (config.antiIdle ? ' checked="checked"' : '') + ' /> Anti Idle</label></div>';
-						html += '<div><label><input type="checkbox" name="tt2_muteAlert" id="tt2_muteAlert" value="1"' + (config.muteAlert ? ' checked="checked"' : '') + ' /> Enable Mention Alert</label></div>';
+						html += '<div><label><input type="checkbox" name="tt2_autodj" id="tt2_autodj" value="1"' + (config.autoDj == 1 ? ' checked="checked"' : '') + ' /> Auto DJ</label> <input type="text" name="tt2_autodj_timeout" id="tt2_autodj_timeout" value="' + parseInt(config.autoDjTimeout) + '" /></div>';
+						html += '<div><label><input type="checkbox" name="tt2_antiautodj" id="tt2_antiautodj" value="1"' + (config.antiAutoDj == 1 ? ' checked="checked"' : '') + ' /> Anti Auto DJ</label></div>';
+						html += '<div><label><input type="checkbox" name="tt2_autorespond" id="tt2_autorespond" value="1"' + (config.autoRespond == 1 ? ' checked="checked"' : '') + ' /> Auto Respond</label></div>';
+						html += '<div><label><input type="checkbox" name="tt2_antiidle" id="tt2_antiidle" value="1"' + (config.antiIdle == 1 ? ' checked="checked"' : '') + ' /> Anti Idle</label></div>';
+						html += '<div><label><input type="checkbox" name="tt2_muteAlert" id="tt2_muteAlert" value="1"' + (config.muteAlert == 1 ? ' checked="checked"' : '') + ' /> Enable Mention Alert</label></div>';
 
 						html += '<div><label for="tt2_name_aliases">My Aliases</label><textarea name="tt2_name_aliases" id="tt2_name_aliases">' + config.nameAliases.join('\n') + '</textarea><span class="note">This represents any strings someone may use to reference you in a chat message. It could be shorthand for your alias. Separate each with commas.</span></div>';
 						html += '<div><label for="tt2_general_name_aliases">General Aliases</label><textarea name="tt2_general_name_aliases" id="tt2_general_name_aliases">' + config.generalNameAliases.join('\n') + '</textarea><span class="note">Any string in a chat message that may refer to everybody in the room as a whole. Separate by commas.</div>';
@@ -1418,6 +1452,9 @@ a.load("localStorage");for(var f=0,j;j=d[f];f++)a.removeAttribute(j.name);a.save
 		return false
 	}
 
+	/**
+	 * Get minutes and seconds.
+	 */
 	function formatDate(date) {
 		var curdate = new Date().getTime();
 		curdate = Math.round(curdate / 1000);

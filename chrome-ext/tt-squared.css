@@ -71,9 +71,14 @@
 #tt2_chat_box .guest-list-container .chatBar .guestListSize { left: 0; bottom: 0; width: 100%; }
 #tt2_chat_box .guest-list-container .guestIdle { position: absolute; top: 0; right: 20px; width: 50px; height: 24px; line-height: 24px; color: #bbb; overflow: hidden; text-align: right; }
 #tt2_chat_box .guest-list-container .guests .isMod { background-color: #D0EDD2; }
+#tt2_chat_box .guest-list-container .guests .isIdle .guestIdle,
+#tt2_chat_box .guest-list-container .guests .isDj .guestIdle,
+#tt2_chat_box .guest-list-container .guests .isMod .guestIdle { color: #999; }
+
 #tt2_chat_box .guest-list-container .guests .isDj { background-color: #A8C4DD; }
 #tt2_chat_box .guest-list-container .guests .isIdle { background-color: #F4D2D2 !important; }
 #tt2_chat_box .guest-list-container .guests .isMod.isDj { background-color: #ADEAB1; }
+
 
 /* TT.FM overrides */
 #outer { margin: 0 !important; }
