@@ -280,7 +280,7 @@ a.load("localStorage");for(var f=0,j;j=d[f];f++)a.removeAttribute(j.name);a.save
 	 * Watch for specific command triggers.
 	 */
 	function watchForCommands(e) {
-		if (stringInText('/djs', e.text)) {
+		if (stringInText('/djs', e.text, true)) {
 			if (typeof _manager.djs != 'undefined') {
 				var msg = [];
 				for (var i in _manager.djs) {
@@ -1439,6 +1439,9 @@ a.load("localStorage");for(var f=0,j;j=d[f];f++)a.removeAttribute(j.name);a.save
 	 */
 	function stringInText(strings, text, forceWord) {
 		forceWord = !forceWord ? false : true;
+		if (!$.isArray(strings)) {
+			strings = [strings];
+		}
 		text = text.toLowerCase();
 		for (var s in strings) {
 			var string = strings[s].toLowerCase();
