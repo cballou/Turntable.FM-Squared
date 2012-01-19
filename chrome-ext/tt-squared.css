@@ -38,7 +38,11 @@
 
 /* options */
 #tt2_settings .accordion div { margin-bottom: 8px; }
+#tt2_settings .accordion div.clearfix { overflow: hidden; }
+#tt2_settings .accordion div.check { float: left; display: inline; background: #222; border: 1px solid #111; padding: 2px 4px; margin: 0 8px 8px 0; min-width: 200px; }
+#tt2_settings .accordion div.col { float: left; display: inline; width: 125px; margin: 0 10px 10px 0; }
 #tt2_settings .accordion div input.checkbox { background: #fff; border: 1px solid #999; }
+#tt2_settings .accordion div input.tiny { width: 50px; }
 #tt2_settings .accordion div input,
 #tt2_settings .accordion div textarea { font-size: 11px; line-height: 11px; background: #fff; color: #222; border: 1px solid #999; margin: 0; }
 #tt2_settings .accordion div textarea { display: block; height: 72px; width: 100%; }
