@@ -34,6 +34,6 @@
     "all_frames": true
   }],
   "permissions": [
-    "tabs", "http://turntable.fm/*"
+    "tabs", "notifications", "http://turntable.fm/*"
   ]
 }

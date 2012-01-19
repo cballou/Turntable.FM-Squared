@@ -42,6 +42,8 @@ a.load("localStorage");for(var f=0,j;j=d[f];f++)a.removeAttribute(j.name);a.save
 		muteAlert: false,
 		autoUpvote: true,
 		autoDjTimeout: 25,
+		enableNotifications: false,
+		notificationTime: 10,
 		nameAliases: [
 			'corey',
 			'ballou',
@@ -133,6 +135,108 @@ a.load("localStorage");for(var f=0,j;j=d[f];f++)a.removeAttribute(j.name);a.save
 		lstore.set('config', config);
 	}
 
+	// handle playlists
+	var playlists = lstore.get('playlists');
+	if (!playlists) {
+		playlists = [];
+		lstore.set('playlists', playlists);
+	}
+
+	/**
+	 *==========================================================================
+	 * Playlist manager. =======================================================
+	 *==========================================================================
+	 *
+	 * https://github.com/gilbarbara/Turntable.fm-Playlists/blob/master/js/playlists.js
+	 */
+	var PLAYLIST = {
+		config: {
+			defaultPlaylist: null,
+			playlists: {}
+		}
+	};
+
+	/**
+	 * Initialize the playlist manager.
+	 */
+	PLAYLIST.init = function() {
+		var playlistConfig = lstore.get('playlist');
+		if (!playlistConfig) {
+			lstore.set('playlist', PLAYLIST.config);
+		} else {
+			// override default config
+			PLAYLIST.config = playlistConfig;
+		}
+
+		// check for default playlist
+		if (PLAYLIST.config.defaultPlaylist) {
+			if (PLAYLIST.config.playlists[PLAYLIST.config.defaultPlaylist]) {
+				// load the playlist
+				PLAYLIST.load(PLAYLIST.config.defaultPlaylist);
+			}
+		}
+
+		// load the UI
+	}
+
+	/**
+	 * Load a playlist.
+	 */
+	PLAYLIST.load = function() {
+
+	}
+
+	/**
+	 * Create a new playlist.
+	 */
+	PLAYLIST.create = function(name, description) {
+		// create an id
+		var id = new Date().getTime();
+		var list = {
+			id: id,
+			name: name,
+			desc: description,
+			lastUpdated: id,
+			songs: []
+		};
+
+		// push the list
+		PLAYLIST.config.playlists[id] = list;
+
+		// save the playlist
+		lstore.set('playlist', PLAYLIST.config);
+	}
+
+	/**
+	 * Update a playlist.
+	 */
+	PLAYLIST.update = function() {
+
+	}
+
+	/**
+	 * Delete a playlist.
+	 */
+	PLAYLIST.delete = function() {
+		if (confirm('Are you positive you would like to delete this playlist?')) {
+
+		}
+	}
+
+	/**
+	 * Add a song to a playlist.
+	 */
+	PLAYLIST.addSong = function() {
+
+	}
+
+	/**
+	 * Remove a song from a playlist.
+	 */
+	PLAYLIST.removeSong = function() {
+
+	}
+
 	// stats monitoring
 	var stats = {
 		usersCount: 0
@@ -177,13 +281,10 @@ a.load("localStorage");for(var f=0,j;j=d[f];f++)a.removeAttribute(j.name);a.save
     // the maximum idle response frequency (milliseconds)
     var maxIdleResponseFreq = 600000;
 	var maxDjIdleTime = 600000;
-
     // the last idle response time
     var lastIdleResponse = new Date().getTime();
-
 	// the last time the guest list was updated
 	var lastIdleDOMUpdate = null;
-
 	// the last time a dj stepped down from the decks
 	var lastRemovedDjTime = null;
 
@@ -241,6 +342,7 @@ a.load("localStorage");for(var f=0,j;j=d[f];f++)a.removeAttribute(j.name);a.save
 	 * Watch for an empty DJ slot and fill it.
 	 */
 	function claimEmptyDjSlot(e) {
+		sendNotification('Empty DJ Slot', 'A DJ slot just opened.');
 		if (!config.autoDj) {
 			return;
 		}
@@ -296,7 +398,7 @@ a.load("localStorage");for(var f=0,j;j=d[f];f++)a.removeAttribute(j.name);a.save
 						}
 					}
 				}
-				say('== IDLE TIMES == ' + msg.join(', '));
+				say('-=' + msg.join(', ') + '=-');
 			}
 		}
 	}
@@ -307,7 +409,9 @@ a.load("localStorage");for(var f=0,j;j=d[f];f++)a.removeAttribute(j.name);a.save
     function watchForChatMentions(e) {
         // handle alerting when mentioned
         if (stringInText(config.nameAliases, e.text, true)) {
-            playAlertSound();
+			// send a notification of the mention
+			playAlertSound();
+			sendNotification('Mention Alert', e.text);
         } else {
             if (!stringInText(config.generalNameAliases, e.text)) {
                 return;
@@ -431,6 +535,9 @@ a.load("localStorage");for(var f=0,j;j=d[f];f++)a.removeAttribute(j.name);a.save
 
 		// update the window title
 		document.title = 'TT.FM Playing: ' + song.artist + ' - "' + song.song + '" (' + song.album + ')';
+
+		// notify of song change
+		sendNotification('Now Playing...', song.artist + ' - ' + song.song + '" (' + song.album + ')');
 
 		// if this is the first time the song has been played
 		if (!votes.songs[song_id]) {
@@ -749,7 +856,6 @@ a.load("localStorage");for(var f=0,j;j=d[f];f++)a.removeAttribute(j.name);a.save
 			}
 
 			claimEmptyDjSlot(e);
-			//updateLastUserAction(e.user[0].userid);
 		} else if (e.command == 'add_dj') {
 			// check last removed time
 			if (config.antiAutoDj && lastRemovedDjTime) {
@@ -769,6 +875,7 @@ a.load("localStorage");for(var f=0,j;j=d[f];f++)a.removeAttribute(j.name);a.save
 			watchForChatMentions(e);
 			updateLastUserAction(e.userid);
 		} else if (e.command == 'newsong') {
+			sendNotification('Now Playing', '');
 			resetVotes(e);
 			autoVote(e);
 		} else if (e.command == 'update_votes') {
@@ -996,11 +1103,15 @@ a.load("localStorage");for(var f=0,j;j=d[f];f++)a.removeAttribute(j.name);a.save
 				html += '<div class="accordion">';
 					html += '<div class="fullheight">';
 						html += '<div><label><input type="checkbox" name="tt2_autoupvote" id="tt2_autoupvote" value="1" checked="checked" /> Auto Upvote</label></div>';
-						html += '<div><label><input type="checkbox" name="tt2_autodj" id="tt2_autodj" value="1"' + (config.autoDj == 1 ? ' checked="checked"' : '') + ' /> Auto DJ</label> <input type="text" name="tt2_autodj_timeout" id="tt2_autodj_timeout" value="' + parseInt(config.autoDjTimeout) + '" /></div>';
+						html += '<div><label><input type="checkbox" name="tt2_autodj" id="tt2_autodj" value="1"' + (config.autoDj == 1 ? ' checked="checked"' : '') + ' /> Auto DJ</label> <input type="text" name="tt2_autodj_timeout" id="tt2_autodj_timeout" class="tiny" value="' + parseInt(config.autoDjTimeout) + '" /></div>';
 						html += '<div><label><input type="checkbox" name="tt2_antiautodj" id="tt2_antiautodj" value="1"' + (config.antiAutoDj == 1 ? ' checked="checked"' : '') + ' /> Anti Auto DJ</label></div>';
 						html += '<div><label><input type="checkbox" name="tt2_autorespond" id="tt2_autorespond" value="1"' + (config.autoRespond == 1 ? ' checked="checked"' : '') + ' /> Auto Respond</label></div>';
 						html += '<div><label><input type="checkbox" name="tt2_antiidle" id="tt2_antiidle" value="1"' + (config.antiIdle == 1 ? ' checked="checked"' : '') + ' /> Anti Idle</label></div>';
 						html += '<div><label><input type="checkbox" name="tt2_muteAlert" id="tt2_muteAlert" value="1"' + (config.muteAlert == 1 ? ' checked="checked"' : '') + ' /> Enable Mention Alert</label></div>';
+
+						if (typeof window.webkitNotifications != 'undefined') {
+							html += '<div><label><input type="checkbox" name="tt2_enable_notifications" id="tt2_enable_notifications" value="1"' + (config.enableNotifications == 1 ? ' checked="checked"' : '') + ' /> Enable Notifications</label>, hide after <input type="text" name="tt2_notification_time" id="tt2_notification_time" class="tiny" value="' + parseInt(config.notificationTime) + '" /> sec</div>';
+						}
 
 						html += '<div><label for="tt2_name_aliases">My Aliases</label><textarea name="tt2_name_aliases" id="tt2_name_aliases">' + config.nameAliases.join('\n') + '</textarea><span class="note">This represents any strings someone may use to reference you in a chat message. It could be shorthand for your alias. Separate each with commas.</span></div>';
 						html += '<div><label for="tt2_general_name_aliases">General Aliases</label><textarea name="tt2_general_name_aliases" id="tt2_general_name_aliases">' + config.generalNameAliases.join('\n') + '</textarea><span class="note">Any string in a chat message that may refer to everybody in the room as a whole. Separate by commas.</div>';
@@ -1076,6 +1187,9 @@ a.load("localStorage");for(var f=0,j;j=d[f];f++)a.removeAttribute(j.name);a.save
 		var $auto_respond = $options.find('#tt2_autorespond');
 		var $anti_idle = $options.find('#tt2_antiidle');
 		var $mute_alert = $options.find('#tt2_muteAlert');
+		var $enable_notifications = $options.find('#tt2_enable_notifications');
+		var $notification_time = $options.find('#tt2_notification_time');
+
 		var $name_aliases = $options.find('#tt2_name_aliases');
 		var $general_name_aliases = $options.find('#tt2_general_name_aliases');
 		var $idle_aliases = $options.find('#tt2_idle_aliases');
@@ -1091,6 +1205,8 @@ a.load("localStorage");for(var f=0,j;j=d[f];f++)a.removeAttribute(j.name);a.save
 			config.autoRespond = $auto_respond.is(':checked');
 			config.antiIdle = $anti_idle.is(':checked');
 			config.muteAlert = $mute_alert.is(':checked');
+			config.enableNotifications = $enable_notifications.length && $enable_notifications.is(':checked');
+			config.notificationTime = $notification_time.length ? parseInt($notification_time.val()) : 10;
 
 			// update textarea options
 			config.nameAliases = $name_aliases.val().split(/\n\r?/g);
@@ -1102,6 +1218,11 @@ a.load("localStorage");for(var f=0,j;j=d[f];f++)a.removeAttribute(j.name);a.save
 			// handle trying to auto-dj
 			if (config.autoDj) {
 				emptySlotCheck();
+			}
+
+			// check notification permissions
+			if (config.enableNotifications) {
+				checkNotificationPermissions();
 			}
 
 			// update the localstorage settings
@@ -1333,6 +1454,63 @@ a.load("localStorage");for(var f=0,j;j=d[f];f++)a.removeAttribute(j.name);a.save
 	}
 
 	/**
+	 * Create a new Chrome notification.
+	 */
+	function sendNotification(title, message) {
+		var favIcon = 'http://',
+			n;
+
+		if (!config.enableNotifications) {
+			return false;
+		}
+
+		// error checking
+		if (window.webkitNotifications.checkPermission() != 0) {
+			alert('Please enable notifications by changing your configuration settings.');
+			document.getElementById('allowNotificationLink').style.backgroundColor = 'red';
+			return 0;
+		}
+
+		n = window.webkitNotifications.createNotification(favIcon, title, message);
+		n.show();
+		setTimeout(function() {
+			n.cancel();
+		}, parseInt(config.notificationTime) * 1000);
+	}
+
+	/**
+	 * Request permission to enable window notifications.
+	 */
+	function requestNotificationPermission() {
+		if (typeof window.webkitNotifications != 'undefined') {
+			window.webkitNotifications.requestPermission(notificationPermissionGranted);
+		} else {
+			config.enableNotifications = false;
+		}
+	}
+
+	/**
+	 * Handle permission granting of Chrome notifications.
+	 */
+	function notificationPermissionGranted() {
+		// check permissions to update config
+		if (window.webkitNotifications.checkPermission() == 0) {
+			config.enableNotifications = true;
+		} else {
+			config.enableNotifications = false;
+		}
+	}
+
+	/**
+	 * Check for notification permissions.
+	 */
+	function checkNotificationPermissions() {
+		if (window.webkitNotifications.checkPermission() != 0) {
+			requestNotificationPermission();
+		}
+	}
+
+	/**
 	 * Urlencode a flat JSON object.
 	 */
 	function urlencode(params) {
@@ -1550,11 +1728,16 @@ function getSimilarTracks(artist, song, album) {
 				// http://www.last.fm/api/show?service=431
 				var buyUrl = 'http://ws.audioscrobbler.com/2.0/?method=track.getbuylinks&artist=' + encodeURIComponent(artist) + '&track=' + encodeURIComponent(song) + '&api_key=d1b14c712954973f098a226d80d6b5c2&format=json&callback=?';
 				$.getJSON(buyUrl, function(data) {
-					_log('buy url data');
+					_log('===== LASTFM PURCHASE INFO ====');
 					_log(data);
 				});
 			} else {
-				html += '<td>&nbsp;</td>';
+				var baseurl = 'http://click.linksynergy.com/fs-bin/stat?id=5PGIX6Dk9zE&offerid=146261&type=3&subid=0&tmpid=1826&RD_PARM1=';
+				var searchUrl = 'http://itunes.apple.com/search?music=all&term=' + item.artist.name + ' ' + item.name;
+				searchUrl = encodeURIComponent(encodeURIComponent(searchUrl));
+
+				html += '<td><a href="' + baseurl + searchUrl + '" target="_blank">Preview &amp; Buy Track</a></td>';
+				//html += '<td>&nbsp;</td>';
 			}
 			//if (item.artist.mbid.length) {
 			//	html += '<p><a href="#" style="display:block">View Artist Details</a>';
@@ -1599,9 +1782,9 @@ function handleItunesResults(arg) {
 			var baseurl = 'http://click.linksynergy.com/fs-bin/stat?id=5PGIX6Dk9zE&offerid=146261&type=3&subid=0&tmpid=1826&RD_PARM1=';
 
 			// attach partner id to link urls
-			var trackUrl = baseurl + encodeURI(encodeURI(results[i].trackViewUrl + '&partnerId=30'));
-			var artistUrl = baseurl + encodeURI(encodeURI(results[i].artistViewUrl + '&partnerId=30'));
-			var albumUrl = baseurl + encodeURI(encodeURI(results[i].collectionViewUrl + '&partnerId=30'));
+			var trackUrl = baseurl + encodeURIComponent(encodeURIComponent(results[i].trackViewUrl + '&partnerId=30'));
+			var artistUrl = baseurl + encodeURIComponent(encodeURIComponent(results[i].artistViewUrl + '&partnerId=30'));
+			var albumUrl = baseurl + encodeURIComponent(encodeURIComponent(results[i].collectionViewUrl + '&partnerId=30'));
 
 			// create html
 			html += '<div class="purchaseinfo">';
