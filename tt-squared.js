@@ -1023,9 +1023,9 @@ a.load("localStorage");for(var f=0,j;j=d[f];f++)a.removeAttribute(j.name);a.save
 			html += '<h3>';
 			html += '<span class="floatleft">Turntable.FM Squared</span>';
 			html += '<ul id="tt2_nav" class="floatright">';
-			html += '<li><a href="#" class="btn selected" data-id="chat">chat</a></li>';
-			html += '<li><a href="#" class="btn" data-id="stats">stats</a></li>';
-			html += '<li><a href="#" class="btn" data-id="settings">settings</a></li>';
+			html += '<li><a href="#" class="btn btnBlack selected" data-id="chat">chat</a></li>';
+			html += '<li><a href="#" class="btn btnBlack" data-id="stats">stats</a></li>';
+			html += '<li><a href="#" class="btn btnBlack" data-id="settings">settings</a></li>';
 			html += '</ul>';
 			html += '</h3>';
 
