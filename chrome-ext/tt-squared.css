@@ -71,14 +71,98 @@
 #tt2_chat_box .guest-list-container .chatBar .guestListSize { left: 0; bottom: 0; width: 100%; }
 #tt2_chat_box .guest-list-container .guestIdle { position: absolute; top: 0; right: 20px; width: 50px; height: 24px; line-height: 24px; color: #bbb; overflow: hidden; text-align: right; }
 #tt2_chat_box .guest-list-container .guests .isMod { background-color: #D0EDD2; }
-#tt2_chat_box .guest-list-container .guests .isIdle .guestIdle,
 #tt2_chat_box .guest-list-container .guests .isDj .guestIdle,
 #tt2_chat_box .guest-list-container .guests .isMod .guestIdle { color: #999; }
+#tt2_chat_box .guest-list-container .guests .isIdle .guestIdle { color: #333; }
 
 #tt2_chat_box .guest-list-container .guests .isDj { background-color: #A8C4DD; }
 #tt2_chat_box .guest-list-container .guests .isIdle { background-color: #F4D2D2 !important; }
 #tt2_chat_box .guest-list-container .guests .isMod.isDj { background-color: #ADEAB1; }
 
+/* Custom Buttons */
+.btn {
+    white-space: nowrap;
+    -moz-border-bottom-colors: none;
+    -moz-border-image: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    border-radius: 3px;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-style: solid;
+    border-width: 1px;
+    color: #FFF;
+    font: bold 11px/1 "Lucida Grande","Lucida Sans Unicode","Lucida Sans",Geneva,Verdana,sans-serif;
+    padding: 7px 10px 8px;
+    text-align: center;
+    text-transform: uppercase;
+    overflow: hidden;
+}
+
+.btnGreen {
+    background-color: #7FBF4D;
+    background-image: -webkit-gradient(linear, left top, left bottom, from(#7FBF4D), to(#63A62F));
+    background-image: -webkit-linear-gradient(top, #7FBF4D, #63A62F);
+    background-image: -moz-linear-gradient(top, #7FBF4D, #63A62F);
+    background-image: -ms-linear-gradient(top, #7FBF4D, #63A62F);
+    background-image: -o-linear-gradient(top, #7FBF4D, #63A62F);
+    background-image: linear-gradient(top, #7FBF4D, #63A62F);
+    border-color: #63A62F #63A62F #5B992B;
+    border-radius: 3px 3px 3px 3px;
+    box-shadow: 0 1px 0 0 #96CA6D inset;
+    -moz-box-shadow: 0 1px 0 0 #96CA6D inset;
+    -webkit-box-shadow: 0 1px 0 0 #96CA6D inset;
+    text-shadow: 0 -1px 0 #4C9021;
+}
+
+.btnBlue {
+    background-color: #A5B8DA;
+    background-image: -webkit-gradient(linear, left top, left bottom, from(#A5B8DA), to(#7089B3));
+    background-image: -webkit-linear-gradient(top, #A5B8DA, #7089B3);
+    background-image: -moz-linear-gradient(top, #A5B8DA, #7089B3);
+    background-image: -ms-linear-gradient(top, #A5B8DA, #7089B3);
+    background-image: -o-linear-gradient(top, #A5B8DA, #7089B3);
+    background-image: linear-gradient(top, #A5B8DA, #7089B3);
+    border-color: #758FBA #6C84AB #5C6F91;
+    -moz-box-shadow: 0 1px 0 0 #AEC3E5 inset;
+    -webkit-box-shadow: 0 1px 0 0 #AEC3E5 inset;
+    box-shadow: 0 1px 0 0 #AEC3E5 inset;
+    text-shadow: 0 -1px 1px #64799E;
+}
+
+.btnRed {
+    background-color: #EE432E;
+    background-image: -webkit-gradient(linear, left top, left bottom, from(#EE432E), to(#B51700));
+    background-image: -webkit-linear-gradient(top, #EE432E, #B51700);
+    background-image: -moz-linear-gradient(top, #EE432E, #B51700);
+    background-image: -ms-linear-gradient(top, #EE432E, #B51700);
+    background-image: -o-linear-gradient(top, #EE432E, #B51700);
+    background-image: linear-gradient(top, #EE432E, #B51700);
+    border-color: #951100;
+    box-shadow: 0 0 0 1px rgba(255, 115, 100, 0.4) inset, 0 1px 3px #333;
+    -moz-box-shadow: 0 0 0 1px rgba(255, 115, 100, 0.4) inset, 0 1px 3px #333;
+    -webkit-box-shadow: 0 0 0 1px rgba(255, 115, 100, 0.4) inset, 0 1px 3px #333;
+    text-shadow: 0 -1px 1px rgba(0, 0, 0, 0.8);
+}
+
+.itunesIcon {
+    float: left;
+    display: inline;
+    width: 16px;
+    height: 16px;
+    margin: 0 8px 0 8px;
+    background: url(https://github.com/cballou/Turntable.FM-Squared/raw/master/icons/itunes-32.png) 0 0 no-repeat;
+}
+
+.plusIcon {
+    float: left;
+    display: inline;
+    width: 16px;
+    height: 16px;
+    margin: 0 8px 0 8px;
+    background: url(https://github.com/cballou/Turntable.FM-Squared/raw/master/icons/plus.png) 0 0 no-repeat;
+}
 
 /* TT.FM overrides */
 #outer { margin: 0 !important; }

@@ -1723,7 +1723,7 @@ function getSimilarTracks(artist, song, album) {
 			html += '<td>' + item.name + '</td>';
 
 			if (item.mbid.length) {
-				html += '<td><a href="#">Preview &amp; Buy Track</a></td>';
+				html += '<td><a href="#" class="btn btnGreen" target="_blank"><span class="itunesIcon"></span> Preview &amp; Buy Track</a></td>';
 				// get buy links and change them
 				// http://www.last.fm/api/show?service=431
 				var buyUrl = 'http://ws.audioscrobbler.com/2.0/?method=track.getbuylinks&artist=' + encodeURIComponent(artist) + '&track=' + encodeURIComponent(song) + '&api_key=d1b14c712954973f098a226d80d6b5c2&format=json&callback=?';
@@ -1736,7 +1736,7 @@ function getSimilarTracks(artist, song, album) {
 				var searchUrl = 'http://itunes.apple.com/search?music=all&term=' + item.artist.name + ' ' + item.name;
 				searchUrl = encodeURIComponent(encodeURIComponent(searchUrl));
 
-				html += '<td><a href="' + baseurl + searchUrl + '" target="_blank">Preview &amp; Buy Track</a></td>';
+				html += '<td><a href="' + baseurl + searchUrl + '" class="btn btnGreen" target="_blank"><span class="itunesIcon"></span> Preview &amp; Buy Track</a></td>';
 				//html += '<td>&nbsp;</td>';
 			}
 			//if (item.artist.mbid.length) {
@@ -1750,7 +1750,7 @@ function getSimilarTracks(artist, song, album) {
 			// append html
 			$('#similar_tracks').find('table tbody').html(html);
 			// show similar tracks button
-			$('<a href="#" class="btn" id="similarTracksBtn">Show Similar Tracks</a>').appendTo($('#tt2_stats_current_coverart .purchaseinfo'));
+			$('<a href="#" class="btn btnGreen" id="similarTracksBtn"><span class="plusIcon"></span> Show Similar Tracks</a>').appendTo($('#tt2_stats_current_coverart .purchaseinfo'));
 		}
 	});
 }
@@ -1788,9 +1788,9 @@ function handleItunesResults(arg) {
 
 			// create html
 			html += '<div class="purchaseinfo">';
-			html += '<a href="' + trackUrl + '" target="_blank">Buy Track $' + results[i].trackPrice + '</a>';
-			html += '<a href="' + albumUrl + '" target="_blank">Buy Album $' + results[i].collectionPrice + '</a>';
-			html += '<a href="' + artistUrl + '" target="_blank">View Artist Details and Top Songs</a>';
+			html += '<a href="' + trackUrl + '" class="btn btnGreen" target="_blank"><span class="itunesIcon"></span> Buy Track $' + results[i].trackPrice + '</a>';
+			html += '<a href="' + albumUrl + '" class="btn btnGreen" target="_blank"><span class="itunesIcon"></span> Buy Album $' + results[i].collectionPrice + '</a>';
+			html += '<a href="' + artistUrl + '" class="btn btnBlue" target="_blank"><span class="plusIcon"></span> View Artist Details and Top Songs</a>';
 			html += '</div>';
 
 			// only display first result
