@@ -1016,14 +1016,8 @@ a.load("localStorage");for(var f=0,j;j=d[f];f++)a.removeAttribute(j.name);a.save
 		$('#outer').css('margin', 0);
 		$('#footer').css({ 'text-align': 'left' });
 
-		// check for scrolling
-		var scrollbarWidth = 0;
-		if ($(window).get(0).scrollHeight > windowSize.height) {
-			scrollbarWidth = 16;
-		}
-
 		// create tt2 container
-		var html = '<div id="tt2_container" style="display: block; width:' + (tt2_size.width-scrollbarWidth-20) + 'px;height:' + (tt2_size.height-20) + 'px;">';
+		var html = '<div id="tt2_container" style="display: block; width:' + (tt2_size.width-20) + 'px;height:' + (tt2_size.height-20) + 'px;">';
 			html += '<h3>';
 			html += '<span class="floatleft">Turntable.FM Squared</span>';
 			html += '<ul id="tt2_nav" class="floatright">';
@@ -1156,6 +1150,12 @@ a.load("localStorage");for(var f=0,j;j=d[f];f++)a.removeAttribute(j.name);a.save
 
 		// append
 		$(html).appendTo('body');
+
+		// check for scrolling
+		if ($(window).get(0).scrollHeight > windowSize.height) {
+			$('#tt2_container').css('width', tt2_size.width-36);
+			scrollbarWidth = 16;
+		}
 
 		// move the chat
 		moveChatWindow();
@@ -1412,7 +1412,7 @@ a.load("localStorage");for(var f=0,j;j=d[f];f++)a.removeAttribute(j.name);a.save
 
 		// fix guest container sizing
 		$('#tt2_chat_box').find('.guest-list-container').css({
-			height: '' + (tt2_size.height - tt2_playing_size.height - 90) + 'px !important',
+			height: '' + (tt2_size.height - tt2_playing_size.height - 95) + 'px !important',
 			width: '' + chat_width + 'px !important',
 			top: '0 !important',
 			right: '0 !important',
