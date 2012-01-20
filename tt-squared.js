@@ -1314,7 +1314,7 @@ a.load("localStorage");for(var f=0,j;j=d[f];f++)a.removeAttribute(j.name);a.save
 
 		// fix guest container sizing
 		$('#tt2_chat_box').find('.guest-list-container').css({
-			height: '' + (tt2_size.height - tt2_playing_size.height - 90) + 'px !important',
+			height: '' + (tt2_size.height - tt2_playing_size.height - title_height - message_height - 95) + 'px !important',
 			width: '' + chat_width + 'px !important',
 			top: '0 !important',
 			right: '0 !important',
@@ -1323,7 +1323,7 @@ a.load("localStorage");for(var f=0,j;j=d[f];f++)a.removeAttribute(j.name);a.save
 
 		// fix chat message sizing
 		$('#tt2_chat_box').find('.guest-list-container .guests').css({
-			height: '' + (tt2_size.height - tt2_playing_size.height - title_height - message_height - 90) + 'px !important',
+			height: '' + (tt2_size.height - tt2_playing_size.height - title_height - message_height - 95) + 'px !important',
 			width: '100%',
 			'overflow-x': 'none !important',
 			'overflow-y': 'auto !important'
@@ -1331,7 +1331,7 @@ a.load("localStorage");for(var f=0,j;j=d[f];f++)a.removeAttribute(j.name);a.save
 
 		// fix chat sizing in TT2
 		$('#tt2_chat_box').find('.chat-container').css({
-			height: '' + (tt2_size.height - tt2_playing_size.height - 90) + 'px !important',
+			height: '' + (tt2_size.height - tt2_playing_size.height - 95) + 'px !important',
 			width: '' + (chat_box_width - chat_width - 20) + 'px !important',
 			top: '0 !important',
 			left: '0 !important'
@@ -1339,7 +1339,7 @@ a.load("localStorage");for(var f=0,j;j=d[f];f++)a.removeAttribute(j.name);a.save
 
 		// fix chat message sizing
 		$('#tt2_chat_box').find('.chat-container .messages').css({
-			height: '' + (tt2_size.height - tt2_playing_size.height - title_height - message_height - 90) + 'px !important',
+			height: '' + (tt2_size.height - tt2_playing_size.height - title_height - message_height - 95) + 'px !important',
 			width: '' + (chat_box_width - chat_width - 20) + 'px !important',
 			'overflow-x': 'none !important',
 			'overflow-y': 'auto !important'
@@ -1762,7 +1762,7 @@ function getSimilarTracks(artist, song, album) {
 			// append html
 			$('#similar_tracks').find('table tbody').html(html);
 			// show similar tracks button
-			$('<a href="#" class="btnS btnBlue" id="similarTracksBtn"><span class="icon"><img src="https://github.com/cballou/Turntable.FM-Squared/raw/master/icons/plus.png" height="16" width="16" alt="Show Similar Tracks" /></span> Show Similar Tracks</a>').appendTo($('#tt2_stats_current_coverart .purchaseinfo'));
+			$('<a href="#" class="btnS btnBlue" id="similarTracksBtn"><span class="iconS"><img src="https://github.com/cballou/Turntable.FM-Squared/raw/master/icons/plus.png" height="16" width="16" alt="Show Similar Tracks" /></span> Show Similar Tracks</a>').appendTo($('#tt2_stats_current_coverart .purchaseinfo'));
 		}
 	});
 }
@@ -1800,9 +1800,9 @@ function handleItunesResults(arg) {
 
 			// create html
 			html += '<div class="purchaseinfo">';
-			html += '<p><a href="' + trackUrl + '" class="btnS btnGreen" target="_blank"><span class="icon"><img src="https://github.com/cballou/Turntable.FM-Squared/raw/master/icons/itunes-32.png" height="16" width="16" alt="Artist Details and Top Songs" /></span> Buy Track $' + results[i].trackPrice + '</a></p>';
-			html += '<p><a href="' + albumUrl + '" class="btnS btnGreen" target="_blank"><span class="icon"><img src="https://github.com/cballou/Turntable.FM-Squared/raw/master/icons/itunes-32.png" height="16" width="16" alt="Artist Details and Top Songs" /></span> Buy Album $' + results[i].collectionPrice + '</a></p>';
-			html += '<p><a href="' + artistUrl + '" class="btnS btnBlue" target="_blank"><span class="icon"><img src="https://github.com/cballou/Turntable.FM-Squared/raw/master/icons/plus.png" height="16" width="16" alt="Artist Details and Top Songs" /></span> Artist Details and Top Songs</a></p>';
+			html += '<p><a href="' + trackUrl + '" class="btnS btnGreen" target="_blank"><span class="iconS"><img src="https://github.com/cballou/Turntable.FM-Squared/raw/master/icons/itunes-32.png" height="16" width="16" alt="Artist Details and Top Songs" /></span> Buy Track $' + results[i].trackPrice + '</a></p>';
+			html += '<p><a href="' + albumUrl + '" class="btnS btnGreen" target="_blank"><span class="iconS"><img src="https://github.com/cballou/Turntable.FM-Squared/raw/master/icons/itunes-32.png" height="16" width="16" alt="Artist Details and Top Songs" /></span> Buy Album $' + results[i].collectionPrice + '</a></p>';
+			html += '<p><a href="' + artistUrl + '" class="btnS btnBlue" target="_blank"><span class="iconS"><img src="https://github.com/cballou/Turntable.FM-Squared/raw/master/icons/plus.png" height="16" width="16" alt="Artist Details and Top Songs" /></span> Artist Details and Top Songs</a></p>';
 			html += '</div>';
 
 			// only display first result
