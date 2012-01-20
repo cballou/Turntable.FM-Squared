@@ -562,14 +562,14 @@ a.load("localStorage");for(var f=0,j;j=d[f];f++)a.removeAttribute(j.name);a.save
 
 		var albumArt = '';
 		if (song.coverart) {
-			albumArt += '<img src="' + song.coverart + '" width="150" height="150" alt="' + alt + '" />';
+			albumArt += '<img src="' + song.coverart + '" class="coverart" width="150" height="150" alt="' + alt + '" />';
 		} else {
-			albumArt += '<div class="img" width="150" height="150" alt="' + alt + '"></div>';
+			albumArt += '<div class="coverart" width="150" height="150" alt="' + alt + '"></div>';
 		}
 
 		$('#tt2_stats_current_coverart').find('.songinfo').css('min-width', tt2_size.width - 225);
 		$('#tt2_stats_current_coverart').find('.songinfo').html(details);
-		$('#tt2_stats_current_coverart').find('img, .img').eq(0).remove();
+		$('#tt2_stats_current_coverart').find('.coverart').eq(0).remove();
 		$('#tt2_stats_current_coverart').prepend(albumArt);
 
 		// update current song
@@ -632,14 +632,14 @@ a.load("localStorage");for(var f=0,j;j=d[f];f++)a.removeAttribute(j.name);a.save
 
 		var albumArt = '';
 		if (song.coverart) {
-			albumArt += '<img src="' + song.coverart + '" width="150" height="150" alt="' + alt + '" />';
+			albumArt += '<img src="' + song.coverart + '" class="coverart" width="150" height="150" alt="' + alt + '" />';
 		} else {
-			albumArt += '<div class="img" width="150" height="150" alt="' + alt + '"></div>';
+			albumArt += '<div class="coverart" width="150" height="150" alt="' + alt + '"></div>';
 		}
 
 		$('#tt2_stats_current_coverart').find('.songinfo').css('min-width', tt2_size.width - 225);
 		$('#tt2_stats_current_coverart').find('.songinfo').html(details);
-		$('#tt2_stats_current_coverart').find('img, .img').remove();
+		$('#tt2_stats_current_coverart').find('.coverart').remove();
 		$('#tt2_stats_current_coverart').prepend(albumArt);
 
 		// update current song
@@ -1783,8 +1783,8 @@ function handleItunesResults(arg) {
 			$caholder = $('#tt2_stats_current_coverart');
 			if ($caholder.find('img').length == 0 && results[i].artworkUrl100) {
 				var alt = escape(results[i].artistName) + ' - ' + escape(results[i].trackName) + ' (' + escape(results[i].collectionName) + ')';
-				var img = '<img class="img100" src="' + results[i].artworkUrl100 + '" width="100" height="100" alt="' + alt + '" />';
-				$caholder.find('#tt2_stats_current_coverart .img').eq(0).remove();
+				var img = '<img class="coverart img100" src="' + results[i].artworkUrl100 + '" width="100" height="100" alt="' + alt + '" />';
+				$caholder.find('#tt2_stats_current_coverart .coverart').remove();
 				$caholder.find('#tt2_stats_current_coverart').prepend(img);
 			}
 
