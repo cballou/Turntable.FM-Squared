@@ -260,7 +260,8 @@
     -webkit-box-shadow: 0 0 0 1px rgba(255, 115, 100, 0.4) inset;
 }
 
-.icon { vertical-align: middle; padding-right: 8px; }
+#tt2_stats_current_coverart .songinfo p span.icon, .icon { display: inline-block; width: 16px; height: 16px; vertical-align: middle; padding-right: 8px; }
+
 
 /* TT.FM overrides */
 #outer { margin: 0 !important; }
