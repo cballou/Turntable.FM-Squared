@@ -46,7 +46,7 @@
 #tt2_stats_current_coverart .songinfo p strong { font-weight: bold; }
 #tt2_stats_current_coverart .coverart { float: left; display: inline; width: 150px; height: 150px; margin: 0 10px 10px 0; background: #222; border: 4px solid #222; }
 #tt2_stats_current_coverart .img100 { width: 100px; height: 100px; }
-#tt2_stats_current_coverart .songinfo .btn { float: left; display: inline; margin: 0 4px 4px 0; }
+#tt2_stats_current_coverart .songinfo .btnS { margin: 0 4px 4px 0; }
 
 /* options */
 #tt2_settings .accordion div { margin-bottom: 8px; }
@@ -260,7 +260,7 @@
     -webkit-box-shadow: 0 0 0 1px rgba(255, 115, 100, 0.4) inset;
 }
 
-#tt2_stats_current_coverart .songinfo p span.icon, .icon { display: inline-block; width: 16px; height: 16px; vertical-align: middle; padding-right: 8px; }
+#tt2_stats_current_coverart .songinfo p span.icon, .icon { float: none; display: inline-block; width: 16px; height: 16px; vertical-align: middle; padding-right: 8px; }
 
 
 /* TT.FM overrides */
