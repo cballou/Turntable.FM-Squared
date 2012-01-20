@@ -119,6 +119,7 @@
     text-transform: uppercase;
     text-decoration: none;
     overflow: hidden;
+    vertical-align: middle;
 }
 
 .btnS:hover {
@@ -265,6 +266,7 @@
     -webkit-box-shadow: 0 0 0 1px rgba(255, 115, 100, 0.4) inset;
 }
 
+/* icons */
 #tt2_stats_current_coverart .songinfo p span.iconS, .iconS { float: none; display: inline-block; width: 16px; height: 16px; vertical-align: middle; padding-right: 4px; }
 
 /* TT.FM overrides */

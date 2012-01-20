@@ -1367,8 +1367,14 @@ a.load("localStorage");for(var f=0,j;j=d[f];f++)a.removeAttribute(j.name);a.save
 		windowSize.width = $this.width();
 		windowSize.height = $this.height();
 
+		// check for scrolling
+		var scrollbarWidth = 0;
+		if ($this.scrollTop() > 0) {
+			scrollbarWidth = 16;
+		}
+
 		// fix the width and height
-		tt2_size.width = windowSize.width - containerWidth;
+		tt2_size.width = windowSize.width - containerWidth - scrollbarWidth;
 		tt2_size.height = windowSize.height;
 
 		$('#tt2_container').css('width', tt2_size.width - 20);
@@ -1487,10 +1493,10 @@ a.load("localStorage");for(var f=0,j;j=d[f];f++)a.removeAttribute(j.name);a.save
 		}
 
 		n = window.webkitNotifications.createNotification(favIcon, title, message);
+		n.ondisplay= function() {
+			setTimeout('n.cancel()', parseInt(config.notificationTime) * 1000);
+		};
 		n.show();
-		setTimeout(function() {
-			n.cancel();
-		}, parseInt(config.notificationTime) * 1000);
 	}
 
 	/**
