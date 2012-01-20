@@ -536,9 +536,6 @@ a.load("localStorage");for(var f=0,j;j=d[f];f++)a.removeAttribute(j.name);a.save
 		// update the window title
 		document.title = 'TT.FM Playing: ' + song.artist + ' - "' + song.song + '" (' + song.album + ')';
 
-		// notify of song change
-		sendNotification('Now Playing...', song.artist + ' - ' + song.song + '" (' + song.album + ')');
-
 		// if this is the first time the song has been played
 		if (!votes.songs[song_id]) {
 			votes.songs[song_id] = {
@@ -603,6 +600,9 @@ a.load("localStorage");for(var f=0,j;j=d[f];f++)a.removeAttribute(j.name);a.save
 
 			}
 		}
+
+		// notify of song change
+		sendNotification('Now Playing...', song.artist + ' - ' + song.song + '" (' + song.album + ')');
 	}
 
 	/**
@@ -854,7 +854,6 @@ a.load("localStorage");for(var f=0,j;j=d[f];f++)a.removeAttribute(j.name);a.save
 			if (config.antiAutoDj) {
 				lastRemovedDjTime = new Date().getTime();
 			}
-
 			claimEmptyDjSlot(e);
 		} else if (e.command == 'add_dj') {
 			// check last removed time
@@ -875,7 +874,6 @@ a.load("localStorage");for(var f=0,j;j=d[f];f++)a.removeAttribute(j.name);a.save
 			watchForChatMentions(e);
 			updateLastUserAction(e.userid);
 		} else if (e.command == 'newsong') {
-			sendNotification('Now Playing', '');
 			resetVotes(e);
 			autoVote(e);
 		} else if (e.command == 'update_votes') {
@@ -1023,9 +1021,9 @@ a.load("localStorage");for(var f=0,j;j=d[f];f++)a.removeAttribute(j.name);a.save
 			html += '<h3>';
 			html += '<span class="floatleft">Turntable.FM Squared</span>';
 			html += '<ul id="tt2_nav" class="floatright">';
-			html += '<li><a href="#" class="btn btnBlack selected" data-id="chat">chat</a></li>';
-			html += '<li><a href="#" class="btn btnBlack" data-id="stats">stats</a></li>';
-			html += '<li><a href="#" class="btn btnBlack" data-id="settings">settings</a></li>';
+			html += '<li><a href="#" class="btnS btnBlack selected" data-id="chat">chat</a></li>';
+			html += '<li><a href="#" class="btnS btnBlack" data-id="stats">stats</a></li>';
+			html += '<li><a href="#" class="btnS btnBlack" data-id="settings">settings</a></li>';
 			html += '</ul>';
 			html += '</h3>';
 
@@ -1125,7 +1123,7 @@ a.load("localStorage");for(var f=0,j;j=d[f];f++)a.removeAttribute(j.name);a.save
 						html += '<div><label for="tt2_idle_replies">Idle Replies</label><textarea name="tt2_idle_replies" id="tt2_idle_replies">' + config.idleReplies.join('\n') + '</textarea><span class="note">Auto reply messages when someone mentions your name. You can use <em>{{NICKNAME}}</em> to fill in their name.</span></div>';
 						html += '<div><label for="tt2_idle_messages">Idle Messages</label><textarea name="tt2_idle_messages" id="tt2_idle_messages">' + config.idleMessages.join('\n') + '</textarea><span class="note">If you are DJing and have been AFK too long, one of these messages will be sent at random.</span></div>';
 
-						html += '<div><button type="button" name="updateSettings" id="updateSettings" name="Save Changes">Save Changes</button></div>'
+						html += '<div><button type="button" name="updateSettings" id="updateSettings" class="btnS btnBlack" name="Save Changes">Save Changes</button></div>'
 					html += '</div>';
 				html += '</div>';
 			html += '</div>';
@@ -1157,9 +1155,9 @@ a.load("localStorage");for(var f=0,j;j=d[f];f++)a.removeAttribute(j.name);a.save
 		moveChatWindow();
 
 		// watch for nav change
-		$('#tt2_nav .btn').live('click', function() {
+		$('#tt2_nav .btnS').live('click', function() {
 			var $this = $(this);
-			$('#tt2_nav').find('.btn').removeClass('selected');
+			$('#tt2_nav').find('.btnS').removeClass('selected');
 			$('#tt2_container').find('.section').hide();
 			$this.addClass('selected');
 			var target = $this.data('id');
@@ -1244,7 +1242,7 @@ a.load("localStorage");for(var f=0,j;j=d[f];f++)a.removeAttribute(j.name);a.save
 		// watch for similar track click
 		$('#similarTracksBtn').live('click', function() {
 			// show similar
-			$('#tt2_nav').find('.btn').removeClass('selected');
+			$('#tt2_nav').find('.btnS').removeClass('selected');
 			$('#tt2_container').find('.section').hide();
 			var $target = $('#similar_tracks');
 			if ($target.length) {
@@ -1463,12 +1461,18 @@ a.load("localStorage");for(var f=0,j;j=d[f];f++)a.removeAttribute(j.name);a.save
 	 * Create a new Chrome notification.
 	 */
 	function sendNotification(title, message) {
-		var favIcon = 'http://',
-			n;
+		var favIcon = 'http://turntable.fm/favicon.ico', n;
+
+		_log('Send notification called.');
 
 		if (!config.enableNotifications) {
 			return false;
 		}
+
+		_log('Notifications are enabled.');
+		_log(window.webkitNotifications.checkPermission());
+		_log('Title: ' + title);
+		_log('Message: ' + message);
 
 		// error checking
 		if (window.webkitNotifications.checkPermission() != 0) {
@@ -1729,7 +1733,7 @@ function getSimilarTracks(artist, song, album) {
 			html += '<td>' + item.name + '</td>';
 
 			if (item.mbid.length) {
-				html += '<td><a href="#" class="btn btnGreen" target="_blank"><span class="itunesIcon"></span> Preview &amp; Buy Track</a></td>';
+				html += '<td><a href="#" class="btnS btnGreen" target="_blank"><span class="itunesIcon"></span> Preview &amp; Buy Track</a></td>';
 				// get buy links and change them
 				// http://www.last.fm/api/show?service=431
 				var buyUrl = 'http://ws.audioscrobbler.com/2.0/?method=track.getbuylinks&artist=' + encodeURIComponent(artist) + '&track=' + encodeURIComponent(song) + '&api_key=d1b14c712954973f098a226d80d6b5c2&format=json&callback=?';
@@ -1742,7 +1746,7 @@ function getSimilarTracks(artist, song, album) {
 				var searchUrl = 'http://itunes.apple.com/search?music=all&term=' + item.artist.name + ' ' + item.name;
 				searchUrl = encodeURIComponent(encodeURIComponent(searchUrl));
 
-				html += '<td><a href="' + baseurl + searchUrl + '" class="btn btnGreen" target="_blank"><span class="itunesIcon"></span> Preview &amp; Buy Track</a></td>';
+				html += '<td><a href="' + baseurl + searchUrl + '" class="btnS btnGreen" target="_blank"><span class="itunesIcon"></span> Preview &amp; Buy Track</a></td>';
 				//html += '<td>&nbsp;</td>';
 			}
 			//if (item.artist.mbid.length) {
@@ -1756,7 +1760,7 @@ function getSimilarTracks(artist, song, album) {
 			// append html
 			$('#similar_tracks').find('table tbody').html(html);
 			// show similar tracks button
-			$('<a href="#" class="btn btnGreen" id="similarTracksBtn"><span class="plusIcon"></span> Show Similar Tracks</a>').appendTo($('#tt2_stats_current_coverart .purchaseinfo'));
+			$('<a href="#" class="btnS btnBlue" id="similarTracksBtn"><span class="icon"><img src="https://github.com/cballou/Turntable.FM-Squared/raw/master/icons/plus.png" height="16" width="16" alt="Show Similar Tracks" /></span> Show Similar Tracks</a>').appendTo($('#tt2_stats_current_coverart .purchaseinfo'));
 		}
 	});
 }
@@ -1794,9 +1798,9 @@ function handleItunesResults(arg) {
 
 			// create html
 			html += '<div class="purchaseinfo">';
-			html += '<a href="' + trackUrl + '" class="btn btnGreen" target="_blank"><span class="itunesIcon"></span> Buy Track $' + results[i].trackPrice + '</a>';
-			html += '<a href="' + albumUrl + '" class="btn btnGreen" target="_blank"><span class="itunesIcon"></span> Buy Album $' + results[i].collectionPrice + '</a>';
-			html += '<a href="' + artistUrl + '" class="btn btnBlue" target="_blank"><span class="plusIcon"></span> View Artist Details and Top Songs</a>';
+			html += '<a href="' + trackUrl + '" class="btnS btnGreen" target="_blank"><span class="icon"><img src="https://github.com/cballou/Turntable.FM-Squared/raw/master/icons/itunes-32.png" height="16" width="16" alt="Artist Details and Top Songs" /></span> Buy Track $' + results[i].trackPrice + '</a>';
+			html += '<a href="' + albumUrl + '" class="btnS btnGreen" target="_blank"><span class="icon"><img src="https://github.com/cballou/Turntable.FM-Squared/raw/master/icons/itunes-32.png" height="16" width="16" alt="Artist Details and Top Songs" /></span> Buy Album $' + results[i].collectionPrice + '</a>';
+			html += '<a href="' + artistUrl + '" class="btnS btnBlue" target="_blank"><span class="icon"><img src="https://github.com/cballou/Turntable.FM-Squared/raw/master/icons/plus.png" height="16" width="16" alt="Artist Details and Top Songs" /></span> Artist Details and Top Songs</a>';
 			html += '</div>';
 
 			// only display first result

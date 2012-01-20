@@ -5,10 +5,22 @@
 #tt2_nav { list-style: none; }
 #tt2_nav li { list-style: none; float: right; display: inline; margin-right: 5px; font-size: 12px; }
 #tt2_nav li:first-child { margin-right: 0; }
-#tt2_nav .btn { background: #222623; font-size: 12px; padding: 4px 6px; border-radius: 3px; -webkit-border-radius: 3px; -moz-border-radius: 3px; color: #fff; text-decoration: none; box-shadow: 1px 1px 1px #000; -moz-box-shadow: 1px 1px 1px #000; -webkit-box-shadow: 1px 1px 1px #000; cursor: pointer; }
-#tt2_nav .btn:hover { background: #323633; }
-#tt2_nav .btn.selected { line-height: 22px; vertical-align: middle; background: #000; box-shadow: none; -moz-box-shadow: none; -webkit-box-shadow: none; }
-
+#tt2_nav .btn { padding: 4px 6px; font-variant: small-caps; }
+/* #tt2_nav .btn { background: #222623; font-size: 12px; padding: 4px 6px; border-radius: 3px; -webkit-border-radius: 3px; -moz-border-radius: 3px; color: #fff; text-decoration: none; box-shadow: 1px 1px 1px #000; -moz-box-shadow: 1px 1px 1px #000; -webkit-box-shadow: 1px 1px 1px #000; cursor: pointer; } */
+#tt2_nav .btn.selected {
+    color: #000;
+    background-color: #fff;
+    background-image: -webkit-gradient(linear, left top, left bottom, from(#aaa), to(#fff));
+    background-image: -webkit-linear-gradient(top, #aaa, #fff);
+    background-image: -moz-linear-gradient(top, #aaa, #fff);
+    background-image: -ms-linear-gradient(top, #aaa, #fff);
+    background-image: -o-linear-gradient(top, #aaa, #fff);
+    background-image: linear-gradient(top, #aaa, #fff);
+    box-shadow: 0 1px 0 0 #ccc inset;
+    -moz-box-shadow: 0 1px 0 0 #ccc inset;
+    -webkit-box-shadow: 0 1px 0 0 #ccc inset;
+    text-shadow: 0 -1px 0 #bbb;
+}
 
 .floatleft { float: left; display: inline; }
 .floatright { float: right; display: inline; }
@@ -30,23 +42,24 @@
 #tt2_stats_current_coverart { overflow: hidden; padding: 10px 10px 0; }
 #tt2_stats_current_coverart .songinfo { }
 #tt2_stats_current_coverart .songinfo p { margin: 0; }
-#tt2_stats_current_coverart .songinfo p span { float:left; display:inline; width:100px; }
+#tt2_stats_current_coverart .songinfo p span { float: left; display: inline; width: 100px; }
 #tt2_stats_current_coverart .songinfo p strong { font-weight: bold; }
 #tt2_stats_current_coverart img,
 #tt2_stats_current_coverart .img { float: left; display: inline; width: 150px; height: 150px; margin: 0 10px 10px 0; background: #222; border: 4px solid #222; }
 #tt2_stats_current_coverart .img100 { width: 100px; height: 100px; }
+#tt2_stats_current_coverart .songinfo .btn { float: left; display: inline; margin: 0 4px 4px 0; }
 
 /* options */
 #tt2_settings .accordion div { margin-bottom: 8px; }
 #tt2_settings .accordion div.clearfix { overflow: hidden; }
 #tt2_settings .accordion div.check { float: left; display: inline; background: #222; border: 1px solid #111; padding: 2px 4px; margin: 0 8px 8px 0; min-width: 200px; }
-#tt2_settings .accordion div.col { float: left; display: inline; width: 125px; margin: 0 10px 10px 0; }
-#tt2_settings .accordion div input.checkbox { background: #fff; border: 1px solid #999; }
+#tt2_settings .accordion div.col { float: left; display: inline; width: 200px; margin: 0 10px 10px 0; }
+#tt2_settings .accordion div input.checkbox { background: #fff; border: 1px solid #999; vertical-align: middle; }
 #tt2_settings .accordion div input.tiny { width: 50px; }
 #tt2_settings .accordion div input,
 #tt2_settings .accordion div textarea { font-size: 11px; line-height: 11px; background: #fff; color: #222; border: 1px solid #999; margin: 0; }
 #tt2_settings .accordion div textarea { display: block; height: 72px; width: 100%; }
-#tt2_settings .accordion div .note { display: block; font-size: 10px; color: #999; padding: 4px; }
+#tt2_settings .accordion div .note { display: block; font-size: 10px; line-height: 14px; color: #999; padding: 4px; }
 
 /* similar tracks */
 #similar_tracks { display: none; clear: both; margin-top: 10px; }
@@ -97,27 +110,47 @@
     border-width: 1px;
     color: #FFF;
     font: bold 11px/1 "Lucida Grande","Lucida Sans Unicode","Lucida Sans",Geneva,Verdana,sans-serif;
-    padding: 7px 10px 8px;
+    padding: 3px 4px 4px;
     text-align: center;
     text-transform: uppercase;
     text-decoration: none;
     overflow: hidden;
 }
 
+.btn:hover {
+    cursor: pointer;
+}
+
 .btnBlack {
     background-color: #000;
-    background-image: -webkit-gradient(linear, left top, left bottom, from(#333), to(#000));
-    background-image: -webkit-linear-gradient(top, #333, #000);
-    background-image: -moz-linear-gradient(top, #333, #000);
-    background-image: -ms-linear-gradient(top, #333, #000);
-    background-image: -o-linear-gradient(top, #333, #000);
-    background-image: linear-gradient(top, #333, #000);
+    background-image: -webkit-gradient(linear, left top, left bottom, from(#666), to(#000));
+    background-image: -webkit-linear-gradient(top, #666, #000);
+    background-image: -moz-linear-gradient(top, #666, #000);
+    background-image: -ms-linear-gradient(top, #666, #000);
+    background-image: -o-linear-gradient(top, #666, #000);
+    background-image: linear-gradient(top, #666, #000);
     border: none;
     border-radius: 3px 3px 3px 3px;
-    box-shadow: 0 1px 0 0 #96CA6D inset;
-    -moz-box-shadow: 0 1px 0 0 #96CA6D inset;
-    -webkit-box-shadow: 0 1px 0 0 #96CA6D inset;
-    text-shadow: 0 -1px 0 #4C9021;
+    box-shadow: 0 1px 0 0 #333 inset;
+    -moz-box-shadow: 0 1px 0 0 #333 inset;
+    -webkit-box-shadow: 0 1px 0 0 #333 inset;
+    text-shadow: 0 -1px 0 #333;
+}
+
+.btnBlack:hover {
+    background-color: #222;
+    background-image: -webkit-gradient(linear, left top, left bottom, from(#888), to(#222));
+    background-image: -webkit-linear-gradient(top, #888, #222);
+    background-image: -moz-linear-gradient(top, #888, #222);
+    background-image: -ms-linear-gradient(top, #888, #222);
+    background-image: -o-linear-gradient(top, #888, #222);
+    background-image: linear-gradient(top, #888, #222);
+    border: none;
+    border-radius: 3px 3px 3px 3px;
+    box-shadow: 0 1px 0 0 #555 inset;
+    -moz-box-shadow: 0 1px 0 0 #555 inset;
+    -webkit-box-shadow: 0 1px 0 0 #555 inset;
+    text-shadow: 0 -1px 0 #555;
 }
 
 .btnGreen {
@@ -136,6 +169,26 @@
     text-shadow: 0 -1px 0 #4C9021;
 }
 
+.btnGreen:hover {
+    background-color: #76B347;
+    background-image: -webkit-gradient(linear, left top, left bottom, from(#76B347), to(#5E9E2E));
+    background-image: -webkit-linear-gradient(top, #76B347, #5E9E2E);
+    background-image: -moz-linear-gradient(top, #76B347, #5E9E2E);
+    background-image: -ms-linear-gradient(top, #76B347, #5E9E2E);
+    background-image: -o-linear-gradient(top, #76B347, #5E9E2E);
+    background-image: linear-gradient(top, #76B347, #5E9E2E);
+    box-shadow: 0 1px 0 0 #8DBF67 inset;
+}
+
+.btnGreen:active {
+    border-color: #5B992B #5B992B #538C27;
+    border-style: solid;
+    border-width: 1px;
+    box-shadow: 0 0 8px 4px #548C29 inset, 0 1px 0 0 #eee;
+    -moz-box-shadow: 0 0 8px 4px #548C29 inset, 0 1px 0 0 #eee;
+    -webkit-box-shadow: 0 0 8px 4px #548C29 inset, 0 1px 0 0 #eee;
+}
+
 .btnBlue {
     background-color: #A5B8DA;
     background-image: -webkit-gradient(linear, left top, left bottom, from(#A5B8DA), to(#7089B3));
@@ -149,6 +202,25 @@
     -webkit-box-shadow: 0 1px 0 0 #AEC3E5 inset;
     box-shadow: 0 1px 0 0 #AEC3E5 inset;
     text-shadow: 0 -1px 1px #64799E;
+}
+
+.btnBlue:hover {
+    background-color: #9BADCC;
+    background-image: -webkit-gradient(linear, left top, left bottom, from(#9BADCC), to(#687FA6));
+    background-image: -webkit-linear-gradient(top, #9BADCC, #687FA6);
+    background-image: -moz-linear-gradient(top, #9BADCC, #687FA6);
+    background-image: -ms-linear-gradient(top, #9BADCC, #687FA6);
+    background-image: -o-linear-gradient(top, #9BADCC, #687FA6);
+    background-image: linear-gradient(top, #9BADCC, #687FA6);
+    border-color: #6D86AD #647A9E #546685;
+    box-shadow: 0 1px 0 0 #A5B9D9 inset;
+}
+
+.btnBlue:active {
+    border: 1px solid #546685;
+    box-shadow: 0 0 8px 2px #7E8DA6 inset, 0 1px 0 0 #eee;
+    -moz-box-shadow: 0 0 8px 2px #7E8DA6 inset, 0 1px 0 0 #eee;
+    -webkit-box-shadow: 0 0 8px 2px #7E8DA6 inset, 0 1px 0 0 #eee;
 }
 
 .btnRed {
@@ -166,23 +238,30 @@
     text-shadow: 0 -1px 1px rgba(0, 0, 0, 0.8);
 }
 
-.itunesIcon {
-    float: left;
-    display: inline;
-    width: 16px;
-    height: 16px;
-    margin: 0 8px 0 8px;
-    background: url(https://github.com/cballou/Turntable.FM-Squared/raw/master/icons/itunes-32.png) 0 0 no-repeat;
+.btnRed:hover {
+    background-color: #F37873;
+    background-image: -webkit-gradient(linear, left top, left bottom, from(#F37873), to(#A20601));
+    background-image: -webkit-linear-gradient(top, #F37873, #A20601);
+    background-image: -moz-linear-gradient(top, #F37873, #A20601);
+    background-image: -ms-linear-gradient(top, #F37873, #A20601);
+    background-image: -o-linear-gradient(top, #F37873, #A20601);
+    background-image: linear-gradient(top, #F37873, #A20601);
 }
 
-.plusIcon {
-    float: left;
-    display: inline;
-    width: 16px;
-    height: 16px;
-    margin: 0 8px 0 8px;
-    background: url(https://github.com/cballou/Turntable.FM-Squared/raw/master/icons/plus.png) 0 0 no-repeat;
+.btnRed:active {
+    background-color: #D43C28;
+    background-image: -webkit-gradient(linear, left top, left bottom, from(#D43C28), to(#700D00));
+    background-image: -webkit-linear-gradient(top, #D43C28, #700D00);
+    background-image: -moz-linear-gradient(top, #D43C28, #700D00);
+    background-image: -ms-linear-gradient(top, #D43C28, #700D00);
+    background-image: -o-linear-gradient(top, #D43C28, #700D00);
+    background-image: linear-gradient(top, #D43C28, #700D00);
+    box-shadow: 0 0 0 1px rgba(255, 115, 100, 0.4) inset;
+    -moz-box-shadow: 0 0 0 1px rgba(255, 115, 100, 0.4) inset;
+    -webkit-box-shadow: 0 0 0 1px rgba(255, 115, 100, 0.4) inset;
 }
+
+.icon { vertical-align: middle; padding-right: 8px; }
 
 /* TT.FM overrides */
 #outer { margin: 0 !important; }
