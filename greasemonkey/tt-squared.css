@@ -44,8 +44,7 @@
 #tt2_stats_current_coverart .songinfo p { margin: 0; }
 #tt2_stats_current_coverart .songinfo p span { float: left; display: inline; width: 100px; }
 #tt2_stats_current_coverart .songinfo p strong { font-weight: bold; }
-#tt2_stats_current_coverart img,
-#tt2_stats_current_coverart .img { float: left; display: inline; width: 150px; height: 150px; margin: 0 10px 10px 0; background: #222; border: 4px solid #222; }
+#tt2_stats_current_coverart .coverart { float: left; display: inline; width: 150px; height: 150px; margin: 0 10px 10px 0; background: #222; border: 4px solid #222; }
 #tt2_stats_current_coverart .img100 { width: 100px; height: 100px; }
 #tt2_stats_current_coverart .songinfo .btn { float: left; display: inline; margin: 0 4px 4px 0; }
 
