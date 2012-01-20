@@ -1313,8 +1313,8 @@ a.load("localStorage");for(var f=0,j;j=d[f];f++)a.removeAttribute(j.name);a.save
 		if (tt2_playing_size.height < 204) tt2_playing_size.height = 204;
 
 		// fix guest container sizing
-		$('#tt2_chat_box').find('.guest-list-container').css({
-			height: '' + (tt2_size.height - tt2_playing_size.height - title_height - message_height - 95) + 'px !important',
+		$chat_box.find('.guest-list-container').css({
+			height: '' + (tt2_size.height - tt2_playing_size.height - 95) + 'px !important',
 			width: '' + chat_width + 'px !important',
 			top: '0 !important',
 			right: '0 !important',
@@ -1322,7 +1322,7 @@ a.load("localStorage");for(var f=0,j;j=d[f];f++)a.removeAttribute(j.name);a.save
 		});
 
 		// fix chat message sizing
-		$('#tt2_chat_box').find('.guest-list-container .guests').css({
+		$chat_box.find('.guest-list-container .guests').css({
 			height: '' + (tt2_size.height - tt2_playing_size.height - title_height - message_height - 95) + 'px !important',
 			width: '100%',
 			'overflow-x': 'none !important',
@@ -1338,7 +1338,7 @@ a.load("localStorage");for(var f=0,j;j=d[f];f++)a.removeAttribute(j.name);a.save
 		});
 
 		// fix chat message sizing
-		$('#tt2_chat_box').find('.chat-container .messages').css({
+		$chat_box.find('.chat-container .messages').css({
 			height: '' + (tt2_size.height - tt2_playing_size.height - title_height - message_height - 95) + 'px !important',
 			width: '' + (chat_box_width - chat_width - 20) + 'px !important',
 			'overflow-x': 'none !important',
@@ -1346,7 +1346,7 @@ a.load("localStorage");for(var f=0,j;j=d[f];f++)a.removeAttribute(j.name);a.save
 		});
 
 		// fix remainder of windows
-		$('#tt2_container').find('.fullheight').css('height', tt2_size.height - tt2_playing_size.height);
+		$('#tt2_container').find('.fullheight').css('height', tt2_size.height - tt2_playing_size.height - 40);
 	}
 
 	/**
