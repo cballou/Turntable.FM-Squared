@@ -1018,7 +1018,7 @@ a.load("localStorage");for(var f=0,j;j=d[f];f++)a.removeAttribute(j.name);a.save
 
 		// check for scrolling
 		var scrollbarWidth = 0;
-		if ($(window).scrollTop() > 0) {
+		if ($(window).get(0).scrollHeight > windowSize.height) {
 			scrollbarWidth = 16;
 		}
 
@@ -1316,7 +1316,9 @@ a.load("localStorage");for(var f=0,j;j=d[f];f++)a.removeAttribute(j.name);a.save
 		};
 
 		// fix for min-height
-		if (tt2_playing_size.height < 204) tt2_playing_size.height = 204;
+		if (tt2_playing_size.height < 204) {
+			tt2_playing_size.height = 204;
+		}
 
 		// fix guest container sizing
 		$chat_box.find('.guest-list-container').css({
@@ -1375,7 +1377,7 @@ a.load("localStorage");for(var f=0,j;j=d[f];f++)a.removeAttribute(j.name);a.save
 
 		// check for scrolling
 		var scrollbarWidth = 0;
-		if ($this.scrollTop() > 0) {
+		if ($this.get(0).scrollHeight > windowSize.height) {
 			scrollbarWidth = 16;
 		}
 
@@ -1393,7 +1395,9 @@ a.load("localStorage");for(var f=0,j;j=d[f];f++)a.removeAttribute(j.name);a.save
 		};
 
 		// fix for min-height
-		if (tt2_playing_size.height < 204) tt2_playing_size.height = 204;
+		if (tt2_playing_size.height < 204) {
+			tt2_playing_size.height = 204;
+		}
 
 		// reference the new spot
 		var $chat_box = $('#tt2_chat_box');
