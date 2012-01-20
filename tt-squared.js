@@ -1490,11 +1490,6 @@ a.load("localStorage");for(var f=0,j;j=d[f];f++)a.removeAttribute(j.name);a.save
 			return false;
 		}
 
-		_log('Notifications are enabled.');
-		_log(window.webkitNotifications.checkPermission());
-		_log('Title: ' + title);
-		_log('Message: ' + message);
-
 		// error checking
 		if (window.webkitNotifications.checkPermission() != 0) {
 			alert('Please enable notifications by changing your configuration settings.');
@@ -1503,8 +1498,10 @@ a.load("localStorage");for(var f=0,j;j=d[f];f++)a.removeAttribute(j.name);a.save
 		}
 
 		n = window.webkitNotifications.createNotification(favIcon, title, message);
-		n.ondisplay= function() {
-			setTimeout('n.cancel()', parseInt(config.notificationTime) * 1000);
+		n.ondisplay = function() {
+			setTimeout(function() {
+				n.cancel();
+			}, parseInt(config.notificationTime) * 1000);
 		};
 		n.show();
 	}
