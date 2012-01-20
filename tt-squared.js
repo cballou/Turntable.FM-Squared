@@ -1016,8 +1016,14 @@ a.load("localStorage");for(var f=0,j;j=d[f];f++)a.removeAttribute(j.name);a.save
 		$('#outer').css('margin', 0);
 		$('#footer').css({ 'text-align': 'left' });
 
+		// check for scrolling
+		var scrollbarWidth = 0;
+		if ($(window).scrollTop() > 0) {
+			scrollbarWidth = 16;
+		}
+
 		// create tt2 container
-		var html = '<div id="tt2_container" style="display: block; width:' + (tt2_size.width-20) + 'px;height:' + (tt2_size.height-20) + 'px;">';
+		var html = '<div id="tt2_container" style="display: block; width:' + (tt2_size.width-scrollbarWidth-20) + 'px;height:' + (tt2_size.height-20) + 'px;">';
 			html += '<h3>';
 			html += '<span class="floatleft">Turntable.FM Squared</span>';
 			html += '<ul id="tt2_nav" class="floatright">';
