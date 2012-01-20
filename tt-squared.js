@@ -1346,7 +1346,11 @@ a.load("localStorage");for(var f=0,j;j=d[f];f++)a.removeAttribute(j.name);a.save
 		});
 
 		// fix remainder of windows
-		$('#tt2_container').find('.fullheight').css('height', tt2_size.height - tt2_playing_size.height - 40);
+		$('#tt2_container').find('.fullheight').css(
+			'height',
+			'' + (tt2_size.height - tt2_playing_size.height - 95) + 'px !important'
+			//tt2_size.height - tt2_playing_size.height - 40
+		);
 	}
 
 	/**
@@ -1401,7 +1405,7 @@ a.load("localStorage");for(var f=0,j;j=d[f];f++)a.removeAttribute(j.name);a.save
 
 		// fix chat message sizing
 		$('#tt2_chat_box').find('.guest-list-container .guests').css({
-			height: '' + (tt2_size.height - tt2_playing_size.height - title_height - message_height - 90) + 'px !important',
+			height: '' + (tt2_size.height - tt2_playing_size.height - title_height - message_height - 95) + 'px !important',
 			width: '100%',
 			'overflow-x': 'none !important',
 			'overflow-y': 'auto !important'
@@ -1409,7 +1413,7 @@ a.load("localStorage");for(var f=0,j;j=d[f];f++)a.removeAttribute(j.name);a.save
 
 		// fix chat sizing in TT2
 		$('#tt2_chat_box').find('.chat-container').css({
-			height: '' + (tt2_size.height - tt2_playing_size.height - 90) + 'px !important',
+			height: '' + (tt2_size.height - tt2_playing_size.height - 95) + 'px !important',
 			width: '' + (chat_box_width - chat_width - 20) + 'px !important',
 			top: '0 !important',
 			left: '0 !important'
@@ -1417,7 +1421,7 @@ a.load("localStorage");for(var f=0,j;j=d[f];f++)a.removeAttribute(j.name);a.save
 
 		// fix chat message sizing
 		$('#tt2_chat_box').find('.chat-container .messages').css({
-			height: '' + (tt2_size.height - tt2_playing_size.height - title_height - message_height - 90) + 'px !important',
+			height: '' + (tt2_size.height - tt2_playing_size.height - title_height - message_height - 95) + 'px !important',
 			width: '' + (chat_box_width - chat_width - 20) + 'px !important',
 			'overflow-x': 'none !important',
 			'overflow-y': 'auto !important'
@@ -1429,7 +1433,8 @@ a.load("localStorage");for(var f=0,j;j=d[f];f++)a.removeAttribute(j.name);a.save
 		var tt2_section_padding = 20;
 		$('#tt2_container').find('.fullheight').css(
 			'height',
-			tt2_size.height - tt2_playing_size.height - tt2_title_height - tt2_section_title_height - tt2_section_padding
+			'' + (tt2_size.height - tt2_playing_size.height - 95) + 'px !important'
+			//tt2_size.height - tt2_playing_size.height - tt2_title_height - tt2_section_title_height - tt2_section_padding
 		);
 	}
 
