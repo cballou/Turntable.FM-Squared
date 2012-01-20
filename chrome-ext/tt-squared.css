@@ -95,7 +95,7 @@
 #tt2_chat_box .guest-list-container .guests .isMod.isDj { background-color: #ADEAB1; }
 
 /* Custom Buttons */
-.btn {
+.btnS {
     white-space: nowrap;
     -moz-border-bottom-colors: none;
     -moz-border-image: none;
@@ -116,7 +116,7 @@
     overflow: hidden;
 }
 
-.btn:hover {
+.btnS:hover {
     cursor: pointer;
 }
 
