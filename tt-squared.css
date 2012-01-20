@@ -5,9 +5,9 @@
 #tt2_nav { list-style: none; }
 #tt2_nav li { list-style: none; float: right; display: inline; margin-right: 5px; font-size: 12px; }
 #tt2_nav li:first-child { margin-right: 0; }
-#tt2_nav .btn { padding: 4px 6px; font-variant: small-caps; }
+#tt2_nav .btnS { padding: 4px 6px; font-variant: small-caps; }
 /* #tt2_nav .btn { background: #222623; font-size: 12px; padding: 4px 6px; border-radius: 3px; -webkit-border-radius: 3px; -moz-border-radius: 3px; color: #fff; text-decoration: none; box-shadow: 1px 1px 1px #000; -moz-box-shadow: 1px 1px 1px #000; -webkit-box-shadow: 1px 1px 1px #000; cursor: pointer; } */
-#tt2_nav .btn.selected {
+#tt2_nav .btnS.selected {
     color: #000;
     background-color: #fff;
     background-image: -webkit-gradient(linear, left top, left bottom, from(#aaa), to(#fff));
@@ -96,7 +96,7 @@
 
 /* Custom Buttons */
 .btnS {
-    white-space: nowrap;
+    /*white-space: nowrap;*/
     -moz-border-bottom-colors: none;
     -moz-border-image: none;
     -moz-border-left-colors: none;

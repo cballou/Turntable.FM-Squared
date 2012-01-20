@@ -398,7 +398,7 @@ a.load("localStorage");for(var f=0,j;j=d[f];f++)a.removeAttribute(j.name);a.save
 						}
 					}
 				}
-				say('-=' + msg.join(', ') + '=-');
+				say('-= ' + msg.join(', ') + ' =-');
 			}
 		}
 	}
@@ -1503,8 +1503,9 @@ a.load("localStorage");for(var f=0,j;j=d[f];f++)a.removeAttribute(j.name);a.save
 	 * Handle permission granting of Chrome notifications.
 	 */
 	function notificationPermissionGranted() {
+		var PERMISSION_ALLOWED = 0;
 		// check permissions to update config
-		if (window.webkitNotifications.checkPermission() == 0) {
+		if (window.webkitNotifications.checkPermission() == PERMISSION_ALLOWED) {
 			config.enableNotifications = true;
 		} else {
 			config.enableNotifications = false;
@@ -1515,7 +1516,8 @@ a.load("localStorage");for(var f=0,j;j=d[f];f++)a.removeAttribute(j.name);a.save
 	 * Check for notification permissions.
 	 */
 	function checkNotificationPermissions() {
-		if (window.webkitNotifications.checkPermission() != 0) {
+		var PERMISSION_ALLOWED = 0;
+		if (window.webkitNotifications.checkPermission() != PERMISSION_ALLOWED) {
 			requestNotificationPermission();
 		}
 	}
@@ -1798,9 +1800,9 @@ function handleItunesResults(arg) {
 
 			// create html
 			html += '<div class="purchaseinfo">';
-			html += '<a href="' + trackUrl + '" class="btnS btnGreen" target="_blank"><span class="icon"><img src="https://github.com/cballou/Turntable.FM-Squared/raw/master/icons/itunes-32.png" height="16" width="16" alt="Artist Details and Top Songs" /></span> Buy Track $' + results[i].trackPrice + '</a>';
-			html += '<a href="' + albumUrl + '" class="btnS btnGreen" target="_blank"><span class="icon"><img src="https://github.com/cballou/Turntable.FM-Squared/raw/master/icons/itunes-32.png" height="16" width="16" alt="Artist Details and Top Songs" /></span> Buy Album $' + results[i].collectionPrice + '</a>';
-			html += '<a href="' + artistUrl + '" class="btnS btnBlue" target="_blank"><span class="icon"><img src="https://github.com/cballou/Turntable.FM-Squared/raw/master/icons/plus.png" height="16" width="16" alt="Artist Details and Top Songs" /></span> Artist Details and Top Songs</a>';
+			html += '<p><a href="' + trackUrl + '" class="btnS btnGreen" target="_blank"><span class="icon"><img src="https://github.com/cballou/Turntable.FM-Squared/raw/master/icons/itunes-32.png" height="16" width="16" alt="Artist Details and Top Songs" /></span> Buy Track $' + results[i].trackPrice + '</a></p>';
+			html += '<p><a href="' + albumUrl + '" class="btnS btnGreen" target="_blank"><span class="icon"><img src="https://github.com/cballou/Turntable.FM-Squared/raw/master/icons/itunes-32.png" height="16" width="16" alt="Artist Details and Top Songs" /></span> Buy Album $' + results[i].collectionPrice + '</a></p>';
+			html += '<p><a href="' + artistUrl + '" class="btnS btnBlue" target="_blank"><span class="icon"><img src="https://github.com/cballou/Turntable.FM-Squared/raw/master/icons/plus.png" height="16" width="16" alt="Artist Details and Top Songs" /></span> Artist Details and Top Songs</a></p>';
 			html += '</div>';
 
 			// only display first result
