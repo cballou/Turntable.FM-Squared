@@ -133,6 +133,57 @@ window.TTFM_SQ = null;
 			lstore.set('config', config);
 		}
 
+		// stats monitoring
+		var stats = {
+			usersCount: 0
+		};
+
+		// vote monitoring
+		var votes = {
+			// total songs played
+			totalSongs: 0,
+			score: 0,
+			votes: 0,
+			upvotes: 0,
+			downvotes: 0,
+			hearts: 0,
+
+			// for the current song
+			current: {
+				score: 0,
+				votes: 0,
+				hearts: 0,
+				upvoters: [],
+				downvoters: []
+			},
+			// for each song
+			songs: {},
+			// by each user
+			user: {},
+			// for my songs
+			mine: {
+				totalSongs: 0,
+				score: 0,
+				votes: 0,
+				hearts: 0,
+				upvotes: 0,
+				downvotes: 0,
+				songs: {
+					/* score: 0, votes: 0, hearts: 0, upvoters: [], downvoters: [], info: [] */
+				}
+			}
+		};
+
+		// the maximum idle response frequency (milliseconds)
+		var maxIdleResponseFreq = 600000;
+		var maxDjIdleTime = 600000;
+		// the last idle response time
+		var lastIdleResponse = new Date().getTime();
+		// the last time the guest list was updated
+		var lastIdleDOMUpdate = null;
+		// the last time a dj stepped down from the decks
+		var lastRemovedDjTime = null;
+
 		// handle playlists
 		var playlists = lstore.get('playlists');
 		if (!playlists) {
@@ -234,57 +285,6 @@ window.TTFM_SQ = null;
 		PLAYLIST.removeSong = function() {
 
 		}
-
-		// stats monitoring
-		var stats = {
-			usersCount: 0
-		};
-
-		// vote monitoring
-		var votes = {
-			// total songs played
-			totalSongs: 0,
-			score: 0,
-			votes: 0,
-			upvotes: 0,
-			downvotes: 0,
-			hearts: 0,
-
-			// for the current song
-			current: {
-				score: 0,
-				votes: 0,
-				hearts: 0,
-				upvoters: [],
-				downvoters: []
-			},
-			// for each song
-			songs: {},
-			// by each user
-			user: {},
-			// for my songs
-			mine: {
-				totalSongs: 0,
-				score: 0,
-				votes: 0,
-				hearts: 0,
-				upvotes: 0,
-				downvotes: 0,
-				songs: {
-					/* score: 0, votes: 0, hearts: 0, upvoters: [], downvoters: [], info: [] */
-				}
-			}
-		};
-
-		// the maximum idle response frequency (milliseconds)
-		var maxIdleResponseFreq = 600000;
-		var maxDjIdleTime = 600000;
-		// the last idle response time
-		var lastIdleResponse = new Date().getTime();
-		// the last time the guest list was updated
-		var lastIdleDOMUpdate = null;
-		// the last time a dj stepped down from the decks
-		var lastRemovedDjTime = null;
 
 		/**
 		 * Function to retrieve turntable objects.
@@ -500,7 +500,7 @@ window.TTFM_SQ = null;
 				if (!isDj() || !isCurrentDj()) {
 					_manager.callback('upvote');
 				}
-			}, randomDelay(3, 30));
+			}, randomDelay(5, 30));
 		}
 
 		/**
@@ -740,10 +740,11 @@ window.TTFM_SQ = null;
 				// ensure we have an object to track user voting
 				if (!votes.user[uid]) {
 					votes.user[uid] = {
-						songs: 0,
+						votes: 0,
 						score: 0,
 						upvotes: 0,
-						downvotes: 0
+						downvotes: 0,
+						hearts: 0
 					};
 				}
 
@@ -753,20 +754,33 @@ window.TTFM_SQ = null;
 					votes.current.upvoters[uid] = users[uid].name;
 
 					// add to the user
-					votes.user[uid].songs += 1;
+					votes.user[uid].votes += 1;
 					votes.user[uid].upvotes += 1;
-					votes.user[uid].score = Math.round(10000 * (votes.user[uid].upvotes / (votes.user[uid].downvotes + votes.user[uid].upvotes))) / 100;
+					votes.user[uid].score = (votes.user[uid].upvotes / votes.user[uid].votes).toFixed(2)
+
+					// check if they reversed
+					if (typeof votes.current.downvoters[uid] != 'undefined') {
+						votes.user[uid].downvotes -= 1;
+						votes.user[uid].votes -= 1;
+						votes.downvotes -= 1;
+						votes.votes -= 1;
+
+						if (isCurrentDj()) {
+							votes.mine.downvotes -= 1;
+							votes.mine.votes -= 1;
+						}
+					}
 
 					// add to overall
 					votes.upvotes += 1;
-					votes.score = Math.round(10000 * (votes.upvotes / votes.votes)) / 100;
+					votes.score = (votes.upvotes / votes.votes).toFixed(2);
 
 					// if im djing
 					if (isCurrentDj()) {
 						// increment my total upvotes
 						votes.mine.votes += 1;
 						votes.mine.upvotes += 1;
-						votes.mine.score = Math.round(10000 * (votes.mine.upvotes / (votes.mine.downvotes + votes.mine.upvotes))) / 100;
+						votes.mine.score = (votes.mine.upvotes / votes.mine.votes).toFixed(2);
 
 						// add upvoter to my song
 						votes.mine.songs[song_id].upvoters[uid] = users[uid].name;
@@ -776,13 +790,26 @@ window.TTFM_SQ = null;
 					votes.current.downvoters[uid] = users[uid].name;
 
 					// add to the user
-					votes.user[uid].songs += 1;
+					votes.user[uid].votes += 1;
 					votes.user[uid].downvotes += 1;
-					votes.user[uid].score = Math.round(10000 * (votes.user[uid].upvotes / (votes.user[uid].downvotes + votes.user[uid].upvotes))) / 100;
+					votes.user[uid].score = (votes.user[uid].upvotes / votes.user[uid].votes).toFixed(2)
+
+					// check if they reversed
+					if (typeof votes.current.upvoters[uid] != 'undefined') {
+						votes.user[uid].upvotes -= 1;
+						votes.user[uid].votes -= 1;
+						votes.upvotes -= 1;
+						votes.votes -= 1;
+
+						if (isCurrentDj()) {
+							votes.mine.upvotes -= 1;
+							votes.mine.votes -= 1;
+						}
+					}
 
 					// add to overall
 					votes.downvotes += 1;
-					votes.score = Math.round(10000 * (votes.upvotes / votes.votes)) / 100;
+					votes.score = (votes.upvotes / votes.votes).toFixed(2)
 
 					// if im djing
 					if (isCurrentDj()) {
@@ -791,7 +818,7 @@ window.TTFM_SQ = null;
 						// increment my total downvotes
 						votes.mine.votes += 1;
 						votes.mine.downvotes += 1;
-						votes.mine.score = votes.mine.upvotes / (votes.mine.downvotes + votes.mine.upvotes);
+						votes.mine.score = (votes.mine.upvotes / votes.mine.votes).toFixed(2);
 
 						// add downvoter to my song
 						votes.mine.songs[song_id].downvoters[uid] = users[uid].name;
