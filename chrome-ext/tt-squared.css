@@ -2,7 +2,7 @@
 #tt2_container { position:absolute; top: 10px; right: 10px; margin: 0; padding: 0; background: #333; color: #FFF; font-size: 12px; line-height: 18px; overflow: hidden; border-radius: 3px; }
 #tt2_container h3 { padding: 4px 10px; margin: 0; font-size: 22px; line-height: 22px; font-weight: bold; background: #9cba9e; color: #000; vertical-align: middle; overflow: hidden;
     border-top-left-radius: 3px;
-    border-bottom-left-radius: 3px;
+    border-top-right-radius: 3px;
     -moz-border-radius-topleft: 3px;
     -moz-border-radius-topright: 3px;
     -webkit-border-top-left-radius: 3px;
@@ -31,7 +31,14 @@
 .floatleft { float: left; display: inline; }
 .floatright { float: right; display: inline; }
 
-#tt2_container h4 { padding: 4px 10px; margin-bottom: 0; font-size: 18px; line-height: 18px; font-weight: bold; background: #5C755E; color: #FFF; }
+#tt2_container h4 { padding: 4px 10px; margin-bottom: 0; font-size: 18px; line-height: 18px; font-weight: normal; background: #5C755E; color: #FFF;
+    border-bottom-left-radius: 3px;
+    border-bottom-right-radius: 3px;
+    -moz-border-radius-bottomleft: 3px;
+    -moz-border-radius-bottomright: 3px;
+    -webkit-border-bottom-left-radius: 3px;
+    -webkit-border-bottom-right-radius: 3px;
+}
 #tt2_container h5 { padding: 4px 10px; margin: 0; font-size: 14px; line-height: 14px; font-weight: bold; background: #222; }
 #tt2_container ul.stats { padding: 0 10px; }
 #tt2_container ul.stats li { padding: 2px 0; border-top: 1px dotted #222; }
@@ -42,6 +49,8 @@
 #tt2_container .accordion { padding: 10px 10px 0; }
 #tt2_container .hidden { display: none; }
 #tt2_container .fullheight { overflow-x: hidden; overflow-y: auto; }
+
+#tt2_container h4.toggleAccordion:hover { background: #6C856E; }
 
 /* cover art */
 #tt2_stats_current_coverart { overflow: hidden; padding: 10px 10px 0; }
