@@ -345,7 +345,7 @@ window.TTFM_SQ = null;
 			sendNotification(
 				'Empty DJ Slot',
 				msg,
-				'https://raw.github.com/cballou/Turntable.FM-Squared/master/notifications/index.html'
+				'http://cballou.github.com/Turntable.FM-Squared'
 			);
 
 			if (!config.autoDj) {
