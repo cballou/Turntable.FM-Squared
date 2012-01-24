@@ -1533,12 +1533,12 @@ window.TTFM_SQ = null;
 			if (html) {
 				// fix up the URL
 				var url = html + '?title=' + encodeURIComponent(title) + '&message=' + encodeURIComponent(message);
+				alert(url);
 				n = window.webkitNotifications.createHTMLNotification(url);
 			} else {
 				n = window.webkitNotifications.createNotification(favIcon, title, message);
 			}
 
-			n = window.webkitNotifications.createNotification(favIcon, title, message);
 			n.ondisplay = function() {
 				setTimeout(function() {
 					n.cancel();
