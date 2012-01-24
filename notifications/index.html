@@ -1,0 +1,110 @@
+<html>
+<head>
+
+    <title></title>
+    <style type="text/css">
+    html, body { margin: 0; padding: 0; }
+    body { padding: 10px; background: #333; color: #fff; }
+    h2 { font-size: 28px; margin-bottom: 12px; }
+    #message { font-size: 12px; line-height: 16px; }
+    #message p { margin: 0 0 10px; padding: 0; }
+    .btn {
+        -moz-border-bottom-colors: none;
+        -moz-border-image: none;
+        -moz-border-left-colors: none;
+        -moz-border-right-colors: none;
+        -moz-border-top-colors: none;
+        border-radius: 3px;
+        -moz-border-radius: 3px;
+        -webkit-border-radius: 3px;
+        border-style: solid;
+        border-width: 1px;
+        color: #FFF;
+        font: bold 11px/1 "Lucida Grande","Lucida Sans Unicode","Lucida Sans",Geneva,Verdana,sans-serif;
+        padding: 3px 4px 4px;
+        text-align: center;
+        text-transform: uppercase;
+        text-decoration: none;
+        overflow: hidden;
+        vertical-align: middle;
+        cursor: pointer;
+    }
+
+    .btnGreen {
+        background-color: #7FBF4D;
+        background-image: -webkit-gradient(linear, left top, left bottom, from(#7FBF4D), to(#63A62F));
+        background-image: -webkit-linear-gradient(top, #7FBF4D, #63A62F);
+        background-image: -moz-linear-gradient(top, #7FBF4D, #63A62F);
+        background-image: -ms-linear-gradient(top, #7FBF4D, #63A62F);
+        background-image: -o-linear-gradient(top, #7FBF4D, #63A62F);
+        background-image: linear-gradient(top, #7FBF4D, #63A62F);
+        border-color: #63A62F #63A62F #5B992B;
+        border-radius: 3px 3px 3px 3px;
+        box-shadow: 0 1px 0 0 #96CA6D inset;
+        -moz-box-shadow: 0 1px 0 0 #96CA6D inset;
+        -webkit-box-shadow: 0 1px 0 0 #96CA6D inset;
+        text-shadow: 0 -1px 0 #4C9021;
+    }
+
+    .btnGreen:hover {
+        background-color: #76B347;
+        background-image: -webkit-gradient(linear, left top, left bottom, from(#76B347), to(#5E9E2E));
+        background-image: -webkit-linear-gradient(top, #76B347, #5E9E2E);
+        background-image: -moz-linear-gradient(top, #76B347, #5E9E2E);
+        background-image: -ms-linear-gradient(top, #76B347, #5E9E2E);
+        background-image: -o-linear-gradient(top, #76B347, #5E9E2E);
+        background-image: linear-gradient(top, #76B347, #5E9E2E);
+        box-shadow: 0 1px 0 0 #8DBF67 inset;
+    }
+
+    .btnGreen:active {
+        border-color: #5B992B #5B992B #538C27;
+        border-style: solid;
+        border-width: 1px;
+        box-shadow: 0 0 8px 4px #548C29 inset, 0 1px 0 0 #eee;
+        -moz-box-shadow: 0 0 8px 4px #548C29 inset, 0 1px 0 0 #eee;
+        -webkit-box-shadow: 0 0 8px 4px #548C29 inset, 0 1px 0 0 #eee;
+    }
+    </style>
+</head>
+<body>
+    <h2 id="title">Title</h2>
+    <div id="message">Message</div>
+    <script type="text/javascript">
+    // parse title and message
+    var title = getParameterByName('title');
+    var message = getParameterByName('message');
+
+    // place values
+    document.getElementById('title').innerHTML = title;
+    document.getElementById('message').innerHTML = message;
+
+    // handle "become dj"
+    var becomeDj = document.getElementById('becomeDj');
+    if (becomeDj) {
+        becomeDj.onclick = function() {
+            if (window.opener) {
+                if (window.opener.becomeDj) {
+                    window.opener.becomeDj();
+                }
+            }
+        };
+    }
+
+    /**
+     * Retrieve named parameters.
+     */
+    function getParameterByName(name) {
+        name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
+        var regexS = "[\\?&]" + name + "=([^&#]*)";
+        var regex = new RegExp(regexS);
+        var results = regex.exec(window.location.href);
+        if (results == null) {
+            return "";
+        } else {
+            return decodeURIComponent(results[1].replace(/\+/g, " "));
+        }
+    }
+    </script>
+</body>
+</html>
