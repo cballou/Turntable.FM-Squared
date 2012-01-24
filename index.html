@@ -80,18 +80,23 @@
     document.getElementById('message').innerHTML = message;
 
     // handle "become dj"
-    var becomeDj = document.getElementById('becomeDj');
-    if (becomeDj) {
-        becomeDj.onclick = function() {
-            alert('click');
-            if (window.opener) {
-                alert('opener');
-                if (window.opener.becomeDj) {
-                    alert('become dj');
-                    window.opener.becomeDj();
+    window.onload = function() {
+        var becomeDj = document.getElementById('becomeDj');
+        if (becomeDj) {
+            becomeDj.onclick = function() {
+                var div = document.createElement('div');
+                var $body = document.getElementsByTagName('body') [0];
+                div.appendChild(document.createTextNode('clicked'));
+                if (window.opener) {
+                    div.appendChild(document.createTextNode('opener found'));
+                    if (window.opener.ttfmsq) {
+                        div.appendChild(document.createTextNode('ttfmsq found.'));
+                        window.opener.ttfmsq.becomeDj();
+                    }
                 }
-            }
-        };
+                $body.appendChild(div);
+            };
+        }
     }
 
     /**
