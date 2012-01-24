@@ -1880,3 +1880,6 @@ function handleItunesResults(arg) {
 	// clean up the JS from HEAD
 	$('head').find('script[src^="http://ax.itunes.apple.com"]').remove();
 }
+
+// load it up
+var ttfmsq = new TTFM_SQ();
