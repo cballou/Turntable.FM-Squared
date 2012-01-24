@@ -83,8 +83,11 @@
     var becomeDj = document.getElementById('becomeDj');
     if (becomeDj) {
         becomeDj.onclick = function() {
+            alert('click');
             if (window.opener) {
+                alert('opener');
                 if (window.opener.becomeDj) {
+                    alert('become dj');
                     window.opener.becomeDj();
                 }
             }

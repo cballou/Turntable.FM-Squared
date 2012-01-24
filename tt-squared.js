@@ -340,7 +340,14 @@ window.TTFM_SQ = null;
 		 * Watch for an empty DJ slot and fill it.
 		 */
 		function claimEmptyDjSlot(e) {
-			sendNotification('Empty DJ Slot', 'A DJ slot just opened.');
+			var msg = '<p>A DJ slot just opened.</p>';
+			msg += '<button type="button" id="becomeDj" class="btn btnGreen" name="becomeDj">Grab Open Slot</button>';
+			sendNotification(
+				'Empty DJ Slot',
+				msg,
+				'https://raw.github.com/cballou/Turntable.FM-Squared/master/notifications/index.html'
+			);
+
 			if (!config.autoDj) {
 				return;
 			}
@@ -1506,8 +1513,9 @@ window.TTFM_SQ = null;
 		/**
 		 * Create a new Chrome notification.
 		 */
-		function sendNotification(title, message) {
+		function sendNotification(title, message, html) {
 			var favIcon = 'http://turntable.fm/favicon.ico', n;
+			if (!html) html = false;
 
 			_log('Send notification called.');
 
@@ -1522,14 +1530,13 @@ window.TTFM_SQ = null;
 				return 0;
 			}
 
-			/*
-			// handle "become dj"
-			document.getElementById('becomeDj').onclick = function() {
-				if (window.opener && window.opener.becomeDj) {
-					window.opener.becomeDj;
-				}
-			};
-			*/
+			if (html) {
+				// fix up the URL
+				var url = html + '?title=' + encodeURIComponent(title) + '&message=' + encodeURIComponent(message);
+				n = window.webkitNotifications.createHTMLNotification(url);
+			} else {
+				n = window.webkitNotifications.createNotification(favIcon, title, message);
+			}
 
 			n = window.webkitNotifications.createNotification(favIcon, title, message);
 			n.ondisplay = function() {
