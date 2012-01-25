@@ -362,6 +362,13 @@ window.TTFM_SQ = null;
 			}
 
 			// become dj
+			becomeDj();
+		}
+
+		/**
+		 * Handles becoming a DJ.
+		 */
+		this.becomeDj = function() {
 			setTimeout(function() {
 				_manager.callback('become_dj', _manager.become_dj.data('spot'))
 			}, config.autoDjTimeout);
@@ -416,7 +423,11 @@ window.TTFM_SQ = null;
 			if (stringInText(config.nameAliases, e.text, true)) {
 				// send a notification of the mention
 				playAlertSound();
-				sendNotification('Mention Alert', e.text);
+				sendNotification(
+					'Mention Alert',
+					e.text,
+					'http://cballou.github.com/Turntable.FM-Squared'
+				);
 			} else {
 				if (!stringInText(config.generalNameAliases, e.text)) {
 					return;
@@ -606,8 +617,18 @@ window.TTFM_SQ = null;
 				}
 			}
 
+			var title = '<p>' + song.artist + ' - "' + song.song + '"';
+			if (song.album && song.album.length) {
+				title += ' (' + song.album + ')';
+			}
+			title += '</p>';
+
 			// notify of song change
-			sendNotification('Now Playing...', song.artist + ' - ' + song.song + '" (' + song.album + ')');
+			sendNotification(
+				'Now Playing...',
+				title,
+				'http://cballou.github.com/Turntable.FM-Squared'
+			);
 		}
 
 		/**
@@ -910,6 +931,9 @@ window.TTFM_SQ = null;
 				autoVote(e);
 			} else if (e.command == 'update_votes') {
 				updateVotes(e);
+			} else if (e.command == 'update_user') {
+				_log('=== UPDATE USER ===');
+				_log(e);
 			} else if (e.command == 'add_dj') {
 				updateLastUserAction(e.user[0].userid);
 			} else if (e.command == 'registered') {
@@ -1482,7 +1506,6 @@ window.TTFM_SQ = null;
 			$('#tt2_container').find('.fullheight').css(
 				'height',
 				'' + (tt2_size.height - tt2_playing_size.height - 95) + 'px !important'
-				//tt2_size.height - tt2_playing_size.height - tt2_title_height - tt2_section_title_height - tt2_section_padding
 			);
 		}
 
@@ -1805,7 +1828,7 @@ function getSimilarTracks(artist, song, album) {
 				});
 			} else {
 				var baseurl = 'http://click.linksynergy.com/fs-bin/stat?id=5PGIX6Dk9zE&offerid=146261&type=3&subid=0&tmpid=1826&RD_PARM1=';
-				var searchUrl = 'http://itunes.apple.com/search?music=all&term=' + item.artist.name + ' ' + item.name;
+				var searchUrl = 'http://ax.itunes.apple.com/WebObjects/MZSearch.woa/wa/search?term=' + item.artist.name + ' ' + item.name;
 				searchUrl = encodeURIComponent(encodeURIComponent(searchUrl));
 
 				html += '<td><a href="' + baseurl + searchUrl + '" class="btnS btnGreen" target="_blank"><span class="itunesIcon"></span> Preview &amp; Buy Track</a></td>';
