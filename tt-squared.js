@@ -14,6 +14,7 @@ window.TTFM_SQ = null;
 		var _mods = [];
 		var _manager = null;
 		var _k = null;
+		var self = this;
 
 		// some specific user monitors
 		var _lastUserActions = {};
@@ -362,13 +363,14 @@ window.TTFM_SQ = null;
 			}
 
 			// become dj
-			becomeDj();
+			self.becomeDj();
 		}
 
 		/**
 		 * Handles becoming a DJ.
 		 */
 		this.becomeDj = function() {
+			_log('Attempting to become DJ.');
 			setTimeout(function() {
 				_manager.callback('become_dj', _manager.become_dj.data('spot'))
 			}, config.autoDjTimeout);
@@ -629,6 +631,34 @@ window.TTFM_SQ = null;
 				title,
 				'http://cballou.github.com/Turntable.FM-Squared'
 			);
+		}
+
+		/**
+		 * A user update event occurred, check if it entails adding or removing
+		 * a fan.
+		 */
+		function updateFans(e) {
+			if (typeof e.fans != 'undefined') {
+				if (e.fans == 1) {
+					if (typeof _usernameMappings[e.userid] != 'undefined') {
+						var msg = _usernameMappings[e.userid] + ' has become a fan.';
+						sendNotification(
+							'You\'ve Been Fanned.',
+							_usernameMappings[e.userid],
+							'http://cballou.github.com/Turntable.FM-Squared'
+						);
+					}
+				} else if (e.fans == -1) {
+					if (typeof _usernameMappings[e.userid] != 'undefined') {
+						var msg = _usernameMappings[e.userid] + ' is no longer your fan.';
+						sendNotification(
+							'You\'ve Been Unfanned.',
+							_usernameMappings[e.userid],
+							'http://cballou.github.com/Turntable.FM-Squared'
+						);
+					}
+				}
+			}
 		}
 
 		/**
@@ -932,8 +962,7 @@ window.TTFM_SQ = null;
 			} else if (e.command == 'update_votes') {
 				updateVotes(e);
 			} else if (e.command == 'update_user') {
-				_log('=== UPDATE USER ===');
-				_log(e);
+				updateFans(e);
 			} else if (e.command == 'add_dj') {
 				updateLastUserAction(e.user[0].userid);
 			} else if (e.command == 'registered') {
@@ -1904,4 +1933,4 @@ function handleItunesResults(arg) {
 }
 
 // load it up
-var ttfmsq = new TTFM_SQ();
+window.ttfmsq = new TTFM_SQ();
