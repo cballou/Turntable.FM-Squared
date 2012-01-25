@@ -84,14 +84,20 @@
         var becomeDj = document.getElementById('becomeDj');
         if (becomeDj) {
             becomeDj.onclick = function() {
-                var div = document.createElement('div');
+                if (typeof chrome.extension != 'undefined') {
+                    var parent = chrome.extension.getBackgroundPage();
+                } else if (window.opener) {
+                    var parent = window.opener;
+                }
+                
                 var $body = document.getElementsByTagName('body') [0];
+                var div = document.createElement('div');
                 div.appendChild(document.createTextNode('clicked'));
-                if (window.opener) {
+                if (parent) {
                     div.appendChild(document.createTextNode('opener found'));
-                    if (window.opener.ttfmsq) {
+                    if (typeof parent.ttfmsq != 'undefined') {
                         div.appendChild(document.createTextNode('ttfmsq found.'));
-                        window.opener.ttfmsq.becomeDj();
+                        parent.ttfmsq.becomeDj();
                     }
                 }
                 $body.appendChild(div);
