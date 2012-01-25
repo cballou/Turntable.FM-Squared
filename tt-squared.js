@@ -640,20 +640,20 @@ window.TTFM_SQ = null;
 		function updateFans(e) {
 			if (typeof e.fans != 'undefined') {
 				if (e.fans == 1) {
-					if (typeof _usernameMappings[e.userid] != 'undefined') {
-						var msg = _usernameMappings[e.userid] + ' has become a fan.';
+					if (typeof _room.users[e.userid] != 'undefined') {
+						var msg = _room.users[e.userid].name + ' has become a fan.';
 						sendNotification(
 							'You\'ve Been Fanned.',
-							_usernameMappings[e.userid],
+							msg,
 							'http://cballou.github.com/Turntable.FM-Squared'
 						);
 					}
 				} else if (e.fans == -1) {
-					if (typeof _usernameMappings[e.userid] != 'undefined') {
-						var msg = _usernameMappings[e.userid] + ' is no longer your fan.';
+					if (typeof _room.users[e.userid] != 'undefined') {
+						var msg = _room.users[e.userid].name + ' is no longer your fan.';
 						sendNotification(
 							'You\'ve Been Unfanned.',
-							_usernameMappings[e.userid],
+							msg,
 							'http://cballou.github.com/Turntable.FM-Squared'
 						);
 					}
