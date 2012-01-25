@@ -639,7 +639,7 @@ window.TTFM_SQ = null;
 		 */
 		function updateFans(e) {
 			if (typeof e.fans != 'undefined') {
-				if (e.fans == 1) {
+				if (e.fans === 1) {
 					if (typeof _room.users[e.userid] != 'undefined') {
 						var msg = _room.users[e.userid].name + ' has become a fan.';
 						sendNotification(
@@ -648,7 +648,7 @@ window.TTFM_SQ = null;
 							'http://cballou.github.com/Turntable.FM-Squared'
 						);
 					}
-				} else if (e.fans == -1) {
+				} else if (e.fans === -1) {
 					if (typeof _room.users[e.userid] != 'undefined') {
 						var msg = _room.users[e.userid].name + ' is no longer your fan.';
 						sendNotification(
@@ -1279,6 +1279,7 @@ window.TTFM_SQ = null;
 			var $auto_upvote = $options.find('#tt2_autoupvote');
 			var $auto_dj = $options.find('#tt2_autodj');
 			var $auto_dj_timeout = $options.find('#tt2_autodj_timeout');
+			var $anti_auto_dj = $options.find('#tt2_antiautodj');
 			var $auto_respond = $options.find('#tt2_autorespond');
 			var $anti_idle = $options.find('#tt2_antiidle');
 			var $mute_alert = $options.find('#tt2_muteAlert');
@@ -1296,6 +1297,7 @@ window.TTFM_SQ = null;
 				// save all option changes
 				config.autoUpvote = $auto_upvote.is(':checked');
 				config.autoDj = $auto_dj.is(':checked');
+				config.antiAutoDj = $anti_auto_dj.is(':checked');
 				config.autoDjTimeout = parseInt($auto_dj_timeout.val()) || 25;
 				config.autoRespond = $auto_respond.is(':checked');
 				config.antiIdle = $anti_idle.is(':checked');
