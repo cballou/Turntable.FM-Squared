@@ -80,15 +80,7 @@
     document.getElementById('message').innerHTML = message;
 
     // handle "become dj"
-    var tmp_ol;
-    if (window.onload) {
-        tmp_ol = window.onload;
-    }
-    
     window.onload = function() {
-        if (tmp_ol) {
-            tmp_ol();
-        }
         var becomeDj = document.getElementById('becomeDj');
         if (becomeDj) {
             becomeDj.onclick = function() {
