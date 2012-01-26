@@ -342,7 +342,7 @@ window.TTFM_SQ = null;
 		 */
 		function claimEmptyDjSlot(e) {
 			var msg = '<p>A DJ slot just opened.</p>';
-			msg += '<button type="button" id="becomeDj" class="btn btnGreen" name="becomeDj">Grab Open Slot</button>';
+			//msg += '<button type="button" id="becomeDj" class="btn btnGreen" name="becomeDj">Grab Open Slot</button>';
 			sendNotification(
 				'Empty DJ Slot',
 				msg,
@@ -619,16 +619,20 @@ window.TTFM_SQ = null;
 				}
 			}
 
-			var title = '<p>' + song.artist + ' - "' + song.song + '"';
-			if (song.album && song.album.length) {
-				title += ' (' + song.album + ')';
+			var msg = '';
+			if (song.coverart) {
+				msg += '<img src="' + song.coverart + '" height="75" width="75" alt="' + alt + '" style="float:left;display:inline;margin:0 10px 10px 0" />';
 			}
-			title += '</p>';
+			msg += '<p>' + song.artist + ' - "' + song.song + '"';
+			if (song.album && song.album.length) {
+				msg += ' (' + song.album + ')';
+			}
+			msg += '</p>';
 
 			// notify of song change
 			sendNotification(
 				'Now Playing...',
-				title,
+				msg,
 				'http://cballou.github.com/Turntable.FM-Squared'
 			);
 		}
@@ -641,18 +645,18 @@ window.TTFM_SQ = null;
 			if (typeof e.fans != 'undefined') {
 				if (e.fans === 1) {
 					if (typeof _room.users[e.userid] != 'undefined') {
-						var msg = _room.users[e.userid].name + ' has become a fan.';
+						var msg = _room.users[e.userid].name + ' has a new fan.';
 						sendNotification(
-							'You\'ve Been Fanned.',
+							'Someone Gained a Fan.',
 							msg,
 							'http://cballou.github.com/Turntable.FM-Squared'
 						);
 					}
 				} else if (e.fans === -1) {
 					if (typeof _room.users[e.userid] != 'undefined') {
-						var msg = _room.users[e.userid].name + ' is no longer your fan.';
+						var msg = _room.users[e.userid].name + ' lost a fan.';
 						sendNotification(
-							'You\'ve Been Unfanned.',
+							'Someone Lost a Fan.',
 							msg,
 							'http://cballou.github.com/Turntable.FM-Squared'
 						);
