@@ -38,6 +38,7 @@ window.TTFM_SQ = null;
 			antiAutoDj: true,
 			autoRespond: true,
 			antiIdle: true,
+			showIdleTimes: false,
 			muteAlert: false,
 			autoUpvote: true,
 			autoDjTimeout: 25,
@@ -397,22 +398,24 @@ window.TTFM_SQ = null;
 		 */
 		function watchForCommands(e) {
 			if (stringInText('/djs', e.text)) {
-				if (typeof _manager.djs != 'undefined') {
-					var msg = [];
-					for (var i in _manager.djs) {
-						if (typeof _manager.djs[i] != 'undefined') {
-							var user_id = _manager.djs[i][0];
-							if (typeof _room.users[user_id] != 'undefined') {
-								var username = _room.users[user_id].name;
-								if (typeof _lastUserActions[user_id] != 'undefined') {
-									msg.push(username + ': ' + formatDate(_lastUserActions[user_id]));
-								} else {
-									msg.push(username + ': 0:00');
+				if (config.showIdleTimes) {
+					if (typeof _manager.djs != 'undefined') {
+						var msg = [];
+						for (var i in _manager.djs) {
+							if (typeof _manager.djs[i] != 'undefined') {
+								var user_id = _manager.djs[i][0];
+								if (typeof _room.users[user_id] != 'undefined') {
+									var username = _room.users[user_id].name;
+									if (typeof _lastUserActions[user_id] != 'undefined') {
+										msg.push(username + ': ' + formatDate(_lastUserActions[user_id]));
+									} else {
+										msg.push(username + ': 0:00');
+									}
 								}
 							}
 						}
+						say('-= ' + msg.join(', ') + ' =-');
 					}
-					say('-= ' + msg.join(', ') + ' =-');
 				}
 			}
 		}
@@ -1635,6 +1638,24 @@ window.TTFM_SQ = null;
 			var PERMISSION_ALLOWED = 0;
 			if (window.webkitNotifications.checkPermission() != PERMISSION_ALLOWED) {
 				requestNotificationPermission();
+			} else {
+				// handle web worker in chrome
+				// via toobify.com
+				if ("webkitNotifications" in window) {
+					// create a new worker
+					var worker = new SharedWorker('https://github.com/cballou/Turntable.FM-Squared/raw/master/notifications/worker.js');
+					var incomingMsg = null;
+					// watch for message passing
+					worker.port.addEventListener('message', function(event) {
+						if (event.data.msg !== incomingMsg) {
+							$(window).trigger('toobifyRemote',[event.data]);
+							// reset the event message state
+							incomingMsg = null;
+						}
+					}, false);
+					// start the shared worker connection
+					worker.start();
+				}
 			}
 		}
 
