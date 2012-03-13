@@ -980,10 +980,13 @@ window.TTFM_SQ = null;
 
 			// watch for search of an artists
 			$('#tt2_container').delegate('.btnSearchArtist', 'click', function() {
+				// unescape the term
+				var term = unescape($(this).data('term'));
 				// trigger TT.FM search
 				$('#playlist .addSongsButton').trigger('click');
-				$('#right-panel').find('form.songSearch').find('input').val($(this).data('term'));
-				turntable.playlist.submitSearchQuery(false, '#playlist .searchView .songSearch input');
+				$('#right-panel').find('form.songSearch').find('input').val(term);
+				$('#right-panel').find('form.songSearch').trigger('submit');
+				//turntable.playlist.submitSearchQuery(false, '#playlist .searchView .songSearch input');
 				return false;
 			});
 			
@@ -1790,7 +1793,7 @@ function getSimilarTracks(artist, song, album) {
 			html += '<td>' + item.name + '</td>';
 
 			if (item.mbid.length) {
-				html += '<td><a href="#" class="btnS btnGreen" target="_blank"><span class="itunesIcon"></span> Preview &amp; Buy Track</a></td>';
+				html += '<td><a href="#" class="btnS btnGreen" target="_blank"><span class="itunesIcon"></span> Preview &amp; Buy</a></td>';
 				// get buy links and change them
 				// http://www.last.fm/api/show?service=431
 				var buyUrl = 'http://ws.audioscrobbler.com/2.0/?method=track.getbuylinks&artist=' + encodeURIComponent(artist) + '&track=' + encodeURIComponent(song) + '&api_key=d1b14c712954973f098a226d80d6b5c2&format=json&callback=?';
@@ -1803,11 +1806,11 @@ function getSimilarTracks(artist, song, album) {
 				var searchUrl = 'http://ax.itunes.apple.com/WebObjects/MZSearch.woa/wa/search?term=' + item.artist.name + ' ' + item.name;
 				searchUrl = encodeURIComponent(encodeURIComponent(searchUrl));
 
-				html += '<td><a href="' + baseurl + searchUrl + '" class="btnS btnGreen" target="_blank"><span class="itunesIcon"></span> Preview &amp; Buy Track</a></td>';
+				html += '<td><a href="' + baseurl + searchUrl + '" class="btnS btnGreen" target="_blank"><span class="itunesIcon"></span> Preview &amp; Buy</a></td>';
 				//html += '<td>&nbsp;</td>';
 			}
 			
-			html += '<td><a href="#" class="btnS btnBlue btnSearchArtist" data-term="' + escape(item.artist.name + ' ' + item.name) + '">Search on TT.FM</a></td>';
+			html += '<td><a href="#" class="btnS btnBlue btnSearchArtist" data-term="' + escape(item.artist.name + ' ' + item.name) + '">TT.FM Search</a></td>';
 			//if (item.artist.mbid.length) {
 			//	html += '<p><a href="#" style="display:block">View Artist Details</a>';
 			//}
