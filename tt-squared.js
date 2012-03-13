@@ -44,6 +44,10 @@ window.TTFM_SQ = null;
 			autoDjTimeout: 25,
 			enableNotifications: false,
 			notificationTime: 10,
+			notifications: {
+				enablePM: true,
+				antiIdle: true
+			},
 			nameAliases: [
 				'corey',
 				'ballou',
@@ -333,11 +337,17 @@ window.TTFM_SQ = null;
 		function watchForChatMentions(e) {
 			// handle alerting when mentioned
 			if (stringInText(config.nameAliases, e.text, true)) {
+				// ensure we aren't talking about ourselves
+				_log('Mention alert');
+				_log(e);
+				
 				// send a notification of the mention
 				playAlertSound();
+				
+				// handle alert
 				sendNotification(
 					'Mention Alert',
-					e.text,
+					escape(e.text),
 					'http://cballou.github.com/Turntable.FM-Squared'
 				);
 			} else {
@@ -393,6 +403,16 @@ window.TTFM_SQ = null;
 				return;
 			}
 
+			// handle notifying the user
+			if (config.notifications.antiIdle) {
+				sendNotification(
+					'Are You There?',
+					'It looks as though you may have gone idle. You have been idle for ' +
+					formatDate(lastIdleResponse),
+					'http://cballou.github.com/Turntable.FM-Squared'
+				);
+			}
+			
 			// create a response
 			var response = randomChoice(config.idleMessages);
 
@@ -438,7 +458,11 @@ window.TTFM_SQ = null;
 		 */
 		function resetVotes(e) {
 			// initially hide similar tracks
-			$('#similar_tracks').hide();
+			if (!$('#similar_tracks').is(':hidden')) {
+				$('#tt2_nav .btnS').filter(function() { 
+					return $(this).data('id') === 'chat' 
+				}).trigger('click');				
+			}
 
 			// reset current vote counter
 			votes.current.score = 0;
@@ -542,7 +566,7 @@ window.TTFM_SQ = null;
 			// notify of song change
 			sendNotification(
 				'Now Playing...',
-				msg,
+				escape(msg),
 				'http://cballou.github.com/Turntable.FM-Squared'
 			);
 		}
@@ -611,7 +635,7 @@ window.TTFM_SQ = null;
 			$('#tt2_stats_current_coverart').find('.songinfo').html(details);
 			$('#tt2_stats_current_coverart').find('.coverart').remove();
 			$('#tt2_stats_current_coverart').prepend(albumArt);
-
+			
 			// update current song
 			performSearch(song.artist, song.song, song.album || '');
 
@@ -665,6 +689,23 @@ window.TTFM_SQ = null;
 			// update stats
 			$('#tt2_stats_current_hearts').text(votes.current.hearts);
 			$('#tt2_stats_overall_hearts').text(votes.hearts);
+		}
+		
+		/**
+		 * Handles receiving a PM.
+		 */
+		function handlePM(e) {
+			_log('PM Received');
+			_log(e);
+			
+			// check if we enabled PM notifications
+			if (config.notifications.enablePM) {
+				sendNotification(
+					'Private Message Received',
+					escape(e.text),
+					'http://cballou.github.com/Turntable.FM-Squared'
+				);
+			}
 		}
 
 		/**
@@ -855,16 +896,20 @@ window.TTFM_SQ = null;
 			} else if (e.command == 'add_dj') {
 				// check last removed time
 				if (config.antiAutoDj && lastRemovedDjTime) {
+					var msg = '';
 					var curTime = new Date().getTime();
 					var elapsed = curTime - lastRemovedDjTime;
 					lastRemovedDjTime = null;
 					if (elapsed > 60000) {
-						say('DJ slot was open for a staggering ' + (elapsed / 60000).toFixed(2) + ' minutes.');
+						msg = 'The DJ slot was open for a staggering ' + (elapsed / 60000).toFixed(2) + ' minutes.';
 					} else if (elapsed > 1000) {
-						say('DJ Slot was open for ' + (elapsed / 1000).toFixed(2) + ' seconds.');
+						msg = 'The DJ Slot was open for ' + (elapsed / 1000).toFixed(2) + ' seconds.';
 					} else {
-						say('DJ Slot was only open for ' + elapsed + ' milliseconds.');
+						msg = 'The DJ Slot was only open for ' + elapsed + ' milliseconds.';
 					}
+					
+					// send notification
+					sendNotification('DJ Slot Stats', msg, 'http://cballou.github.com/Turntable.FM-Squared');
 				}
 			} else if (e.command == 'speak' && e.userid) {
 				watchForCommands(e);
@@ -886,6 +931,8 @@ window.TTFM_SQ = null;
 				}
 			} else if (e.command == 'snagged') {
 				updateHearts(e);
+			} else if (e.command == 'pmmed') {
+				handlePM(e);
 			}
 		}
 
@@ -1122,7 +1169,10 @@ window.TTFM_SQ = null;
 
 							if (typeof window.webkitNotifications != 'undefined') {
 								html += '<div class="check"><label><input type="checkbox" name="tt2_enable_notifications" id="tt2_enable_notifications" value="1"' + (config.enableNotifications == 1 ? ' checked="checked"' : '') + ' /> Enable Notifications</label>, hide after <input type="text" name="tt2_notification_time" id="tt2_notification_time" class="tiny" value="' + parseInt(config.notificationTime) + '" /> sec</div>';
+								html += '<div class="check"><label><input type="checkbox" name="tt2_notifications_enablePM" id="tt2_notifications_enablePM" value="1"' + (config.notification.enablePM == 1 ? ' checked="checked"' : '') + ' /> PM Notifications</label></div>';
+								html += '<div class="check"><label><input type="checkbox" name="tt2_notifications_idle" id="tt2_notifications_idle" value="1"' + (config.notification.antiIdle == 1 ? ' checked="checked"' : '') + ' /> PM Notifications</label></div>';
 							}
+							
 							html += '</div>';
 							html += '<div class="clearfix">';
 
@@ -1209,7 +1259,11 @@ window.TTFM_SQ = null;
 			var $auto_respond = $options.find('#tt2_autorespond');
 			var $anti_idle = $options.find('#tt2_antiidle');
 			var $mute_alert = $options.find('#tt2_muteAlert');
+			
+			// notifications
 			var $enable_notifications = $options.find('#tt2_enable_notifications');
+			var $enable_notification_pm = $options.find('#tt2_enable_notification_pm');
+			var $enable_notification_idle = $options.find('#tt2_enable_notification_idle');
 			var $notification_time = $options.find('#tt2_notification_time');
 
 			var $name_aliases = $options.find('#tt2_name_aliases');
@@ -1217,6 +1271,7 @@ window.TTFM_SQ = null;
 			var $idle_aliases = $options.find('#tt2_idle_aliases');
 			var $idle_replies = $options.find('#tt2_idle_replies');
 			var $idle_messages = $options.find('#tt2_idle_messages');
+			
 
 			// watch for change to options
 			$options.find('#updateSettings').click(function() {
@@ -1228,7 +1283,11 @@ window.TTFM_SQ = null;
 				config.autoRespond = $auto_respond.is(':checked');
 				config.antiIdle = $anti_idle.is(':checked');
 				config.muteAlert = $mute_alert.is(':checked');
+				
+				// notification options
 				config.enableNotifications = $enable_notifications.length && $enable_notifications.is(':checked');
+				config.notifications.enablePM = $enable_notification_pm.length && $enable_notification_pm.is(':checked');
+				config.notifications.antiIdle = $enable_notification_idle.length && $enable_notification_idle.is(':checked');
 				config.notificationTime = $notification_time.length ? parseInt($notification_time.val()) : 10;
 
 				// update textarea options
@@ -1370,7 +1429,6 @@ window.TTFM_SQ = null;
 			$('#tt2_container').find('.fullheight').css(
 				'height',
 				'' + (tt2_size.height - tt2_playing_size.height - 95) + 'px !important'
-				//tt2_size.height - tt2_playing_size.height - 40
 			);
 		}
 
@@ -1618,7 +1676,9 @@ window.TTFM_SQ = null;
 		}
 
 		/**
-		 * Check if we recently responded to a message or idle check.
+		 * Check if we recently responded to a message or idle check. If not,
+		 * update the last idle response time since we're going to handle it
+		 * anyways.
 		 */
 		function recentlyResponded() {
 			// check if we responded to an idle request recently
