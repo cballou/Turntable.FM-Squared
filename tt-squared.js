@@ -34,6 +34,7 @@ window.TTFM_SQ = null;
 
 		// prepare default config
 		var defaults = {
+			debugMode: true,
 			autoDj: false,
 			antiAutoDj: true,
 			autoRespond: true,
@@ -124,8 +125,7 @@ window.TTFM_SQ = null;
 				'can\'t wait till 5',
 				'i should be working',
 				'moar coffee.'
-			],
-			debugMode: true
+			]
 		};
 
 		// handle config values
@@ -347,7 +347,7 @@ window.TTFM_SQ = null;
 				// handle alert
 				sendNotification(
 					'Mention Alert',
-					escape(e.text),
+					e.text,
 					'http://cballou.github.com/Turntable.FM-Squared'
 				);
 			} else {
@@ -1028,7 +1028,7 @@ window.TTFM_SQ = null;
 			// watch for search of an artists
 			$('#tt2_container').delegate('.btnSearchArtist', 'click', function() {
 				// unescape the term
-				var term = unescape($(this).data('term'));
+				var term = $(this).data('term');
 				// trigger TT.FM search
 				$('#playlist .addSongsButton').trigger('click');
 				$('#right-panel').find('form.songSearch').find('input').val(term);
@@ -1166,16 +1166,15 @@ window.TTFM_SQ = null;
 							html += '<div class="check"><label><input type="checkbox" name="tt2_autorespond" id="tt2_autorespond" value="1"' + (config.autoRespond == 1 ? ' checked="checked"' : '') + ' /> Auto Respond</label></div>';
 							html += '<div class="check"><label><input type="checkbox" name="tt2_antiidle" id="tt2_antiidle" value="1"' + (config.antiIdle == 1 ? ' checked="checked"' : '') + ' /> Anti Idle</label></div>';
 							html += '<div class="check"><label><input type="checkbox" name="tt2_muteAlert" id="tt2_muteAlert" value="1"' + (config.muteAlert == 1 ? ' checked="checked"' : '') + ' /> Enable Mention Alert</label></div>';
-
+							html += '<div class="check"><label><input type="checkbox" name="tt2_debugMode" id="tt2_debugMode" value="1"' + (config.debugMode == 1 ? ' checked="checked"' : '') + ' /> Enable Debug Mode</label></div>';
 							if (typeof window.webkitNotifications != 'undefined') {
 								html += '<div class="check"><label><input type="checkbox" name="tt2_enable_notifications" id="tt2_enable_notifications" value="1"' + (config.enableNotifications == 1 ? ' checked="checked"' : '') + ' /> Enable Notifications</label>, hide after <input type="text" name="tt2_notification_time" id="tt2_notification_time" class="tiny" value="' + parseInt(config.notificationTime) + '" /> sec</div>';
 								html += '<div class="check"><label><input type="checkbox" name="tt2_notifications_enablePM" id="tt2_notifications_enablePM" value="1"' + (config.notifications.enablePM == 1 ? ' checked="checked"' : '') + ' /> PM Notifications</label></div>';
 								html += '<div class="check"><label><input type="checkbox" name="tt2_notifications_idle" id="tt2_notifications_idle" value="1"' + (config.notifications.antiIdle == 1 ? ' checked="checked"' : '') + ' /> PM Notifications</label></div>';
 							}
-							
 							html += '</div>';
+							
 							html += '<div class="clearfix">';
-
 							html += '<div class="col"><label for="tt2_name_aliases">My Aliases</label><textarea name="tt2_name_aliases" id="tt2_name_aliases">' + config.nameAliases.join('\n') + '</textarea><span class="note">This represents any strings someone may use to reference you in a chat message. It could be shorthand for your alias. Separate each with commas.</span></div>';
 							html += '<div class="col"><label for="tt2_general_name_aliases">General Aliases</label><textarea name="tt2_general_name_aliases" id="tt2_general_name_aliases">' + config.generalNameAliases.join('\n') + '</textarea><span class="note">Any string in a chat message that may refer to everybody in the room as a whole. Separate by commas.</div>';
 							html += '<div class="col"><label for="tt2_idle_aliases">Idle Aliases</label><textarea name="tt2_idle_aliases" id="tt2_idle_aliases">' + config.idleAliases.join('\n') + '</textarea><span class="note">Words mentioned in chat that may pertain to being idle, away from keyboard, etc.</div>';
@@ -1259,6 +1258,7 @@ window.TTFM_SQ = null;
 			var $auto_respond = $options.find('#tt2_autorespond');
 			var $anti_idle = $options.find('#tt2_antiidle');
 			var $mute_alert = $options.find('#tt2_muteAlert');
+			var $debug_mode = $options.find('#tt2_debugMode');
 			
 			// notifications
 			var $enable_notifications = $options.find('#tt2_enable_notifications');
@@ -1276,6 +1276,7 @@ window.TTFM_SQ = null;
 			// watch for change to options
 			$options.find('#updateSettings').click(function() {
 				// save all option changes
+				config.debugMode = $debug_mode.is(':checked');
 				config.autoUpvote = $auto_upvote.is(':checked');
 				config.autoDj = $auto_dj.is(':checked');
 				config.antiAutoDj = $anti_auto_dj.is(':checked');
@@ -1296,6 +1297,9 @@ window.TTFM_SQ = null;
 				config.idleAliases = $idle_aliases.val().split(/\n\r?/g);
 				config.idleReplies = $idle_replies.val().split(/\n\r?/g);
 				config.idleMessages = $idle_messages.val().split(/\n\r?/g);
+				
+				_log('aliases:');
+				_log(config.nameAliases);
 
 				// handle trying to auto-dj
 				if (config.autoDj) {
