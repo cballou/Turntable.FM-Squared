@@ -39,7 +39,7 @@
     -webkit-border-bottom-left-radius: 3px;
     -webkit-border-bottom-right-radius: 3px;
 }
-#tt2_container h5 { padding: 4px 10px; margin: 0; font-size: 14px; line-height: 14px; font-weight: bold; background: #222; }
+#tt2_container h5 { padding: 4px 10px; margin: 0; font-size: 14px; line-height: 14px; font-weight: bold; background: #222; border-radius: 3px; -moz-border-radius: 3px; -webkit-border-radius: 3px; }
 #tt2_container ul.stats { padding: 0 10px; }
 #tt2_container ul.stats li { padding: 2px 0; border-top: 1px dotted #222; }
 #tt2_container ul.stats li:first-child { border-top: none; }
@@ -51,6 +51,7 @@
 #tt2_container .fullheight { overflow-x: hidden; overflow-y: auto; }
 
 #tt2_container h4.toggleAccordion:hover { background: #6C856E; }
+#tt2_container h5.toggleAccordion:hover { background: #262626; }
 
 /* cover art */
 #tt2_stats_current_coverart { overflow: hidden; padding: 10px 10px 0; }
