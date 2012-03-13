@@ -566,7 +566,7 @@ window.TTFM_SQ = null;
 			// notify of song change
 			sendNotification(
 				'Now Playing...',
-				escape(msg),
+				msg,
 				'http://cballou.github.com/Turntable.FM-Squared'
 			);
 		}
