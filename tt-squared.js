@@ -695,13 +695,19 @@ window.TTFM_SQ = null;
 		 * Handles receiving a PM.
 		 */
 		function handlePM(e) {
-			_log('PM Received');
-			_log(e);
-			
 			// check if we enabled PM notifications
 			if (config.notifications.enablePM) {
+				var msg = '';
+				
+				// attempt to get sender by id
+				var username = getUsernameById(e.senderid);
+				if (username) {
+					msg = '<strong></strong> has sent you a private message: ';
+				}
+				msg += e.text;
+
 				sendNotification(
-					'Private Message Received',
+					'Private Message',
 					escape(e.text),
 					'http://cballou.github.com/Turntable.FM-Squared'
 				);
@@ -1729,6 +1735,28 @@ window.TTFM_SQ = null;
 			}, delay);
 		}
 
+		/**
+		 * Given a user id, attempt to retrieve the user name.
+		 */
+		function getUsernameById(user_id) {
+			if (typeof _room.users[user_id] != 'undefined') {
+				return _room.users[user_id].name;
+			}
+
+			return false;
+		}
+		
+		/**
+		 * Given a user name, attempt to retrieve the user id.
+		 */
+		function getUserIdByUsername(user_name) {
+			if (typeof _usernameMappings[username] != 'undefined') {
+				return _usernameMappings[username];
+			}
+			
+			return false;
+		}		
+		
 		/**
 		 * Return a random int between two vals.
 		 */
