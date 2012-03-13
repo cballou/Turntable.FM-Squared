@@ -718,8 +718,9 @@ window.TTFM_SQ = null;
 
 			// update the counters
 			var updateCounters = function(data) {
-				votes.current.score = 100 * (data.upvotes / (data.downvotes + data.upvotes));
+				// update current votes and score
 				votes.current.votes = data.upvotes + data.downvotes;
+				votes.current.score = 100 * (data.upvotes / data.votes).toFixed(2);
 
 				// update current stats
 				$('#tt2_stats_current_upvotes').text(data.upvotes);
@@ -793,7 +794,7 @@ window.TTFM_SQ = null;
 						// increment my total upvotes
 						votes.mine.votes += 1;
 						votes.mine.upvotes += 1;
-						votes.mine.score = (votes.mine.upvotes / votes.mine.votes).toFixed(2);
+						votes.mine.score = 100 * (votes.mine.upvotes / votes.mine.votes).toFixed(2);
 
 						// add upvoter to my song
 						votes.mine.songs[song_id].upvoters[uid] = users[uid].name;
@@ -805,7 +806,7 @@ window.TTFM_SQ = null;
 					// add to the user
 					votes.user[uid].votes += 1;
 					votes.user[uid].downvotes += 1;
-					votes.user[uid].score = (votes.user[uid].upvotes / votes.user[uid].votes).toFixed(2)
+					votes.user[uid].score = 100 * (votes.user[uid].upvotes / votes.user[uid].votes).toFixed(2)
 
 					// check if they reversed
 					if (typeof votes.current.upvoters[uid] != 'undefined') {
@@ -822,16 +823,16 @@ window.TTFM_SQ = null;
 
 					// add to overall
 					votes.downvotes += 1;
-					votes.score = (votes.upvotes / votes.votes).toFixed(2)
+					votes.score = 100 * (votes.upvotes / votes.votes).toFixed(2)
 
 					// if im djing
 					if (isCurrentDj()) {
-						_log('I must be djing...');
+						_log('You are currently DJing.');
 
 						// increment my total downvotes
 						votes.mine.votes += 1;
 						votes.mine.downvotes += 1;
-						votes.mine.score = (votes.mine.upvotes / votes.mine.votes).toFixed(2);
+						votes.mine.score = 100 * (votes.mine.upvotes / votes.mine.votes).toFixed(2);
 
 						// add downvoter to my song
 						votes.mine.songs[song_id].downvoters[uid] = users[uid].name;
