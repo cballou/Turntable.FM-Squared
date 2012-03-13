@@ -1169,8 +1169,8 @@ window.TTFM_SQ = null;
 
 							if (typeof window.webkitNotifications != 'undefined') {
 								html += '<div class="check"><label><input type="checkbox" name="tt2_enable_notifications" id="tt2_enable_notifications" value="1"' + (config.enableNotifications == 1 ? ' checked="checked"' : '') + ' /> Enable Notifications</label>, hide after <input type="text" name="tt2_notification_time" id="tt2_notification_time" class="tiny" value="' + parseInt(config.notificationTime) + '" /> sec</div>';
-								html += '<div class="check"><label><input type="checkbox" name="tt2_notifications_enablePM" id="tt2_notifications_enablePM" value="1"' + (config.notification.enablePM == 1 ? ' checked="checked"' : '') + ' /> PM Notifications</label></div>';
-								html += '<div class="check"><label><input type="checkbox" name="tt2_notifications_idle" id="tt2_notifications_idle" value="1"' + (config.notification.antiIdle == 1 ? ' checked="checked"' : '') + ' /> PM Notifications</label></div>';
+								html += '<div class="check"><label><input type="checkbox" name="tt2_notifications_enablePM" id="tt2_notifications_enablePM" value="1"' + (config.notifications.enablePM == 1 ? ' checked="checked"' : '') + ' /> PM Notifications</label></div>';
+								html += '<div class="check"><label><input type="checkbox" name="tt2_notifications_idle" id="tt2_notifications_idle" value="1"' + (config.notifications.antiIdle == 1 ? ' checked="checked"' : '') + ' /> PM Notifications</label></div>';
 							}
 							
 							html += '</div>';
