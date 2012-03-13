@@ -720,7 +720,7 @@ window.TTFM_SQ = null;
 			var updateCounters = function(data) {
 				// update current votes and score
 				votes.current.votes = data.upvotes + data.downvotes;
-				votes.current.score = 100 * (data.upvotes / data.votes).toFixed(2);
+				votes.current.score = 100 * (data.upvotes / data.current.votes).toFixed(2);
 
 				// update current stats
 				$('#tt2_stats_current_upvotes').text(data.upvotes);
