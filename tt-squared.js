@@ -194,101 +194,6 @@ window.TTFM_SQ = null;
 		}
 
 		/**
-		 *==========================================================================
-		 * Playlist manager. =======================================================
-		 *==========================================================================
-		 *
-		 * https://github.com/gilbarbara/Turntable.fm-Playlists/blob/master/js/playlists.js
-		 */
-		var PLAYLIST = {
-			config: {
-				defaultPlaylist: null,
-				playlists: {}
-			}
-		};
-
-		/**
-		 * Initialize the playlist manager.
-		 */
-		PLAYLIST.init = function() {
-			var playlistConfig = lstore.get('playlist');
-			if (!playlistConfig) {
-				lstore.set('playlist', PLAYLIST.config);
-			} else {
-				// override default config
-				PLAYLIST.config = playlistConfig;
-			}
-
-			// check for default playlist
-			if (PLAYLIST.config.defaultPlaylist) {
-				if (PLAYLIST.config.playlists[PLAYLIST.config.defaultPlaylist]) {
-					// load the playlist
-					PLAYLIST.load(PLAYLIST.config.defaultPlaylist);
-				}
-			}
-
-			// load the UI
-		}
-
-		/**
-		 * Load a playlist.
-		 */
-		PLAYLIST.load = function() {
-
-		}
-
-		/**
-		 * Create a new playlist.
-		 */
-		PLAYLIST.create = function(name, description) {
-			// create an id
-			var id = new Date().getTime();
-			var list = {
-				id: id,
-				name: name,
-				desc: description,
-				lastUpdated: id,
-				songs: []
-			};
-
-			// push the list
-			PLAYLIST.config.playlists[id] = list;
-
-			// save the playlist
-			lstore.set('playlist', PLAYLIST.config);
-		}
-
-		/**
-		 * Update a playlist.
-		 */
-		PLAYLIST.update = function() {
-
-		}
-
-		/**
-		 * Delete a playlist.
-		 */
-		PLAYLIST.delete = function() {
-			if (confirm('Are you positive you would like to delete this playlist?')) {
-
-			}
-		}
-
-		/**
-		 * Add a song to a playlist.
-		 */
-		PLAYLIST.addSong = function() {
-
-		}
-
-		/**
-		 * Remove a song from a playlist.
-		 */
-		PLAYLIST.removeSong = function() {
-
-		}
-
-		/**
 		 * Function to retrieve turntable objects.
 		 */
 		function getTurntableObjects() {
@@ -397,6 +302,7 @@ window.TTFM_SQ = null;
 		 * Watch for specific command triggers.
 		 */
 		function watchForCommands(e) {
+			/*
 			if (stringInText('/djs', e.text)) {
 				if (config.showIdleTimes) {
 					if (typeof _manager.djs != 'undefined') {
@@ -418,6 +324,7 @@ window.TTFM_SQ = null;
 					}
 				}
 			}
+			*/
 		}
 
 		/**
@@ -986,15 +893,16 @@ window.TTFM_SQ = null;
 		 * Update the idle time display of each user.
 		 */
 		function displayIdleTimes() {
-			// check if we recently repainted within the last two seconds
+			// check if we recently repainted within the last two hundred milliseconds
 			var now = new Date().getTime();
-			if (lastIdleDOMUpdate && (now - lastIdleDOMUpdate < 2000)) {
+			if (lastIdleDOMUpdate && (now - lastIdleDOMUpdate < 200)) {
 				//_log('Skipping idle time update. Difference: ' + (now - lastIdleDOMUpdate));
 				return true;
 			}
 
 			// update last idle DOM update time
 			lastIdleDOMUpdate = now;
+			
 			_log('Updating idle times.');
 
 			// update the chat box
@@ -1065,12 +973,20 @@ window.TTFM_SQ = null;
 			// watch for changes to DOM nodes
 			$(document).bind('DOMNodeInserted', function(event) {
 				var $node = $(event.target);
-				// check if node references a chat guest
 				if ($node.hasClass('guest')) {
 					displayIdleTimes();
 				}
 			});
 
+			// watch for search of an artists
+			$('#tt2_container').delegate('.btnSearchArtist', 'click', function() {
+				// trigger TT.FM search
+				$('#playlist .addSongsButton').trigger('click');
+				$('#right-panel').find('form.songSearch').find('input').val($(this).data('term'));
+				turntable.playlist.submitSearchQuery(false, '#playlist .searchView .songSearch input');
+				return false;
+			});
+			
 			// periodically check for number of users
 			setInterval(function() {
 				updateRoomUsers();
@@ -1639,20 +1555,21 @@ window.TTFM_SQ = null;
 			if (window.webkitNotifications.checkPermission() != PERMISSION_ALLOWED) {
 				requestNotificationPermission();
 			} else {
-				// handle web worker in chrome
-				// via toobify.com
+				// handle web worker in chrome (via toobify.com)
 				if ("webkitNotifications" in window) {
 					// create a new worker
 					var worker = new SharedWorker('https://github.com/cballou/Turntable.FM-Squared/raw/master/notifications/worker.js');
 					var incomingMsg = null;
+					
 					// watch for message passing
 					worker.port.addEventListener('message', function(event) {
 						if (event.data.msg !== incomingMsg) {
-							$(window).trigger('toobifyRemote',[event.data]);
+							$(window).trigger('toobifyRemote', [event.data]);
 							// reset the event message state
 							incomingMsg = null;
 						}
 					}, false);
+					
 					// start the shared worker connection
 					worker.start();
 				}
@@ -1844,7 +1761,6 @@ function getSimilarTracks(artist, song, album) {
 	$.getJSON(url, function(data) {
 		var html = '';
 
-
 		if (!data || !data.similartracks || !data.similartracks.track) {
 			return false;
 		} else if (typeof data.similartracks.track == 'string') {
@@ -1890,6 +1806,8 @@ function getSimilarTracks(artist, song, album) {
 				html += '<td><a href="' + baseurl + searchUrl + '" class="btnS btnGreen" target="_blank"><span class="itunesIcon"></span> Preview &amp; Buy Track</a></td>';
 				//html += '<td>&nbsp;</td>';
 			}
+			
+			html += '<td><a href="#" class="btnS btnBlue btnSearchArtist" data-term="' + escape(item.artist.name + ' ' + item.name) + '">Search on TT.FM</a></td>';
 			//if (item.artist.mbid.length) {
 			//	html += '<p><a href="#" style="display:block">View Artist Details</a>';
 			//}
