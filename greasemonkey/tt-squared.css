@@ -68,11 +68,13 @@
 #tt2_settings .accordion div.clearfix { overflow: hidden; }
 #tt2_settings .accordion div.check { float: left; display: inline; background: #222; border: 1px solid #111; padding: 2px 4px; margin: 0 8px 8px 0; min-width: 200px; }
 #tt2_settings .accordion div.col { float: left; display: inline; width: 200px; margin: 0 10px 10px 0; }
+#tt2_settings .accordion div.col label { font-weight: bold; }
 #tt2_settings .accordion div input,
 #tt2_settings .accordion div textarea { font-size: 11px; line-height: 1.4em; padding: 0 2px; background: #111; color: #fff; border: 1px solid #000; margin: 0; border-radius: 3px; -moz-border-radius: 3px; -webkit-border-radius: 3px; }
-#tt2_settings .accordion div textarea { display: block; height: 72px; }
+#tt2_settings .accordion div textarea { display: block; height: 72px; font-family: Verdana, Arial, sans-serif; }
 #tt2_settings .accordion div input.checkbox { background: #fff; border: 1px solid #999; vertical-align: middle; margin: 0 5px 0 0; padding: 0; }
 #tt2_settings .accordion div input.tiny { width: 25px; }
+#tt2_settings .accordion div.check input[type=text] { text-align: center; }
 #tt2_settings .accordion div.check input[type=text],
 #tt2_settings .accordion div.check textarea { display: inline-block; height: auto; background: #333; color: #fff; border: 1px solid #111; }
 #tt2_settings .accordion div.col textarea { width: 100%; padding: 2px; background: #222; color: #fff; }
