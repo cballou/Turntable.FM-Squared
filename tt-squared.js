@@ -183,19 +183,12 @@ window.TTFM_SQ = null;
 		// the maximum idle response frequency (milliseconds)
 		var maxIdleResponseFreq = 600000;
 		var maxDjIdleTime = 600000;
-		// the last idle response time
+		// the last idle response time for ourselves
 		var lastIdleResponse = new Date().getTime();
-		// the last time the guest list was updated
-		var lastIdleDOMUpdate = null;
+		// settimeout for guest list update
+		var idleTimeInterval = null;
 		// the last time a dj stepped down from the decks
 		var lastRemovedDjTime = null;
-
-		// handle playlists
-		var playlists = lstore.get('playlists');
-		if (!playlists) {
-			playlists = [];
-			lstore.set('playlists', playlists);
-		}
 
 		/**
 		 * Function to retrieve turntable objects.
@@ -335,12 +328,13 @@ window.TTFM_SQ = null;
 		 * Periodically check if you get mentioned in the chat room.
 		 */
 		function watchForChatMentions(e) {
+			// don't deal with ourselves
+			if (e.senderid && e.senderid == _manager.myuserid) {
+				return;
+			}
+			
 			// handle alerting when mentioned
 			if (stringInText(config.nameAliases, e.text, true)) {
-				// ensure we aren't talking about ourselves
-				_log('Mention alert');
-				_log(e);
-				
 				// send a notification of the mention
 				playAlertSound();
 				
@@ -356,16 +350,22 @@ window.TTFM_SQ = null;
 				}
 			}
 
+			// handle watching for an idle mention
+			watchForIdleMention(e);
+		}
+		
+		function watchForIdleMention(e) {
+			// don't continue if we aren't autoresponding
 			if (!config.autoRespond) {
 				return;
 			}
-
+			
 			if (!stringInText(config.idleAliases, e.text) || e.text.length > 128) {
 				return;
 			}
-
+			
 			// log the idle check
-			_log('Possible idle check: ' + e.text);
+			_log('Idle check: ' + e.text);
 
 			// create a response
 			var response = randomChoice(config.idleReplies);
@@ -398,7 +398,8 @@ window.TTFM_SQ = null;
 			}
 			turntable.isIdle = false;
 
-			// if we're not djing, nobody cares to hear you. likewise if we recently replied
+			// if we're not djing, nobody cares to hear you.
+			// likewise if we recently replied
 			if (!isDj() || recentlyResponded()) {
 				return;
 			}
@@ -944,49 +945,48 @@ window.TTFM_SQ = null;
 		}
 
 		/**
-		 * Update the idle time display of each user.
+		 * Update the idle time display of each user. Handled based on a very
+		 * small setTimeout which gets cleared if this function gets called
+		 * again.
 		 */
 		function displayIdleTimes() {
-			// check if we recently repainted within the last two hundred milliseconds
-			var now = new Date().getTime();
-			if (lastIdleDOMUpdate && (now - lastIdleDOMUpdate < 200)) {
-				//_log('Skipping idle time update. Difference: ' + (now - lastIdleDOMUpdate));
-				return true;
+			// check if we need to clear a timeout
+			if (typeof idleTimeInterval == "number") {
+				clearTimeout(idleTimeInterval);
+				idleTimeInterval = null;
 			}
-
-			// update last idle DOM update time
-			lastIdleDOMUpdate = now;
 			
-			_log('Updating idle times.');
-
-			// update the chat box
-			$('#tt2_chat_box').find('.guest-list-container .guest').each(function() {
-				var $this = $(this);
-				var $name = $this.find('.guestName');
-				var username = $name.text();
-				if (typeof _usernameMappings[username] != 'undefined') {
-					var user_id = _usernameMappings[username];
-					if (typeof _lastUserActions[user_id] != 'undefined') {
-						// update special highlighters
-						var modClass = isRoomModerator(user_id) ? ' isMod' : '';
-						var isDjing = isDj(user_id);
-						modClass += isDjing ? ' isDj' : '';
-						if (isDjing && (now - _lastUserActions[user_id] > maxDjIdleTime)) {
-							modClass += ' isIdle';
-						}
-						$this.removeClass('isMod isDj isIdle').addClass(modClass);
-
-						// update idle time
-						var lastIdle = formatDate(_lastUserActions[user_id]);
-						var $guestIdle = $this.find('.guestIdle');
-						if (!$guestIdle.length) {
-							$name.after('<div class="guestIdle">' + lastIdle + '</div>');
-						} else {
-							$guestIdle.html(lastIdle);
+			// attempt to repaint the DOM in 50 ms unless cancelled
+			idleTimeInterval = setTimeout(function() {
+				// update the chat box
+				$('#tt2_chat_box').find('.guest-list-container .guest').each(function() {
+					var $this = $(this);
+					var $name = $this.find('.guestName');
+					var username = $name.text();
+					if (typeof _usernameMappings[username] != 'undefined') {
+						var user_id = _usernameMappings[username];
+						if (typeof _lastUserActions[user_id] != 'undefined') {
+							// update special highlighters
+							var modClass = isRoomModerator(user_id) ? ' isMod' : '';
+							var isDjing = isDj(user_id);
+							modClass += isDjing ? ' isDj' : '';
+							if (isDjing && (now - _lastUserActions[user_id] > maxDjIdleTime)) {
+								modClass += ' isIdle';
+							}
+							$this.removeClass('isMod isDj isIdle').addClass(modClass);
+	
+							// update idle time
+							var lastIdle = formatDate(_lastUserActions[user_id]);
+							var $guestIdle = $this.find('.guestIdle');
+							if (!$guestIdle.length) {
+								$name.after('<div class="guestIdle">' + lastIdle + '</div>');
+							} else {
+								$guestIdle.html(lastIdle);
+							}
 						}
 					}
-				}
-			});
+				});
+			}, 50);
 		}
 
 		//=========================================
