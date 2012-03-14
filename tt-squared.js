@@ -775,7 +775,7 @@ window.TTFM_SQ = null;
 
 					// add to overall
 					votes.upvotes += 1;
-					votes.score = (votes.upvotes / votes.votes).toFixed(2);
+					votes.score = 100 * (votes.upvotes / votes.votes).toFixed(2);
 
 					// if im djing
 					if (isCurrentDj()) {
