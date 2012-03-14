@@ -958,6 +958,9 @@ window.TTFM_SQ = null;
 			
 			// attempt to repaint the DOM in 50 ms unless cancelled
 			idleTimeInterval = setTimeout(function() {
+				// get the current time
+				var now = new Date().getTime();
+				
 				// update the chat box
 				$('#tt2_chat_box').find('.guest-list-container .guest').each(function() {
 					var $this = $(this);
