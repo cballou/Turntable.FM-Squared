@@ -1170,17 +1170,17 @@ window.TTFM_SQ = null;
 						html += '<div class="fullheight">';
 
 							html += '<div class="clearfix">';
-							html += '<div class="check"><label><input type="checkbox" name="tt2_autoupvote" id="tt2_autoupvote" value="1" checked="checked" /> Auto Upvote</label></div>';
-							html += '<div class="check"><label><input type="checkbox" name="tt2_autodj" id="tt2_autodj" value="1"' + (config.autoDj == 1 ? ' checked="checked"' : '') + ' /> Auto DJ</label> <input type="text" name="tt2_autodj_timeout" id="tt2_autodj_timeout" class="tiny" value="' + parseInt(config.autoDjTimeout) + '" /></div>';
-							html += '<div class="check"><label><input type="checkbox" name="tt2_antiautodj" id="tt2_antiautodj" value="1"' + (config.antiAutoDj == 1 ? ' checked="checked"' : '') + ' /> Anti Auto DJ</label></div>';
-							html += '<div class="check"><label><input type="checkbox" name="tt2_autorespond" id="tt2_autorespond" value="1"' + (config.autoRespond == 1 ? ' checked="checked"' : '') + ' /> Auto Respond</label></div>';
-							html += '<div class="check"><label><input type="checkbox" name="tt2_antiidle" id="tt2_antiidle" value="1"' + (config.antiIdle == 1 ? ' checked="checked"' : '') + ' /> Anti Idle</label></div>';
-							html += '<div class="check"><label><input type="checkbox" name="tt2_muteAlert" id="tt2_muteAlert" value="1"' + (config.muteAlert == 1 ? ' checked="checked"' : '') + ' /> Enable Mention Alert</label></div>';
-							html += '<div class="check"><label><input type="checkbox" name="tt2_debugMode" id="tt2_debugMode" value="1"' + (config.debugMode == 1 ? ' checked="checked"' : '') + ' /> Enable Debug Mode</label></div>';
+							html += '<div class="check"><label><input type="checkbox" class="checkbox" name="tt2_autoupvote" id="tt2_autoupvote" value="1" checked="checked" /> Auto Upvote</label></div>';
+							html += '<div class="check"><label><input type="checkbox" class="checkbox" name="tt2_autodj" id="tt2_autodj" value="1"' + (config.autoDj == 1 ? ' checked="checked"' : '') + ' /> Auto DJ</label> <input type="text" name="tt2_autodj_timeout" id="tt2_autodj_timeout" class="tiny" maxlength="4" value="' + parseInt(config.autoDjTimeout) + '" /> ms</div>';
+							html += '<div class="check"><label><input type="checkbox" class="checkbox" name="tt2_antiautodj" id="tt2_antiautodj" value="1"' + (config.antiAutoDj == 1 ? ' checked="checked"' : '') + ' /> Anti Auto DJ</label></div>';
+							html += '<div class="check"><label><input type="checkbox" class="checkbox" name="tt2_autorespond" id="tt2_autorespond" value="1"' + (config.autoRespond == 1 ? ' checked="checked"' : '') + ' /> Auto Respond</label></div>';
+							html += '<div class="check"><label><input type="checkbox" class="checkbox" name="tt2_antiidle" id="tt2_antiidle" value="1"' + (config.antiIdle == 1 ? ' checked="checked"' : '') + ' /> Anti Idle</label></div>';
+							html += '<div class="check"><label><input type="checkbox" class="checkbox" name="tt2_muteAlert" id="tt2_muteAlert" value="1"' + (config.muteAlert == 1 ? ' checked="checked"' : '') + ' /> Enable Mention Alert</label></div>';
+							html += '<div class="check"><label><input type="checkbox" class="checkbox" name="tt2_debugMode" id="tt2_debugMode" value="1"' + (config.debugMode == 1 ? ' checked="checked"' : '') + ' /> Enable Debug Mode</label></div>';
 							if (typeof window.webkitNotifications != 'undefined') {
-								html += '<div class="check"><label><input type="checkbox" name="tt2_enable_notifications" id="tt2_enable_notifications" value="1"' + (config.enableNotifications == 1 ? ' checked="checked"' : '') + ' /> Enable Notifications</label>, hide after <input type="text" name="tt2_notification_time" id="tt2_notification_time" class="tiny" value="' + parseInt(config.notificationTime) + '" /> sec</div>';
-								html += '<div class="check"><label><input type="checkbox" name="tt2_notifications_enablePM" id="tt2_notifications_enablePM" value="1"' + (config.notifications.enablePM == 1 ? ' checked="checked"' : '') + ' /> PM Notifications</label></div>';
-								html += '<div class="check"><label><input type="checkbox" name="tt2_notifications_idle" id="tt2_notifications_idle" value="1"' + (config.notifications.antiIdle == 1 ? ' checked="checked"' : '') + ' /> PM Notifications</label></div>';
+								html += '<div class="check"><label><input type="checkbox" class="checkbox" name="tt2_enable_notifications" id="tt2_enable_notifications" value="1"' + (config.enableNotifications == 1 ? ' checked="checked"' : '') + ' /> Enable Notifications</label>, hide after <input type="text" name="tt2_notification_time" id="tt2_notification_time" class="tiny" value="' + parseInt(config.notificationTime) + '" /> sec</div>';
+								html += '<div class="check"><label><input type="checkbox" class="checkbox" name="tt2_notifications_enablePM" id="tt2_notifications_enablePM" value="1"' + (config.notifications.enablePM == 1 ? ' checked="checked"' : '') + ' /> PM Notifications</label></div>';
+								html += '<div class="check"><label><input type="checkbox" class="checkbox" name="tt2_notifications_idle" id="tt2_notifications_idle" value="1"' + (config.notifications.antiIdle == 1 ? ' checked="checked"' : '') + ' /> PM Notifications</label></div>';
 							}
 							html += '</div>';
 							
