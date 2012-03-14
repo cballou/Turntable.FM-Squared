@@ -722,6 +722,9 @@ window.TTFM_SQ = null;
 			// retrieve song data
 			var song_id = _room.currentSong._id;
 			var song = _room.currentSong.metadata;
+			
+			_log('Updating votes.');
+			_log(e);
 
 			// update the counters
 			var updateCounters = function(data) {
