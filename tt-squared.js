@@ -861,6 +861,8 @@ window.TTFM_SQ = null;
 			}
 
 			_log('Performing vote updating actions.');
+			_log(e.room.metadata);
+			_log(e.room.metadata.votelog[0]);
 
 			// perform actions
 			updateCounters(e.room.metadata);
