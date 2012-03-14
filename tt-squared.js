@@ -726,31 +726,9 @@ window.TTFM_SQ = null;
 			_log('Updating votes.');
 			_log(e);
 
-			// update the counters
-			var updateCounters = function(data) {
-				// update current votes and score
-				votes.current.votes = data.upvotes + data.downvotes;
-				votes.current.score = 100 * (data.upvotes / data.current.votes).toFixed(2);
-
-				// update current stats
-				$('#tt2_stats_current_upvotes').text(data.upvotes);
-				$('#tt2_stats_current_downvotes').text(data.downvotes);
-				$('#tt2_stats_current_rating').text(votes.current.score + '%');
-				$('#tt2_stats_current_votes').text(votes.current.votes);
-
-				// update overall stats
-				$('#tt2_stats_overall_upvotes').text(votes.upvotes);
-				$('#tt2_stats_overall_downvotes').text(votes.downvotes);
-				$('#tt2_stats_overall_rating').text(votes.score + '%');
-
-				// update personal stats
-				$('#tt2_stats_mine_votes').text(votes.mine.votes);
-				$('#tt2_stats_mine_upvotes').text(votes.mine.upvotes);
-				$('#tt2_stats_mine_downvotes').text(votes.mine.downvotes);
-				$('#tt2_stats_mine_rating').text(votes.mine.score + '%');
-			};
-
-			// record a vote
+			/**
+			 * Record the new vote.
+			 */
 			var recordVote = function(data) {
 				// the room users
 				var users = _room.users;
@@ -850,7 +828,35 @@ window.TTFM_SQ = null;
 				}
 			}
 
-			// retrieve voters
+			/**
+			 * Update vote counters on the stats tab.
+			 */
+			var updateCounters = function(data) {
+				// update current votes and score
+				votes.current.votes = data.upvotes + data.downvotes;
+				votes.current.score = 100 * (data.upvotes / votes.current.votes).toFixed(2);
+
+				// update current stats
+				$('#tt2_stats_current_upvotes').text(data.upvotes);
+				$('#tt2_stats_current_downvotes').text(data.downvotes);
+				$('#tt2_stats_current_rating').text(votes.current.score + '%');
+				$('#tt2_stats_current_votes').text(votes.current.votes);
+
+				// update overall stats
+				$('#tt2_stats_overall_upvotes').text(votes.upvotes);
+				$('#tt2_stats_overall_downvotes').text(votes.downvotes);
+				$('#tt2_stats_overall_rating').text(votes.score + '%');
+
+				// update personal stats
+				$('#tt2_stats_mine_votes').text(votes.mine.votes);
+				$('#tt2_stats_mine_upvotes').text(votes.mine.upvotes);
+				$('#tt2_stats_mine_downvotes').text(votes.mine.downvotes);
+				$('#tt2_stats_mine_rating').text(votes.mine.score + '%');
+			};
+			
+			/**
+			 * Update the list of voters.
+			 */
 			var updateVotersList = function() {
 				if (votes.current.upvoters.length) {
 					$('#tt2_stats_current_upvoters').html('<li>' + votes.current.upvoters.join('</li><li>') + '</li>');
@@ -865,10 +871,8 @@ window.TTFM_SQ = null;
 			_log(e.room.metadata.votelog[0]);
 
 			// perform actions
-			updateCounters(e.room.metadata);
 			recordVote(e.room.metadata.votelog[0]);
-
-			// update list of voters
+			updateCounters(e.room.metadata);
 			updateVotersList();
 		}
 
@@ -1122,6 +1126,12 @@ window.TTFM_SQ = null;
 									html += '<li>Downvotes: <span id="tt2_stats_current_downvotes">0</span></li>';
 									html += '<li>Rating: <span id="tt2_stats_current_rating">0</span></li>';
 									html += '<li>Hearts: <span id="tt2_stats_current_hearts">0</span></li>';
+									html += '<li>';
+									html += '<ul class="current_voters">';
+									html += '<li class="current_upvoters"><h6>Current Upvoters</h6><ul id="tt2_stats_current_upvoters"></ul></li>';
+									html += '<li class="current_downvoters"><h6>Current Downvoters</h6><ul id="tt2_stats_current_downvoters"></ul></li>';
+									html += '</ul>';
+									html += '</li>';
 								html += '</ul>';
 							html += '</div>';
 
