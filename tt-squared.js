@@ -722,9 +722,6 @@ window.TTFM_SQ = null;
 			// retrieve song data
 			var song_id = _room.currentSong._id;
 			var song = _room.currentSong.metadata;
-			
-			_log('Updating votes.');
-			_log(e);
 
 			/**
 			 * Record the new vote.
@@ -858,17 +855,24 @@ window.TTFM_SQ = null;
 			 * Update the list of voters.
 			 */
 			var updateVotersList = function() {
-				if (votes.current.upvoters.length) {
-					$('#tt2_stats_current_upvoters').html('<li>' + votes.current.upvoters.join('</li><li>') + '</li>');
+				var html = [];
+				if (votes.current.upvoters) {
+					for (var i in votes.current.upvoters) {
+						html.push('<li>' + votes.current.upvoters[i] + '</li>');
+					}
+					$('#tt2_stats_current_upvoters').html(html);
 				}
-				if (votes.current.downvoters.length) {
-					$('#tt2_stats_current_downvoters').html('<li>' + votes.current.downvoters.join('</li><li>') + '</li>');
+				
+				html = [];
+				if (votes.current.downvoters) {
+					for (var i in votes.current.downvoters) {
+						html.push('<li>' + votes.current.downvoters[i] + '</li>');
+					}
+					$('#tt2_stats_current_downvoters').html(html);
 				}
 			}
 
 			_log('Performing vote updating actions.');
-			_log(e.room.metadata);
-			_log(e.room.metadata.votelog[0]);
 
 			// perform actions
 			recordVote(e.room.metadata.votelog[0]);
