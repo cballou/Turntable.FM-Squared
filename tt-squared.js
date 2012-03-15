@@ -36,7 +36,6 @@ window.TTFM_SQ = null;
 		var defaults = {
 			debugMode: true,
 			autoDj: false,
-			antiAutoDj: true,
 			autoRespond: true,
 			antiIdle: true,
 			showIdleTimes: false,
@@ -47,7 +46,11 @@ window.TTFM_SQ = null;
 			notificationTime: 10,
 			notifications: {
 				enablePM: true,
-				antiIdle: true
+				antiIdle: true,
+				emptyDjSlot: true,
+				songChange: true,
+				fanChange: true,
+				antiAutoDj: true
 			},
 			nameAliases: [
 				'corey',
@@ -244,14 +247,18 @@ window.TTFM_SQ = null;
 		 * Watch for an empty DJ slot and fill it.
 		 */
 		function claimEmptyDjSlot(e) {
-			var msg = '<p>A DJ slot just opened.</p>';
-			//msg += '<button type="button" id="becomeDj" class="btn btnGreen" name="becomeDj">Grab Open Slot</button>';
-			sendNotification(
-				'Empty DJ Slot',
-				msg,
-				'http://cballou.github.com/Turntable.FM-Squared'
-			);
+			if (config.notifications.emptyDjSlot) {
+				var msg = '<p>A DJ slot just opened.</p>';
+				//msg += '<button type="button" id="becomeDj" class="btn btnGreen" name="becomeDj">Grab Open Slot</button>';
+				
+				sendNotification(
+					'Empty DJ Slot',
+					msg,
+					'http://cballou.github.com/Turntable.FM-Squared'
+				);
+			}
 
+			// if auto dj disabled, return
 			if (!config.autoDj) {
 				return;
 			}
@@ -338,13 +345,16 @@ window.TTFM_SQ = null;
 				// send a notification of the mention
 				playAlertSound();
 				
-				// handle alert
-				sendNotification(
-					'Mention Alert',
-					e.text,
-					'http://cballou.github.com/Turntable.FM-Squared'
-				);
+				// handle mention alert
+				if (config.notifications.mention) {
+					sendNotification(
+						'Mention Alert',
+						e.text,
+						'http://cballou.github.com/Turntable.FM-Squared'
+					);
+				}
 			} else {
+				// don't continue if we don't have a generalized message to all
 				if (!stringInText(config.generalNameAliases, e.text)) {
 					return;
 				}
@@ -354,6 +364,10 @@ window.TTFM_SQ = null;
 			watchForIdleMention(e);
 		}
 		
+		/**
+		 * If mentioned while idle and a specific idle keyword is triggered,
+		 * send random idle response.
+		 */
 		function watchForIdleMention(e) {
 			// don't continue if we aren't autoresponding
 			if (!config.autoRespond) {
@@ -363,9 +377,6 @@ window.TTFM_SQ = null;
 			if (!stringInText(config.idleAliases, e.text) || e.text.length > 128) {
 				return;
 			}
-			
-			// log the idle check
-			_log('Idle check: ' + e.text);
 
 			// create a response
 			var response = randomChoice(config.idleReplies);
@@ -554,22 +565,26 @@ window.TTFM_SQ = null;
 				}
 			}
 
-			var msg = '';
-			if (song.coverart) {
-				msg += '<img src="' + song.coverart + '" height="75" width="75" alt="' + alt + '" style="float:left;display:inline;margin:0 10px 10px 0" />';
-			}
-			msg += '<p>' + song.artist + ' - "' + song.song + '"';
-			if (song.album && song.album.length) {
-				msg += ' (' + song.album + ')';
-			}
-			msg += '</p>';
-
 			// notify of song change
-			sendNotification(
-				'Now Playing...',
-				msg,
-				'http://cballou.github.com/Turntable.FM-Squared'
-			);
+			if (config.notifications.songChange) {
+				var msg = '';
+				if (song.coverart) {
+					msg += '<img src="' + song.coverart + '" height="75" width="75" alt="' + alt + '" style="float:left;display:inline;margin:0 10px 10px 0" />';
+				} else {
+					msg += '<div alt="' + alt + '" style="background: #222; width: 75px; height: 75px; float: left; display: inline; margin:0 10px 10px 0"></div> '
+				}
+				msg += '<p>' + song.artist + ' - "' + song.song + '"';
+				if (song.album && song.album.length) {
+					msg += ' (' + song.album + ')';
+				}
+				msg += '</p>';
+				
+				sendNotification(
+					'Now Playing...',
+					msg,
+					'http://cballou.github.com/Turntable.FM-Squared'
+				);
+			}
 		}
 
 		/**
@@ -577,25 +592,37 @@ window.TTFM_SQ = null;
 		 * a fan.
 		 */
 		function updateFans(e) {
-			if (typeof e.fans != 'undefined') {
-				if (e.fans === 1) {
-					if (typeof _room.users[e.userid] != 'undefined') {
-						var msg = _room.users[e.userid].name + ' has a new fan.';
-						sendNotification(
-							'Someone Gained a Fan.',
-							msg,
-							'http://cballou.github.com/Turntable.FM-Squared'
-						);
-					}
-				} else if (e.fans === -1) {
-					if (typeof _room.users[e.userid] != 'undefined') {
-						var msg = _room.users[e.userid].name + ' lost a fan.';
-						sendNotification(
-							'Someone Lost a Fan.',
-							msg,
-							'http://cballou.github.com/Turntable.FM-Squared'
-						);
-					}
+			if (typeof e.fans == 'undefined') {
+				return;
+			}			
+			
+			// only show for ourselves
+			if (e.userid != _room.selfId) {
+				return;
+			}
+				
+			// if mentions disabled
+			if (!config.notifications.fanChange) {
+				return;
+			}
+			
+			if (e.fans === 1) {
+				if (typeof _room.users[e.userid] != 'undefined') {
+					var msg = _room.users[e.userid].name + ' has a new fan.';
+					sendNotification(
+						'You Gained a Fan.',
+						msg,
+						'http://cballou.github.com/Turntable.FM-Squared'
+					);
+				}
+			} else if (e.fans === -1) {
+				if (typeof _room.users[e.userid] != 'undefined') {
+					var msg = _room.users[e.userid].name + ' lost a fan.';
+					sendNotification(
+						'You Lost a Fan.',
+						msg,
+						'http://cballou.github.com/Turntable.FM-Squared'
+					);
 				}
 			}
 		}
@@ -696,23 +723,24 @@ window.TTFM_SQ = null;
 		 * Handles receiving a PM.
 		 */
 		function handlePM(e) {
-			// check if we enabled PM notifications
-			if (config.notifications.enablePM) {
-				var msg = '';
-				
-				// attempt to get sender by id
-				var username = getUsernameById(e.senderid);
-				if (username) {
-					msg = '<strong></strong> has sent you a private message: ';
-				}
-				msg += e.text;
-
-				sendNotification(
-					'Private Message',
-					escape(e.text),
-					'http://cballou.github.com/Turntable.FM-Squared'
-				);
+			if (!config.notifications.enablePM) {
+				return;
 			}
+			
+			var msg = '';
+			
+			// attempt to get sender by id
+			var username = getUsernameById(e.senderid);
+			if (username) {
+				msg = '<strong></strong> has sent you a private message: ';
+			}
+			msg += e.text;
+
+			sendNotification(
+				'Private Message',
+				escape(e.text),
+				'http://cballou.github.com/Turntable.FM-Squared'
+			);
 		}
 
 		/**
@@ -910,13 +938,15 @@ window.TTFM_SQ = null;
 			}
 
 			if (e.command == 'rem_dj') {
-				if (config.antiAutoDj) {
+				if (config.notifications.antiAutoDj) {
 					lastRemovedDjTime = new Date().getTime();
 				}
+				
+				// potentially claim empty slot
 				claimEmptyDjSlot(e);
 			} else if (e.command == 'add_dj') {
 				// check last removed time
-				if (config.antiAutoDj && lastRemovedDjTime) {
+				if (config.notifications.antiAutoDj && lastRemovedDjTime) {
 					var msg = '';
 					var curTime = new Date().getTime();
 					var elapsed = curTime - lastRemovedDjTime;
@@ -930,7 +960,11 @@ window.TTFM_SQ = null;
 					}
 					
 					// send notification
-					sendNotification('DJ Slot Stats', msg, 'http://cballou.github.com/Turntable.FM-Squared');
+					sendNotification(
+						'DJ Slot Stats',
+						msg,
+						'http://cballou.github.com/Turntable.FM-Squared'
+					);
 				}
 			} else if (e.command == 'speak' && e.userid) {
 				watchForCommands(e);
@@ -1125,17 +1159,19 @@ window.TTFM_SQ = null;
 							html += '<h5 class="toggleAccordion">Current Track</h5>';
 							html += '<div id="tt2_stats_current">';
 								html += '<ul class="stats">';
-									html += '<li>Votes: <span id="tt2_stats_current_votes">0</span></li>';
-									html += '<li>Upvotes: <span id="tt2_stats_current_upvotes">0</span></li>';
-									html += '<li>Downvotes: <span id="tt2_stats_current_downvotes">0</span></li>';
-									html += '<li>Rating: <span id="tt2_stats_current_rating">0</span></li>';
-									html += '<li>Hearts: <span id="tt2_stats_current_hearts">0</span></li>';
+									html += '<li>Votes <span id="tt2_stats_current_votes">0</span></li>';
+									html += '<li>Upvotes <span id="tt2_stats_current_upvotes">0</span></li>';
+									html += '<li>Downvotes <span id="tt2_stats_current_downvotes">0</span></li>';
+									html += '<li>Rating <span id="tt2_stats_current_rating">0</span></li>';
+									html += '<li>Hearts <span id="tt2_stats_current_hearts">0</span></li>';
+									/*
 									html += '<li>';
 									html += '<ul class="current_voters">';
 									html += '<li class="current_upvoters"><h6>Current Upvoters</h6><ul id="tt2_stats_current_upvoters"></ul></li>';
 									html += '<li class="current_downvoters"><h6>Current Downvoters</h6><ul id="tt2_stats_current_downvoters"></ul></li>';
 									html += '</ul>';
 									html += '</li>';
+									*/
 								html += '</ul>';
 							html += '</div>';
 
@@ -1143,12 +1179,12 @@ window.TTFM_SQ = null;
 							html += '<h5 class="toggleAccordion">My Stats</h5>';
 							html += '<div id="tt2_stats_mine">';
 								html += '<ul class="stats">';
-									html += '<li>Songs Played: <span id="tt2_stats_mine_totalSongs">0</span></li>';
-									html += '<li>Votes: <span id="tt2_stats_mine_votes">0</span></li>';
-									html += '<li>Upvotes: <span id="tt2_stats_mine_upvotes">0</span></li>';
-									html += '<li>Downvotes: <span id="tt2_stats_mine_downvotes">0</span></li>';
-									html += '<li>Rating: <span id="tt2_stats_mine_rating">0</span></li>';
-									html += '<li>Hearts: <span id="tt2_stats_mine_hearts">0</span></li>';
+									html += '<li>Songs Played <span id="tt2_stats_mine_totalSongs">0</span></li>';
+									html += '<li>Votes <span id="tt2_stats_mine_votes">0</span></li>';
+									html += '<li>Upvotes <span id="tt2_stats_mine_upvotes">0</span></li>';
+									html += '<li>Downvotes <span id="tt2_stats_mine_downvotes">0</span></li>';
+									html += '<li>Rating <span id="tt2_stats_mine_rating">0</span></li>';
+									html += '<li>Hearts <span id="tt2_stats_mine_hearts">0</span></li>';
 								html += '</ul>';
 							html += '</div>';
 
@@ -1156,12 +1192,12 @@ window.TTFM_SQ = null;
 							html += '<h5 class="toggleAccordion">Overall Room Stats</h5>';
 							html += '<div id="tt2_stats_overall">';
 								html += '<ul class="stats">';
-									html += '<li>Total Users: <span id="tt2_stats_overall_users">0</span></li>';
-									html += '<li>Songs Played: <span id="tt2_stats_overall_totalSongs">0</span></li>';
-									html += '<li>Upvotes: <span id="tt2_stats_overall_upvotes">0</span></li>';
-									html += '<li>Downvotes: <span id="tt2_stats_overall_downvotes">0</span></li>';
-									html += '<li>Rating: <span id="tt2_stats_overall_rating">0</span></li>';
-									html += '<li>Hearts: <span id="tt2_stats_overall_hearts">0</span></li>';
+									html += '<li>Total Users <span id="tt2_stats_overall_users">0</span></li>';
+									html += '<li>Songs Played <span id="tt2_stats_overall_totalSongs">0</span></li>';
+									html += '<li>Upvotes <span id="tt2_stats_overall_upvotes">0</span></li>';
+									html += '<li>Downvotes <span id="tt2_stats_overall_downvotes">0</span></li>';
+									html += '<li>Rating <span id="tt2_stats_overall_rating">0</span></li>';
+									html += '<li>Hearts <span id="tt2_stats_overall_hearts">0</span></li>';
 								html += '</ul>';
 							html += '</div>';
 
@@ -1189,19 +1225,26 @@ window.TTFM_SQ = null;
 						html += '<div class="fullheight">';
 
 							html += '<div class="clearfix">';
-							html += '<div class="check"><label><input type="checkbox" class="checkbox" name="tt2_autoupvote" id="tt2_autoupvote" value="1" checked="checked" /> Auto Upvote</label></div>';
-							html += '<div class="check"><label><input type="checkbox" class="checkbox" name="tt2_autodj" id="tt2_autodj" value="1"' + (config.autoDj == 1 ? ' checked="checked"' : '') + ' /> Auto DJ</label> <input type="text" name="tt2_autodj_timeout" id="tt2_autodj_timeout" class="tiny" maxlength="4" value="' + parseInt(config.autoDjTimeout) + '" /> ms</div>';
-							html += '<div class="check"><label><input type="checkbox" class="checkbox" name="tt2_antiautodj" id="tt2_antiautodj" value="1"' + (config.antiAutoDj == 1 ? ' checked="checked"' : '') + ' /> Anti Auto DJ</label></div>';
-							html += '<div class="check"><label><input type="checkbox" class="checkbox" name="tt2_autorespond" id="tt2_autorespond" value="1"' + (config.autoRespond == 1 ? ' checked="checked"' : '') + ' /> Auto Respond</label></div>';
-							html += '<div class="check"><label><input type="checkbox" class="checkbox" name="tt2_antiidle" id="tt2_antiidle" value="1"' + (config.antiIdle == 1 ? ' checked="checked"' : '') + ' /> Anti Idle</label></div>';
-							html += '<div class="check"><label><input type="checkbox" class="checkbox" name="tt2_muteAlert" id="tt2_muteAlert" value="1"' + (config.muteAlert == 1 ? ' checked="checked"' : '') + ' /> Enable Mention Alert</label></div>';
-							html += '<div class="check"><label><input type="checkbox" class="checkbox" name="tt2_debugMode" id="tt2_debugMode" value="1"' + (config.debugMode == 1 ? ' checked="checked"' : '') + ' /> Enable Debug Mode</label></div>';
-							if (typeof window.webkitNotifications != 'undefined') {
-								html += '<div class="check"><label><input type="checkbox" class="checkbox" name="tt2_enable_notifications" id="tt2_enable_notifications" value="1"' + (config.enableNotifications == 1 ? ' checked="checked"' : '') + ' /> Enable Notifications</label>, hide after <input type="text" name="tt2_notification_time" id="tt2_notification_time" class="tiny" value="' + parseInt(config.notificationTime) + '" maxlength="2" /> sec</div>';
-								html += '<div class="check"><label><input type="checkbox" class="checkbox" name="tt2_notifications_enablePM" id="tt2_notifications_enablePM" value="1"' + (config.notifications.enablePM == 1 ? ' checked="checked"' : '') + ' /> PM Notifications</label></div>';
-								html += '<div class="check"><label><input type="checkbox" class="checkbox" name="tt2_notifications_idle" id="tt2_notifications_idle" value="1"' + (config.notifications.antiIdle == 1 ? ' checked="checked"' : '') + ' /> Anti Idle Notifications</label></div>';
-							}
+							html += '<div class="check" title="Auto upvote allows you to automatically upvote every song that gets played. Your avatar will start head bopping after a random time from song start."><label><input type="checkbox" class="checkbox" name="tt2_autoupvote" id="tt2_autoupvote" value="1" checked="checked" /> Auto Upvote</label></div>';
+							html += '<div class="check" title="Auto DJ is frowned upon. Use with caution, you will get banned from rooms. Use this to attempt to claim an empty DJ slot when it opens. You can adjust the number of milliseconds to wait before attempting to grab the open slot."><label><input type="checkbox" class="checkbox" name="tt2_autodj" id="tt2_autodj" value="1"' + (config.autoDj == 1 ? ' checked="checked"' : '') + ' /> Auto DJ</label> <input type="text" name="tt2_autodj_timeout" id="tt2_autodj_timeout" class="tiny" maxlength="4" value="' + parseInt(config.autoDjTimeout) + '" /> ms</div>';
+							html += '<div class="check" title="Anti Idle is intended to aid in tricking Turntable.FM into believing you are still active on the site."><label><input type="checkbox" class="checkbox" name="tt2_antiidle" id="tt2_antiidle" value="1"' + (config.antiIdle == 1 ? ' checked="checked"' : '') + ' /> Anti Idle</label></div>';
+							html += '<div class="check" title="Auto respond is an addition to anti-idle. When someone mentions your name or an alias as well as an idle alias (both configurable below), this feature triggers an automatic response."><label><input type="checkbox" class="checkbox" name="tt2_autorespond" id="tt2_autorespond" value="1"' + (config.autoRespond == 1 ? ' checked="checked"' : '') + ' /> Auto Respond</label></div>';
+							html += '<div class="check" title="This option toggles an audible alert noise when  any of your name aliases are mentioned anywhere in a chat message."><label><input type="checkbox" class="checkbox" name="tt2_muteAlert" id="tt2_muteAlert" value="1"' + (config.muteAlert == 1 ? ' checked="checked"' : '') + ' /> Enable Mention Alert</label></div>';
+							html += '<div class="check" title="This option is for developers. It allows you to turn on and off the console log capabilities for debugging."><label><input type="checkbox" class="checkbox" name="tt2_debugMode" id="tt2_debugMode" value="1"' + (config.debugMode == 1 ? ' checked="checked"' : '') + ' /> Enable Debug Mode</label></div>';
 							html += '</div>';
+							
+							if (typeof window.webkitNotifications != 'undefined') {
+								html += '<h5 class="toggleAccordion">Chrome Notifications <div class="check" title="This is a global notification option which overrides all other notification options if they are turned on. It allows you to turn on Chrome Notifications."><label><input type="checkbox" class="checkbox" name="tt2_enable_notifications" id="tt2_enable_notifications" value="1"' + (config.enableNotifications == 1 ? ' checked="checked"' : '') + ' /> Enable Notifications</label>, hide after <input type="text" name="tt2_notification_time" id="tt2_notification_time" class="tiny" value="' + parseInt(config.notificationTime) + '" maxlength="2" /> sec</div></h5>';
+								html += '<div class="accordion">';
+								html += '<div class="check" title="Enable notifications whenever a song change occurs."><label><input type="checkbox" class="checkbox" name="tt2_enable_notification_songchange" id="tt2_enable_notification_songchange" value="1"' + (config.notifications.songChange == 1 ? ' checked="checked"' : '') + ' /> On Song Change</label></div>';
+								html += '<div class="check" title="Enable notifications whenever a user sends you a private message."><label><input type="checkbox" class="checkbox" name="tt2_enable_notification_pm" id="tt2_enable_notification_pm" value="1"' + (config.notifications.enablePM == 1 ? ' checked="checked"' : '') + ' /> On Private Message</label></div>';
+								html += '<div class="check" title="Enable notifications whenever you have gone idle while DJing."><label><input type="checkbox" class="checkbox" name="tt2_enable_notification_idle" id="tt2_enable_notification_idle" value="1"' + (config.notifications.antiIdle == 1 ? ' checked="checked"' : '') + ' /> Anti Idle</label></div>';
+								html += '<div class="check" title="Enable notifications whenever a DJ slot has opened up."><label><input type="checkbox" class="checkbox" name="tt2_enable_notification_emptydjslot" id="tt2_enable_notification_emptydjslot" value="1"' + (config.notifications.emptyDjSlot == 1 ? ' checked="checked"' : '') + ' /> On Open DJ Slot</label></div>';
+								html += '<div class="check" title="Enable notifications whenever one of your name aliases gets mentioned in chat."><label><input type="checkbox" class="checkbox" name="tt2_enable_notification_mention" id="tt2_enable_notification_mention" value="1"' + (config.notifications.mention == 1 ? ' checked="checked"' : '') + ' /> On Chat Mention</label></div>';
+								html += '<div class="check" title="Enable notifications whenever are fanned or unfanned."><label><input type="checkbox" class="checkbox" name="tt2_enable_notification_fanchange" id="tt2_enable_notification_fanchange" value="1"' + (config.notifications.fanChange == 1 ? ' checked="checked"' : '') + ' /> On Fan Change</label></div>';
+								html += '<div class="check" title="Enable notifications whenever a DJ slot is filled with the elapsed time it took to fill the slot. Used as a countermeasure for Auto DJs. When turned on, you will be notified of the elapsed time it took for a DJ slot to fill up. Anything below 500ms is fishy, especially if there was no fair warning of a DJ dropping."><label><input type="checkbox" class="checkbox" name="tt2_notification_antiautodj" id="tt2_notification_antiautodj" value="1"' + (config.notifications.antiAutoDj == 1 ? ' checked="checked"' : '') + ' /> Anti Auto DJ</label></div>';
+								html += '</div>';
+							}
 							
 							html += '<div class="clearfix">';
 							html += '<div class="col"><label for="tt2_name_aliases">My Aliases</label><textarea name="tt2_name_aliases" id="tt2_name_aliases">' + config.nameAliases.join('\n') + '</textarea><span class="note">This represents any strings someone may use to reference you in a chat message. It could be shorthand for your alias. Separate each with a line break.</span></div>';
@@ -1285,43 +1328,49 @@ window.TTFM_SQ = null;
 			var $auto_upvote = $options.find('#tt2_autoupvote');
 			var $auto_dj = $options.find('#tt2_autodj');
 			var $auto_dj_timeout = $options.find('#tt2_autodj_timeout');
-			var $anti_auto_dj = $options.find('#tt2_antiautodj');
 			var $auto_respond = $options.find('#tt2_autorespond');
 			var $anti_idle = $options.find('#tt2_antiidle');
 			var $mute_alert = $options.find('#tt2_muteAlert');
 			var $debug_mode = $options.find('#tt2_debugMode');
 			
 			// notifications
+			var $notification_time = $options.find('#tt2_notification_time');
 			var $enable_notifications = $options.find('#tt2_enable_notifications');
+			var $enable_notification_songchange = $options.find('#tt2_enable_notification_songchange');
 			var $enable_notification_pm = $options.find('#tt2_enable_notification_pm');
 			var $enable_notification_idle = $options.find('#tt2_enable_notification_idle');
-			var $notification_time = $options.find('#tt2_notification_time');
+			var $enable_notification_emptyslot = $options.find('#tt2_enable_notification_emptydjslot');
+			var $enable_notification_fanchange = $options.find('#tt2_enable_notification_fanchange');
+			var $enable_notification_antiautodj = $options.find('#tt2_notification_antiautodj');
 
+			// general aliases and message responses
 			var $name_aliases = $options.find('#tt2_name_aliases');
 			var $general_name_aliases = $options.find('#tt2_general_name_aliases');
 			var $idle_aliases = $options.find('#tt2_idle_aliases');
 			var $idle_replies = $options.find('#tt2_idle_replies');
 			var $idle_messages = $options.find('#tt2_idle_messages');
 			
-
 			// watch for change to options
 			$options.find('#updateSettings').click(function() {
 				// save all option changes
 				config.debugMode = $debug_mode.is(':checked');
 				config.autoUpvote = $auto_upvote.is(':checked');
 				config.autoDj = $auto_dj.is(':checked');
-				config.antiAutoDj = $anti_auto_dj.is(':checked');
 				config.autoDjTimeout = parseInt($auto_dj_timeout.val()) || 25;
 				config.autoRespond = $auto_respond.is(':checked');
 				config.antiIdle = $anti_idle.is(':checked');
 				config.muteAlert = $mute_alert.is(':checked');
 				
 				// notification options
+				config.notificationTime = $notification_time.length ? parseInt($notification_time.val()) : 10;
 				config.enableNotifications = $enable_notifications.length && $enable_notifications.is(':checked');
+				config.notifications.songChange = $enable_notification_songchange.length && $enable_notification_songchange.is(':checked');
 				config.notifications.enablePM = $enable_notification_pm.length && $enable_notification_pm.is(':checked');
 				config.notifications.antiIdle = $enable_notification_idle.length && $enable_notification_idle.is(':checked');
-				config.notificationTime = $notification_time.length ? parseInt($notification_time.val()) : 10;
-
+				config.notifications.emptyDjSlot = $enable_notification_emptyslot.length && $enable_notification_emptyslot.is(':checked');
+				config.notifications.fanChange = $enable_notification_fanchange.length && $enable_notification_fanchange.is(':checked');
+				config.notifications.antiAutoDj = $enable_notification_antiautodj.length && $enable_notification_antiautodj.is(':checked');
+				
 				// update textarea options
 				config.nameAliases = $name_aliases.val().split(/\n\r?/g);
 				config.generalNameAliases = $general_name_aliases.val().split(/\n\r?/g);
