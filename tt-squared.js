@@ -1234,7 +1234,7 @@ window.TTFM_SQ = null;
 							html += '</div>';
 							
 							if (typeof window.webkitNotifications != 'undefined') {
-								html += '<h5 class="toggleAccordion">Chrome Notifications</h5>';
+								html += '<h5 class="toggleAccordion space_bottom">Chrome Notifications</h5>';
 								html += '<div class="accordion clearfix">';
 								html += '<div class="check" title="This is a global notification option which overrides all other notification options if they are turned on. It allows you to turn on Chrome Notifications."><label><input type="checkbox" class="checkbox" name="tt2_enable_notifications" id="tt2_enable_notifications" value="1"' + (config.enableNotifications == 1 ? ' checked="checked"' : '') + ' /> Enable Notifications</label>, hide after <input type="text" name="tt2_notification_time" id="tt2_notification_time" class="tiny" value="' + parseInt(config.notificationTime) + '" maxlength="2" /> sec</div>';
 								html += '<div class="check" title="Enable notifications whenever a song change occurs."><label><input type="checkbox" class="checkbox" name="tt2_enable_notification_songchange" id="tt2_enable_notification_songchange" value="1"' + (config.notifications.songChange == 1 ? ' checked="checked"' : '') + ' /> On Song Change</label></div>';
