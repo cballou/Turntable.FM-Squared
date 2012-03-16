@@ -981,7 +981,7 @@ window.TTFM_SQ = null;
 				updateLastUserAction(e.user[0].userid);
 			} else if (e.command == 'registered') {
 				for (var i in e.user) {
-					var userinfo = m.user[i];
+					var userinfo = e.user[i];
 					updateLastUserAction(userinfo.userid);
 				}
 			} else if (e.command == 'snagged') {
