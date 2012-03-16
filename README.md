@@ -19,6 +19,11 @@ Features
 * Chat alert on mention of name aliases (configurable)
 * Chat alert of the elapsed time it took a DJ to fill a slot, aka anti-auto dj (configurable)
 
+Current Issues
+==============
+
+* Getting CSS stylesheet to load externally via Firefox Greasemonkey script (currently unusable)
+
 Installation
 ============
 
