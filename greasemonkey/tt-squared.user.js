@@ -22,7 +22,7 @@ function ttSquared() {
     //s.setAttribute('href', 'https://raw.github.com/cballou/Turntable.FM-Squared/master/tt-squared.css');
     //var el = (document.head || document.body).appendChild(s);
     var el = (document.head || document.body).appendChild(document.createElement('style'));
-    el.innerHTML = '@import tt-squared.css';
+    el.innerHTML = '@import "raw.github.com/cballou/Turntable.FM-Squared/master/tt-squared.css"';
 
     // inject javascript
     var s = document.createElement('script');
