@@ -25,7 +25,7 @@ Installation
 This script only works for Firefox and Chrome.
 For Firefox, you must have Greasemonkey installed.
 
-To install as a Greasemonkey script, simply navigate to https://github.com/cballou/Turntable.FM-Anti-Idle-Autoresponder/raw/master/greasemonkey/tt-squared.js
+To install as a Greasemonkey script, simply navigate to https://github.com/cballou/Turntable.FM-Anti-Idle-Autoresponder/raw/master/greasemonkey/tt-squared.user.js
 
 To install as a Chrome Extension, simply navigate to https://github.com/cballou/Turntable.FM-Anti-Idle-Autoresponder/raw/master/chrome-ext/tt-squared.js
 
