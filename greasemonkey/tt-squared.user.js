@@ -18,10 +18,10 @@ function ttSquared() {
     // inject stylesheet
     var s = document.createElement('style');
     //s.setAttribute('rel', 'stylesheet');
-    //s.setAttribute('type', 'text/css');
+    s.setAttribute('type', 'text/css');
     //s.setAttribute('href', 'https://raw.github.com/cballou/Turntable.FM-Squared/master/tt-squared.css');
     //var el = (document.head || document.body).appendChild(s);
-    var el = (document.head || document.body).appendChild(document.createElement('style'));
+    var el = (document.head || document.body).appendChild(s);
     el.innerHTML = '@import url("https://raw.github.com/cballou/Turntable.FM-Squared/master/tt-squared.css")';
 
     // inject javascript
