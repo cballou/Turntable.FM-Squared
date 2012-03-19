@@ -1476,6 +1476,14 @@ window.TTFM_SQ = null;
 			if (tt2_playing_size.height < 204) {
 				tt2_playing_size.height = 204;
 			}
+			
+			_log('' + (tt2_size.height - tt2_playing_size.height - 95) + 'px !important');
+			_log('' + chat_width + 'px !important');
+			_log(height: '' + (tt2_size.height - tt2_playing_size.height - title_height - message_height - 95) + 'px !important');
+			_log(height: '' + (tt2_size.height - tt2_playing_size.height - 95) + 'px !important');
+			_log(width: '' + (chat_box_width - chat_width - 20) + 'px !important');
+			_log(height: '' + (tt2_size.height - tt2_playing_size.height - title_height - message_height - 95) + 'px !important');
+			_log(width: '' + (chat_box_width - chat_width - 20) + 'px !important');
 
 			// fix guest container sizing
 			$chat_box.find('.guest-list-container').css({
