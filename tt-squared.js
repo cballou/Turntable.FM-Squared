@@ -1425,7 +1425,7 @@ window.TTFM_SQ = null;
 		}
 
 		/**
-		 * Move the chat window on resize.
+		 * Move the chat window when the plugin is initially loaded.
 		 */
 		function moveChatWindow() {
 			// get the chat container sizing
@@ -1473,14 +1473,6 @@ window.TTFM_SQ = null;
 			if (tt2_playing_size.height < 204) {
 				tt2_playing_size.height = 204;
 			}
-			
-			_log('' + (tt2_size.height - tt2_playing_size.height - 95) + 'px');
-			_log('' + chat_width + 'px');
-			_log('' + (tt2_size.height - tt2_playing_size.height - title_height - message_height - 95) + 'px');
-			_log('' + (tt2_size.height - tt2_playing_size.height - 95) + 'px');
-			_log('' + (chat_box_width - chat_width - 20) + 'px');
-			_log('' + (tt2_size.height - tt2_playing_size.height - title_height - message_height - 95) + 'px');
-			_log('' + (chat_box_width - chat_width - 20) + 'px');
 
 			// fix guest container sizing
 			$chat_box.find('.guest-list-container').css({
@@ -1565,7 +1557,9 @@ window.TTFM_SQ = null;
 			var chat_box_width = $chat_box.width();
 
 			// get the chat container sizing
+			var $guest_container = $chat_box.find('.guest-list-container');
 			var $chat_container = $chat_box.find('.chat-container');
+			var guest_width = $guest_container.width();
 			var chat_height = $chat_container.height();
 			var chat_width = $chat_container.width();
 			var message_height = $chat_container.find('.chatBar').height();
@@ -1574,13 +1568,12 @@ window.TTFM_SQ = null;
 			// fix guest container sizing
 			$('#tt2_chat_box').find('.guest-list-container').css({
 				height: '' + (tt2_size.height - tt2_playing_size.height - 95) + 'px',
-				width: '' + chat_width + 'px',
+				//width: '' + (chat_box_width - chat_width - 20) + 'px',
 				top: '0',
 				right: '0',
 				left: 'auto'
 			});
 
-			// fix chat message sizing
 			$('#tt2_chat_box').find('.guest-list-container .guests').css({
 				height: '' + (tt2_size.height - tt2_playing_size.height - title_height - message_height - 95) + 'px',
 				width: '100%',
@@ -1591,7 +1584,7 @@ window.TTFM_SQ = null;
 			// fix chat sizing in TT2
 			$('#tt2_chat_box').find('.chat-container').css({
 				height: '' + (tt2_size.height - tt2_playing_size.height - 95) + 'px',
-				width: '' + (chat_box_width - chat_width - 20) + 'px',
+				width: '' + (chat_box_width - guest_width - 20) + 'px',
 				top: '0',
 				left: '0'
 			});
@@ -1599,7 +1592,7 @@ window.TTFM_SQ = null;
 			// fix chat message sizing
 			$('#tt2_chat_box').find('.chat-container .messages').css({
 				height: '' + (tt2_size.height - tt2_playing_size.height - title_height - message_height - 95) + 'px',
-				width: '' + (chat_box_width - chat_width - 20) + 'px',
+				width: '' + chat_width + 'px',
 				'overflow-x': 'none',
 				'overflow-y': 'auto'
 			});
