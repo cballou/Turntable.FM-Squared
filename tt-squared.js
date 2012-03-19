@@ -855,15 +855,15 @@ window.TTFM_SQ = null;
 			var updateCounters = function(data) {
 				// recalculate scores
 				votes.score = 100 * (votes.upvotes / votes.votes).toFixed(2);
-				votes.current.score = 100 * (data.current.upvotes / votes.current.votes).toFixed(2);
+				votes.current.score = 100 * (votes.current.upvotes / votes.current.votes).toFixed(2);
 				votes.user[uid].score = 100 * (votes.user[uid].upvotes / votes.user[uid].votes).toFixed(2);
 				if (isCurrentDj()) {
 					votes.mine.score = 100 * (votes.mine.upvotes / votes.mine.votes).toFixed(2);
 				}
 
 				// update current stats
-				$('#tt2_stats_current_upvotes').text(data.upvotes);
-				$('#tt2_stats_current_downvotes').text(data.downvotes);
+				$('#tt2_stats_current_upvotes').text(votes.current.upvotes);
+				$('#tt2_stats_current_downvotes').text(votes.current.downvotes);
 				$('#tt2_stats_current_rating').text(votes.current.score + '%');
 				$('#tt2_stats_current_votes').text(votes.current.votes);
 
