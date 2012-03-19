@@ -761,9 +761,14 @@ window.TTFM_SQ = null;
 				// the voting user
 				var uid = data[0];
 
-				// add to overall votes
+				// increment vote counts
 				votes.votes += 1;
-
+				votes.user[uid].votes += 1;
+				votes.current.votes += 1;
+				if (isCurrentDj()) {
+					votes.mine.votes += 1;
+				}
+				
 				// ensure we have an object to track user voting
 				if (!votes.user[uid]) {
 					votes.user[uid] = {
@@ -779,16 +784,27 @@ window.TTFM_SQ = null;
 				if (data[1] == 'up') {
 					// add to current upvoters
 					votes.current.upvoters[uid] = users[uid].name;
+					votes.current.upvotes += 1;
 
-					// add to the user
-					votes.user[uid].votes += 1;
+					// add to the user's votes
 					votes.user[uid].upvotes += 1;
-					votes.user[uid].score = (votes.user[uid].upvotes / votes.user[uid].votes).toFixed(2)
 
-					// check if they reversed
+					// add to overall votes
+					votes.upvotes += 1;
+					
+					// add to my vote stats
+					if (isCurrentDj()) {
+						votes.mine.votes += 1;
+						votes.mine.upvotes += 1;
+						votes.mine.songs[song_id].upvoters[uid] = users[uid].name;
+					}
+					
+					// check if they reversed their vote
 					if (typeof votes.current.downvoters[uid] != 'undefined') {
 						votes.user[uid].downvotes -= 1;
 						votes.user[uid].votes -= 1;
+						votes.current.downvotes -= 1;
+						votes.current.votes -= 1;
 						votes.downvotes -= 1;
 						votes.votes -= 1;
 
@@ -798,33 +814,30 @@ window.TTFM_SQ = null;
 						}
 					}
 
-					// add to overall
-					votes.upvotes += 1;
-					votes.score = 100 * (votes.upvotes / votes.votes).toFixed(2);
-
-					// if im djing
-					if (isCurrentDj()) {
-						// increment my total upvotes
-						votes.mine.votes += 1;
-						votes.mine.upvotes += 1;
-						votes.mine.score = 100 * (votes.mine.upvotes / votes.mine.votes).toFixed(2);
-
-						// add upvoter to my song
-						votes.mine.songs[song_id].upvoters[uid] = users[uid].name;
-					}
 				} else {
-					// add to current downvoters
+					// add to current downvoters list
 					votes.current.downvoters[uid] = users[uid].name;
+					votes.current.downvotes += 1;
 
 					// add to the user
-					votes.user[uid].votes += 1;
 					votes.user[uid].downvotes += 1;
-					votes.user[uid].score = 100 * (votes.user[uid].upvotes / votes.user[uid].votes).toFixed(2)
 
+					// add to overall votes
+					votes.downvotes += 1;					
+					
+					// add to my vote stats
+					if (isCurrentDj()) {
+						votes.mine.votes += 1;
+						votes.mine.downvotes += 1;
+						votes.mine.songs[song_id].downvoters[uid] = users[uid].name;
+					}
+					
 					// check if they reversed
 					if (typeof votes.current.upvoters[uid] != 'undefined') {
 						votes.user[uid].upvotes -= 1;
 						votes.user[uid].votes -= 1;
+						votes.current.upvotes -= 1;
+						votes.current.votes -= 1;
 						votes.upvotes -= 1;
 						votes.votes -= 1;
 
@@ -833,23 +846,6 @@ window.TTFM_SQ = null;
 							votes.mine.votes -= 1;
 						}
 					}
-
-					// add to overall
-					votes.downvotes += 1;
-					votes.score = 100 * (votes.upvotes / votes.votes).toFixed(2)
-
-					// if im djing
-					if (isCurrentDj()) {
-						_log('You are currently DJing.');
-
-						// increment my total downvotes
-						votes.mine.votes += 1;
-						votes.mine.downvotes += 1;
-						votes.mine.score = 100 * (votes.mine.upvotes / votes.mine.votes).toFixed(2);
-
-						// add downvoter to my song
-						votes.mine.songs[song_id].downvoters[uid] = users[uid].name;
-					}
 				}
 			}
 
@@ -857,9 +853,13 @@ window.TTFM_SQ = null;
 			 * Update vote counters on the stats tab.
 			 */
 			var updateCounters = function(data) {
-				// update current votes and score
-				votes.current.votes = data.upvotes + data.downvotes;
-				votes.current.score = 100 * (data.upvotes / votes.current.votes).toFixed(2);
+				// recalculate scores
+				votes.score = 100 * (votes.upvotes / votes.votes).toFixed(2);
+				votes.current.score = 100 * (data.current.upvotes / votes.current.votes).toFixed(2);
+				votes.user[uid].score = 100 * (votes.user[uid].upvotes / votes.user[uid].votes).toFixed(2);
+				if (isCurrentDj()) {
+					votes.mine.score = 100 * (votes.mine.upvotes / votes.mine.votes).toFixed(2);
+				}
 
 				// update current stats
 				$('#tt2_stats_current_upvotes').text(data.upvotes);

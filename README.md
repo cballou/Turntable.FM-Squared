@@ -19,6 +19,14 @@ Features
 * Chat alert on mention of name aliases (configurable)
 * Chat alert of the elapsed time it took a DJ to fill a slot, aka anti-auto dj (configurable)
 
+Screenshots
+===========
+* ![Chat window displaying idle DJs and user options](https://github.com/cballou/Turntable.FM-Squared/blob/master/screenshots/screenshot-chat-user-options.jpg)
+* ![Chat window displaying current djs and idle times](https://github.com/cballou/Turntable.FM-Squared/blob/master/screenshots/screenshot-chat-window.jpeg)
+* ![Similar tracks display for the current song](https://github.com/cballou/Turntable.FM-Squared/blob/master/screenshots/screenshot-similar-track-search.jpg)
+* ![Settings page](https://github.com/cballou/Turntable.FM-Squared/blob/master/screenshots/screenshot-settings.jpg)
+* ![Stats page](https://github.com/cballou/Turntable.FM-Squared/blob/master/screenshots/screenshot-stats.jpg)
+
 Current Issues
 ==============
 
