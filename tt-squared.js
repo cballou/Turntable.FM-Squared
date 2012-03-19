@@ -1090,7 +1090,6 @@ window.TTFM_SQ = null;
 				$('#playlist .addSongsButton').trigger('click');
 				$('#right-panel').find('form.songSearch').find('input').val(term);
 				$('#right-panel').find('form.songSearch').trigger('submit');
-				//turntable.playlist.submitSearchQuery(false, '#playlist .searchView .songSearch input');
 				return false;
 			});
 			
@@ -1302,7 +1301,6 @@ window.TTFM_SQ = null;
 				$('#tt2_container').find('.section').hide();
 				$this.addClass('selected');
 				var target = $this.data('id');
-				_log('Target button clicked, intended target: ' + '#tt2_' + target);
 				var $target = $('#tt2_' + target);
 				if ($target.length) {
 					// show the target and fix scroll
@@ -1313,12 +1311,12 @@ window.TTFM_SQ = null;
 
 					// fix chat scroll when necessary
 					if (target == 'chat') {
-						_log('Chat target found.');
-						var $messageBox = $('#tt2_chat_box').find('.chat-container .messages');
-						$messageBox.animate(
-							{ scrollTop: $messageBox[0].scrollHeight },
-							500
-						);
+						$('#tt2_chat_box')
+							.find('.chat-container .messages');
+							.animate(
+								{ scrollTop: $messageBox[0].scrollHeight },
+								500
+							);
 					}
 				}
 				return false;
@@ -1477,51 +1475,51 @@ window.TTFM_SQ = null;
 				tt2_playing_size.height = 204;
 			}
 			
-			_log('' + (tt2_size.height - tt2_playing_size.height - 95) + 'px !important');
-			_log('' + chat_width + 'px !important');
-			_log('' + (tt2_size.height - tt2_playing_size.height - title_height - message_height - 95) + 'px !important');
-			_log('' + (tt2_size.height - tt2_playing_size.height - 95) + 'px !important');
-			_log('' + (chat_box_width - chat_width - 20) + 'px !important');
-			_log('' + (tt2_size.height - tt2_playing_size.height - title_height - message_height - 95) + 'px !important');
-			_log('' + (chat_box_width - chat_width - 20) + 'px !important');
+			_log('' + (tt2_size.height - tt2_playing_size.height - 95) + 'px');
+			_log('' + chat_width + 'px');
+			_log('' + (tt2_size.height - tt2_playing_size.height - title_height - message_height - 95) + 'px');
+			_log('' + (tt2_size.height - tt2_playing_size.height - 95) + 'px');
+			_log('' + (chat_box_width - chat_width - 20) + 'px');
+			_log('' + (tt2_size.height - tt2_playing_size.height - title_height - message_height - 95) + 'px');
+			_log('' + (chat_box_width - chat_width - 20) + 'px');
 
 			// fix guest container sizing
 			$chat_box.find('.guest-list-container').css({
-				height: '' + (tt2_size.height - tt2_playing_size.height - 95) + 'px !important',
-				width: '' + chat_width + 'px !important',
-				top: '0 !important',
-				right: '0 !important',
-				left: 'auto !important'
+				height: '' + (tt2_size.height - tt2_playing_size.height - 95) + 'px',
+				width: '' + chat_width + 'px',
+				top: '0',
+				right: '0',
+				left: 'auto'
 			});
 
 			// fix chat message sizing
 			$chat_box.find('.guest-list-container .guests').css({
-				height: '' + (tt2_size.height - tt2_playing_size.height - title_height - message_height - 95) + 'px !important',
+				height: '' + (tt2_size.height - tt2_playing_size.height - title_height - message_height - 95) + 'px',
 				width: '100%',
-				'overflow-x': 'none !important',
-				'overflow-y': 'auto !important'
+				'overflow-x': 'none',
+				'overflow-y': 'auto'
 			});
 
 			// fix chat sizing in TT2
 			$('#tt2_chat_box').find('.chat-container').css({
-				height: '' + (tt2_size.height - tt2_playing_size.height - 95) + 'px !important',
-				width: '' + (chat_box_width - chat_width - 20) + 'px !important',
-				top: '0 !important',
-				left: '0 !important'
+				height: '' + (tt2_size.height - tt2_playing_size.height - 95) + 'px',
+				width: '' + (chat_box_width - chat_width - 20) + 'px',
+				top: '0',
+				left: '0'
 			});
 
 			// fix chat message sizing
 			$chat_box.find('.chat-container .messages').css({
-				height: '' + (tt2_size.height - tt2_playing_size.height - title_height - message_height - 95) + 'px !important',
-				width: '' + (chat_box_width - chat_width - 20) + 'px !important',
-				'overflow-x': 'none !important',
-				'overflow-y': 'auto !important'
+				height: '' + (tt2_size.height - tt2_playing_size.height - title_height - message_height - 95) + 'px',
+				width: '' + (chat_box_width - chat_width - 20) + 'px',
+				'overflow-x': 'none',
+				'overflow-y': 'auto'
 			});
 
 			// fix remainder of windows
 			$('#tt2_container').find('.fullheight').css(
 				'height',
-				'' + (tt2_size.height - tt2_playing_size.height - 95) + 'px !important'
+				'' + (tt2_size.height - tt2_playing_size.height - 95) + 'px'
 			);
 		}
 
@@ -1576,35 +1574,35 @@ window.TTFM_SQ = null;
 
 			// fix guest container sizing
 			$('#tt2_chat_box').find('.guest-list-container').css({
-				height: '' + (tt2_size.height - tt2_playing_size.height - 95) + 'px !important',
-				width: '' + chat_width + 'px !important',
-				top: '0 !important',
-				right: '0 !important',
-				left: 'auto !important'
+				height: '' + (tt2_size.height - tt2_playing_size.height - 95) + 'px',
+				width: '' + chat_width + 'px',
+				top: '0',
+				right: '0',
+				left: 'auto'
 			});
 
 			// fix chat message sizing
 			$('#tt2_chat_box').find('.guest-list-container .guests').css({
-				height: '' + (tt2_size.height - tt2_playing_size.height - title_height - message_height - 95) + 'px !important',
+				height: '' + (tt2_size.height - tt2_playing_size.height - title_height - message_height - 95) + 'px',
 				width: '100%',
-				'overflow-x': 'none !important',
-				'overflow-y': 'auto !important'
+				'overflow-x': 'none',
+				'overflow-y': 'auto'
 			});
 
 			// fix chat sizing in TT2
 			$('#tt2_chat_box').find('.chat-container').css({
-				height: '' + (tt2_size.height - tt2_playing_size.height - 95) + 'px !important',
-				width: '' + (chat_box_width - chat_width - 20) + 'px !important',
-				top: '0 !important',
-				left: '0 !important'
+				height: '' + (tt2_size.height - tt2_playing_size.height - 95) + 'px',
+				width: '' + (chat_box_width - chat_width - 20) + 'px',
+				top: '0',
+				left: '0'
 			});
 
 			// fix chat message sizing
 			$('#tt2_chat_box').find('.chat-container .messages').css({
-				height: '' + (tt2_size.height - tt2_playing_size.height - title_height - message_height - 95) + 'px !important',
-				width: '' + (chat_box_width - chat_width - 20) + 'px !important',
-				'overflow-x': 'none !important',
-				'overflow-y': 'auto !important'
+				height: '' + (tt2_size.height - tt2_playing_size.height - title_height - message_height - 95) + 'px',
+				width: '' + (chat_box_width - chat_width - 20) + 'px',
+				'overflow-x': 'none',
+				'overflow-y': 'auto'
 			});
 
 			// fix remainder of windows
@@ -1613,7 +1611,7 @@ window.TTFM_SQ = null;
 			var tt2_section_padding = 20;
 			$('#tt2_container').find('.fullheight').css(
 				'height',
-				'' + (tt2_size.height - tt2_playing_size.height - 95) + 'px !important'
+				'' + (tt2_size.height - tt2_playing_size.height - 95) + 'px'
 			);
 		}
 
