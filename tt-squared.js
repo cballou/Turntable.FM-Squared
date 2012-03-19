@@ -1311,12 +1311,11 @@ window.TTFM_SQ = null;
 
 					// fix chat scroll when necessary
 					if (target == 'chat') {
-						$('#tt2_chat_box')
-							.find('.chat-container .messages')
-							.animate(
-								{ scrollTop: $messageBox[0].scrollHeight },
-								500
-							);
+						var $messageBox = $('#tt2_chat_box').find('.chat-container .messages');
+						$messageBox.animate(
+							{ scrollTop: $messageBox[0].scrollHeight },
+							500
+						);
 					}
 				}
 				return false;
