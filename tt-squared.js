@@ -1592,7 +1592,7 @@ window.TTFM_SQ = null;
 			// fix chat message sizing
 			$('#tt2_chat_box').find('.chat-container .messages').css({
 				height: '' + (tt2_size.height - tt2_playing_size.height - title_height - message_height - 95) + 'px',
-				width: '' + chat_width + 'px',
+				width: '' + (chat_box_width - guest_width - 20) + 'px',
 				'overflow-x': 'none',
 				'overflow-y': 'auto'
 			});

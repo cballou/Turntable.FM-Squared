@@ -28,7 +28,7 @@
 #tt2_container h5 { padding: 4px 10px; margin: 0 0 1px 0; font-size: 14px; line-height: 14px; font-weight: bold; background: #222; border-radius: 3px; -moz-border-radius: 3px; -webkit-border-radius: 3px; }
 
 /* stats */
-#tt2_container ul.stats { padding: 0 10px; }
+#tt2_container ul.stats { padding: 0 10px; list-style: none; }
 #tt2_container ul.stats li { padding: 2px 0; border-top: 1px dotted #222; }
 #tt2_container ul.stats li:first-child { border-top: none; }
 #tt2_container ul.stats li span { float: right; display: inline; text-align: right; }

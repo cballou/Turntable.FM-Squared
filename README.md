@@ -22,7 +22,7 @@ Features
 Current Issues
 ==============
 
-* Getting CSS stylesheet to load externally via Firefox Greasemonkey script (currently unusable)
+* Album pricing sometimes shows $-1.
 
 Installation
 ============
@@ -30,7 +30,7 @@ Installation
 This script only works for Firefox and Chrome.
 For Firefox, you must have Greasemonkey installed.
 
-To install as a Greasemonkey script, simply navigate to:
+To install as a Greasemonkey script, simply navigate to and follow the popup instructions:
 https://github.com/cballou/Turntable.FM-Squared/raw/master/greasemonkey/tt-squared.user.js
 
 To install as a Chrome Extension, simply navigate to:
@@ -43,6 +43,7 @@ When you enter a room, you'll notice TT.FM Squared on the right. Click on the se
 Change Log
 ==========
 
+* 2012-03-22 - Made the extension fully functional as a Firefox Greasemonkey script. Styling functional in Firefox. Fixed chat window resizing.
 * 2012-03-13 - Fixing the chat idle time display. Removing dj idle times binding. Fixing similar track handling on next song play. Added TT.FM song search for similar tracks.
 * 2012-01-10 - Adding handling for guest coloring.
 * 2012-01-10 - Added LocalStorage support for saving a user's configuration preferences.
