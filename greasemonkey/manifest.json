@@ -1,7 +1,7 @@
 {
   "name": "Turntable.FM Squared",
   "version": "1.0",
-  "description": "A set of Turntable.FM tools including an improved chat UI, song analytics, auto-upvote (autobop), anti-idle, auto-respond, additional track information, and similar track listings.",
+  "description": "Unique problems and analytics tool for TT.FM.",
   "browser_action": {
     "default_title": "TT.FM Squared",
     //"background_page": "tt-squared.html",
