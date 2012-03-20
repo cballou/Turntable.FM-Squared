@@ -53,12 +53,19 @@ var UserScript = {
  * Where the magic happens.
  */
 function ttSquared() {
-    //var isGoogleChrome = navigator.userAgent.toLowerCase().indexOf('chrome') > -1;
-    //if (!isGoogleChrome) {
+    var isGoogleChrome = navigator.userAgent.toLowerCase().indexOf('chrome') > -1;
+    if (!isGoogleChrome) {
         // inject stylesheet
         var cssTxt = GM_getResourceText('TTFM_CSS');
         GM_addStyle(cssTxt);
-    //}
+    } else {
+        // inject stylesheet
+        var s = document.createElement('link');
+        s.setAttribute('rel', 'stylesheet');
+        s.setAttribute('type', 'text/css');
+        s.setAttribute('href', 'https://raw.github.com/cballou/Turntable.FM-Squared/master/tt-squared.css');
+        (document.head || document.body).appendChild(s);
+    }
 
     // inject javascript
     var s = document.createElement('script');
