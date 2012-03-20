@@ -42,7 +42,7 @@ var UserScript = {
         'http://turntable.fm/privacy',
         'http://turntable.fm/static*'
     ],
-    manifest: 'http://assets.dharmafly.com/allsizes/manifest.json',
+    manifest: 'https://raw.github.com/cballou/Turntable.FM-Squared/master/greasemonkey/manifest.json',
     codebase: 'http://userscripts.org/scripts/source/6178.user.js',
     description: 'A set of Turntable.FM tools including an improved chat UI, song analytics, auto-upvote (autobop), anti-idle, auto-respond, additional track information, and similar track listings.',
     copyright: '(C)2012, Corey Ballou',
@@ -53,12 +53,12 @@ var UserScript = {
  * Where the magic happens.
  */
 function ttSquared() {
-    var isGoogleChrome = navigator.userAgent.toLowerCase().indexOf('chrome') > -1;
-    if (!isGoogleChrome) {
+    //var isGoogleChrome = navigator.userAgent.toLowerCase().indexOf('chrome') > -1;
+    //if (!isGoogleChrome) {
         // inject stylesheet
         var cssTxt = GM_getResourceText('TTFM_CSS');
         GM_addStyle(cssTxt);
-    }
+    //}
 
     // inject javascript
     var s = document.createElement('script');
