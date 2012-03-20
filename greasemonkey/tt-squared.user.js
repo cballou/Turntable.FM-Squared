@@ -21,7 +21,7 @@
 // @exclude     http://turntable.fm/privacy
 // @exclude     http://turntable.fm/static*
 // @match       http://turntable.fm/*
-// @resource    TTFM_CSS tt-squared.css
+// @resource TTFM_CSS tt-squared.css
 // ==/UserScript==
 
 // USERSCRIPT METADATA
@@ -56,24 +56,18 @@ var UserScript = {
  */
 function ttSquared() {
     var isGoogleChrome = navigator.userAgent.toLowerCase().indexOf('chrome') > -1;
-    if (!isGoogleChrome) {
-        // inject stylesheet
-        var cssTxt = GM_getResourceText('TTFM_CSS');
-        GM_addStyle(cssTxt);
-    } else {
-        // inject stylesheet
-        var s = document.createElement('link');
-        s.setAttribute('rel', 'stylesheet');
-        s.setAttribute('type', 'text/css');
-        s.setAttribute('href', 'tt-squared.css');
-        (document.head || document.body).appendChild(s);
-    }
 
     // inject javascript
     var s = document.createElement('script');
     s.setAttribute('src', 'https://raw.github.com/cballou/Turntable.FM-Squared/master/tt-squared.js');
     s.setAttribute('type', 'text/javascript');
     (document.body || document.head || document.documentElement).appendChild(s);
+    
+    //if (!isGoogleChrome) {
+        // inject stylesheet
+        var cssTxt = GM_getResourceText('TTFM_CSS');
+        GM_addStyle(cssTxt);
+    //} 
 }
 
 // initialize
