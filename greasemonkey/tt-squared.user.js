@@ -4,7 +4,7 @@
 // @fullname    Turntable.FM Squared
 // @description A set of Turntable.FM tools including an improved chat UI, song analytics, auto-upvote (autobop), anti-idle, auto-respond, additional track information, and similar track listings.
 // @homepage    http://userscripts.org/scripts/show
-// @icon        http://s3.amazonaws.com/uso_ss/icon/33042/large.PNG?1245499122
+// @icon        https://github.com/cballou/Turntable.FM-Squared/raw/master/greasemonkey/icon128.png
 // @author      http://userscripts.org/users/441482
 // @namespace   http://userscripts.org/users/441482
 // @version     1.0.0
@@ -21,10 +21,11 @@
 // @exclude     http://turntable.fm/privacy
 // @exclude     http://turntable.fm/static*
 // @match       http://turntable.fm/*
-// @resource TTFM_CSS tt-squared.css
+// @resource    TTFM_CSS tt-squared.css
 // ==/UserScript==
 
 // USERSCRIPT METADATA
+/*
 var UserScript = {
     name: 'TT.FM Squared',
     id: 'ttfmsq',
@@ -48,6 +49,7 @@ var UserScript = {
     copyright: '(C)2012, Corey Ballou',
     unwrap: true
 };
+*/
 
 /**
  * Where the magic happens.
