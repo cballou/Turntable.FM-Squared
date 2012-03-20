@@ -21,7 +21,7 @@
 // @exclude     http://turntable.fm/privacy
 // @exclude     http://turntable.fm/static*
 // @match       http://turntable.fm/*
-// @resource TTFM_CSS tt-squared.css
+// @resource TTFM_CSS https://raw.github.com/cballou/Turntable.FM-Squared/master/greasemonkey/tt-squared.css
 // ==/UserScript==
 
 // USERSCRIPT METADATA
@@ -56,18 +56,31 @@ var UserScript = {
  */
 function ttSquared() {
     var isGoogleChrome = navigator.userAgent.toLowerCase().indexOf('chrome') > -1;
-
+    if (isGoogleChrome) {
+        GM_xmlhttpRequest({
+            method: "GET",
+            url: "https://raw.github.com/cballou/Turntable.FM-Squared/master/greasemonkey/tt-squared.css",
+            headers: {
+              "User-Agent": "Mozilla/5.0",
+              "Accept": "text/xml"
+            },
+            onload: function(response) {
+                if (response.responseText) {
+                    GM_addStyle(response.responseText);
+                }
+            }
+        });
+    } else {
+        // inject stylesheet
+        var cssTxt = GM_getResourceText('TTFM_CSS');
+        GM_addStyle(cssTxt);
+    }
+    
     // inject javascript
     var s = document.createElement('script');
     s.setAttribute('src', 'https://raw.github.com/cballou/Turntable.FM-Squared/master/tt-squared.js');
     s.setAttribute('type', 'text/javascript');
     (document.body || document.head || document.documentElement).appendChild(s);
-    
-    //if (!isGoogleChrome) {
-        // inject stylesheet
-        var cssTxt = GM_getResourceText('TTFM_CSS');
-        GM_addStyle(cssTxt);
-    //} 
 }
 
 // initialize
