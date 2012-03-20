@@ -31,6 +31,9 @@
     "all_frames": true
   }],
   "permissions": [
-    "tabs", "notifications", "http://turntable.fm/*"
+    "tabs",
+    "notifications",
+    "http://turntable.fm/*",
+    "https://raw.github.com/cballou/Turntable.FM-Squared/*"
   ]
 }
