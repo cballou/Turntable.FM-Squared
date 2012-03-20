@@ -65,7 +65,7 @@ function ttSquared() {
         var s = document.createElement('link');
         s.setAttribute('rel', 'stylesheet');
         s.setAttribute('type', 'text/css');
-        s.setAttribute('href', 'https://raw.github.com/cballou/Turntable.FM-Squared/master/tt-squared.css');
+        s.setAttribute('href', 'tt-squared.css');
         (document.head || document.body).appendChild(s);
     }
 
