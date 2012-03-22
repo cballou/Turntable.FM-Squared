@@ -50,7 +50,7 @@ You can install one of two ways. You can load the unpacked extension or you can 
 **To load the packed extension *(the fast way)*:**
 Just so you know, extensions are packaged as signed ZIP files with the file extension "crx". Don't be scurred.
 
-* Click on the following link: 
+* Click on the following link: https://github.com/cballou/Turntable.FM-Squared/raw/master/chrome-ext/tt-squared.crx
 
 **To load the unpacked extension from the source code of this repository *(for young jedis)*:**
 
