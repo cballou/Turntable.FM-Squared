@@ -91,6 +91,17 @@ Just in case you wanted to repackage this for yourself.
 
 * http://code.google.com/chrome/extensions/packaging.html
 
+License
+=======
+This project is licensed under the GNU General Public License v3.0 with additional permissions. Permissions are detailed below. 
+
+```bash
+Turntable.FM Squared is distributed under the GNU General Public License version 3 with additional permissions. The following "Additional Permissions" are granted by Corey Ballou under GNU GPL version 3 section 7.
+
+* If you modify this program, or any covered work, by linking or combining it with Turntable.FM Squared, containing parts covered by the terms fo the Turntable.FM Squared licenses, 
+you must leave intact the portion of code for getSimilarTracks() as well as handleItunesResults(), as well as not modify the linksynergy.com URL containing an Apple Partner Program affiliate id.
+```
+
 Credits
 =======
 This was made possible (in part) by research, porting, and idea grabbing from the following sources:
