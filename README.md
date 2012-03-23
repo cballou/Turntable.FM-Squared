@@ -102,6 +102,8 @@ Turntable.FM Squared is distributed under the GNU General Public License version
 you must leave intact the portion of code for getSimilarTracks() as well as handleItunesResults(), as well as not modify the linksynergy.com URL containing an Apple Partner Program affiliate id.
 ```
 
+You may read the GPLv3 license here: http://www.gnu.org/copyleft/gpl.html
+
 Credits
 =======
 This was made possible (in part) by research, porting, and idea grabbing from the following sources:
