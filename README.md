@@ -19,33 +19,28 @@ Features
 * Chat alert on mention of name aliases (configurable)
 * Chat alert of the elapsed time it took a DJ to fill a slot, aka anti-auto dj (configurable)
 
-Screenshots
-===========
-* ![Chat window displaying idle DJs and user options](https://github.com/cballou/Turntable.FM-Squared/blob/master/screenshots/screenshot-chat-user-options.jpg)
-* ![Chat window displaying current djs and idle times](https://github.com/cballou/Turntable.FM-Squared/blob/master/screenshots/screenshot-chat-window.jpeg)
-* ![Similar tracks display for the current song](https://github.com/cballou/Turntable.FM-Squared/blob/master/screenshots/screenshot-similar-track-search.jpg)
-* ![Settings page](https://github.com/cballou/Turntable.FM-Squared/blob/master/screenshots/screenshot-settings.jpg)
-* ![Stats page](https://github.com/cballou/Turntable.FM-Squared/blob/master/screenshots/screenshot-stats.jpg)
-
 Current Issues
 ==============
 
 * Album pricing sometimes shows $-1.
+* Does not fit on small screens due to the intensive UI.
 
 Installation
 ============
 
-This script only works for Firefox and Chrome.
-For Firefox, you must have Greasemonkey installed.
-
-Firefox
--------
-To install as a Greasemonkey script, simply navigate to and follow the popup instructions:
-https://github.com/cballou/Turntable.FM-Squared/raw/master/greasemonkey/tt-squared.user.js
+This script only works for Google Chrome and Firefox.
+**For Firefox, you must have Greasemonkey installed.**
 
 Google Chrome
 -------------
-You can install one of two ways. You can load the unpacked extension or you can simply click a link, the choice is yours!
+You can install in three different ways depending on how hardcore you are:
+
+* *Recommended:* Install from the Google Chrome Web Store: https://chrome.google.com/webstore/detail/ldipemodldjfgcejcgpehbnocimlllhn
+* You can load the unpacked extension 
+* You can click a link, **but you'll have to click it again whenever you want to update**
+
+**To install from the Google Chrome Web Store *(the fast way)*:**
+Just click here while in Chrome and click the `Add to Chrome` button: https://chrome.google.com/webstore/detail/ldipemodldjfgcejcgpehbnocimlllhn
 
 **To load the packed extension *(the fast way)*:**
 Just so you know, extensions are packaged as signed ZIP files with the file extension "crx". Don't be scurred.
@@ -63,13 +58,27 @@ Just so you know, extensions are packaged as signed ZIP files with the file exte
 * Click `OK`.
 * You should now be good to roll. Navigate over to a room on Turntable.FM and it should load up instantly.
 
+Firefox
+-------
+To install as a Greasemonkey script, simply navigate to and follow the popup instructions:
+https://github.com/cballou/Turntable.FM-Squared/raw/master/greasemonkey/tt-squared.user.js
+
 After Installation
 ==================
 When you enter a room, you'll notice TT.FM Squared on the right. Click on the settings tab to adjust your personal settings.
 
+Screenshots
+===========
+![Chat window displaying idle DJs and user options](https://github.com/cballou/Turntable.FM-Squared/raw/master/screenshots/screenshot-chat-user-options.jpg)
+![Chat window displaying current djs and idle times](https://github.com/cballou/Turntable.FM-Squared/raw/master/screenshots/screenshot-chat-window.jpeg)
+![Similar tracks display for the current song](https://github.com/cballou/Turntable.FM-Squared/raw/master/screenshots/screenshot-similar-track-search.jpg)
+![Settings page](https://github.com/cballou/Turntable.FM-Squared/raw/master/screenshots/screenshot-settings.jpg)
+![Stats page](https://github.com/cballou/Turntable.FM-Squared/raw/master/screenshots/screenshot-stats.jpg)
+
 Change Log
 ==========
 
+* 2012-03-23 - Added to the Chrome store. Available at https://chrome.google.com/webstore/detail/ldipemodldjfgcejcgpehbnocimlllhn
 * 2012-03-22 - Added new instructions for Chrome extension installation. Created a new package for easier Chrome install. 
 * 2012-03-20 - Made the extension fully functional as a Firefox Greasemonkey script. Styling functional in Firefox. Fixed chat window resizing.
 * 2012-03-13 - Fixing the chat idle time display. Removing dj idle times binding. Fixing similar track handling on next song play. Added TT.FM song search for similar tracks.
@@ -78,6 +87,7 @@ Change Log
 
 Documentation on Packaging Chrome Extensions
 ============================================
+Just in case you wanted to repackage this for yourself.
 
 * http://code.google.com/chrome/extensions/packaging.html
 
