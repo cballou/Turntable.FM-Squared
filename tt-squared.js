@@ -1040,7 +1040,7 @@ window.TTFM_SQ = null;
 					})
 					// find all DJs and Supers in the list
 					.filter(function() {
-						return $(this).hasClass('isMod isDj');
+						return $(this).hasClass('isMod') || $(this).hasClass('isDj');
 					})
 					// move to the top
 					.prependTo($('#tt2_chat_box').find('.guest-list-container .guests'));
