@@ -250,7 +250,7 @@ window.TTFM_SQ = null;
 			if (config.notifications.emptyDjSlot) {
 				var msg = '<p>A DJ slot just opened.</p>';
 				//msg += '<button type="button" id="becomeDj" class="btn btnGreen" name="becomeDj">Grab Open Slot</button>';
-				
+
 				sendNotification(
 					'Empty DJ Slot',
 					msg,
@@ -339,12 +339,12 @@ window.TTFM_SQ = null;
 			if (e.senderid && e.senderid == _manager.myuserid) {
 				return;
 			}
-			
+
 			// handle alerting when mentioned
 			if (stringInText(config.nameAliases, e.text, true)) {
 				// send a notification of the mention
 				playAlertSound();
-				
+
 				// handle mention alert
 				if (config.notifications.mention) {
 					sendNotification(
@@ -363,7 +363,7 @@ window.TTFM_SQ = null;
 			// handle watching for an idle mention
 			watchForIdleMention(e);
 		}
-		
+
 		/**
 		 * If mentioned while idle and a specific idle keyword is triggered,
 		 * send random idle response.
@@ -373,7 +373,7 @@ window.TTFM_SQ = null;
 			if (!config.autoRespond) {
 				return;
 			}
-			
+
 			if (!stringInText(config.idleAliases, e.text) || e.text.length > 128) {
 				return;
 			}
@@ -424,7 +424,7 @@ window.TTFM_SQ = null;
 					'http://cballou.github.com/Turntable.FM-Squared'
 				);
 			}
-			
+
 			// create a response
 			var response = randomChoice(config.idleMessages);
 
@@ -471,9 +471,9 @@ window.TTFM_SQ = null;
 		function resetVotes(e) {
 			// initially hide similar tracks
 			if (!$('#similar_tracks').is(':hidden')) {
-				$('#tt2_nav .btnS').filter(function() { 
-					return $(this).data('id') === 'chat' 
-				}).trigger('click');				
+				$('#tt2_nav .btnS').filter(function() {
+					return $(this).data('id') === 'chat'
+				}).trigger('click');
 			}
 
 			// reset current vote counter
@@ -578,7 +578,7 @@ window.TTFM_SQ = null;
 					msg += ' (' + song.album + ')';
 				}
 				msg += '</p>';
-				
+
 				sendNotification(
 					'Now Playing...',
 					msg,
@@ -594,18 +594,18 @@ window.TTFM_SQ = null;
 		function updateFans(e) {
 			if (typeof e.fans == 'undefined') {
 				return;
-			}			
-			
+			}
+
 			// only show for ourselves
 			if (e.userid != _room.selfId) {
 				return;
 			}
-				
+
 			// if mentions disabled
 			if (!config.notifications.fanChange) {
 				return;
 			}
-			
+
 			if (e.fans === 1) {
 				if (typeof _room.users[e.userid] != 'undefined') {
 					var msg = _room.users[e.userid].name + ' has a new fan.';
@@ -663,7 +663,7 @@ window.TTFM_SQ = null;
 			$('#tt2_stats_current_coverart').find('.songinfo').html(details);
 			$('#tt2_stats_current_coverart').find('.coverart').remove();
 			$('#tt2_stats_current_coverart').prepend(albumArt);
-			
+
 			// update current song
 			performSearch(song.artist, song.song, song.album || '');
 
@@ -718,7 +718,7 @@ window.TTFM_SQ = null;
 			$('#tt2_stats_current_hearts').text(votes.current.hearts);
 			$('#tt2_stats_overall_hearts').text(votes.hearts);
 		}
-		
+
 		/**
 		 * Handles receiving a PM.
 		 */
@@ -726,9 +726,9 @@ window.TTFM_SQ = null;
 			if (!config.notifications.enablePM) {
 				return;
 			}
-			
+
 			var msg = '';
-			
+
 			// attempt to get sender by id
 			var username = getUsernameById(e.senderid);
 			if (username) {
@@ -768,7 +768,7 @@ window.TTFM_SQ = null;
 				if (isCurrentDj()) {
 					votes.mine.votes += 1;
 				}
-				
+
 				// ensure we have an object to track user voting
 				if (!votes.user[uid]) {
 					votes.user[uid] = {
@@ -791,14 +791,14 @@ window.TTFM_SQ = null;
 
 					// add to overall votes
 					votes.upvotes += 1;
-					
+
 					// add to my vote stats
 					if (isCurrentDj()) {
 						votes.mine.votes += 1;
 						votes.mine.upvotes += 1;
 						votes.mine.songs[song_id].upvoters[uid] = users[uid].name;
 					}
-					
+
 					// check if they reversed their vote
 					if (typeof votes.current.downvoters[uid] != 'undefined') {
 						votes.user[uid].downvotes -= 1;
@@ -823,15 +823,15 @@ window.TTFM_SQ = null;
 					votes.user[uid].downvotes += 1;
 
 					// add to overall votes
-					votes.downvotes += 1;					
-					
+					votes.downvotes += 1;
+
 					// add to my vote stats
 					if (isCurrentDj()) {
 						votes.mine.votes += 1;
 						votes.mine.downvotes += 1;
 						votes.mine.songs[song_id].downvoters[uid] = users[uid].name;
 					}
-					
+
 					// check if they reversed
 					if (typeof votes.current.upvoters[uid] != 'undefined') {
 						votes.user[uid].upvotes -= 1;
@@ -878,7 +878,7 @@ window.TTFM_SQ = null;
 				$('#tt2_stats_mine_downvotes').text(votes.mine.downvotes);
 				$('#tt2_stats_mine_rating').text(votes.mine.score + '%');
 			};
-			
+
 			/**
 			 * Update the list of voters.
 			 */
@@ -890,7 +890,7 @@ window.TTFM_SQ = null;
 					}
 					$('#tt2_stats_current_upvoters').html(html);
 				}
-				
+
 				html = [];
 				if (votes.current.downvoters) {
 					for (var i in votes.current.downvoters) {
@@ -941,7 +941,7 @@ window.TTFM_SQ = null;
 				if (config.notifications.antiAutoDj) {
 					lastRemovedDjTime = new Date().getTime();
 				}
-				
+
 				// potentially claim empty slot
 				claimEmptyDjSlot(e);
 			} else if (e.command == 'add_dj') {
@@ -958,7 +958,7 @@ window.TTFM_SQ = null;
 					} else {
 						msg = 'The DJ Slot was only open for ' + elapsed + ' milliseconds.';
 					}
-					
+
 					// send notification
 					sendNotification(
 						'DJ Slot Stats',
@@ -1002,40 +1002,48 @@ window.TTFM_SQ = null;
 				clearTimeout(idleTimeInterval);
 				idleTimeInterval = null;
 			}
-			
+
 			// attempt to repaint the DOM in 50 ms unless cancelled
 			idleTimeInterval = setTimeout(function() {
 				// get the current time
 				var now = new Date().getTime();
-				
+
 				// update the chat box
-				$('#tt2_chat_box').find('.guest-list-container .guest').each(function() {
-					var $this = $(this);
-					var $name = $this.find('.guestName');
-					var username = $name.text();
-					if (typeof _usernameMappings[username] != 'undefined') {
-						var user_id = _usernameMappings[username];
-						if (typeof _lastUserActions[user_id] != 'undefined') {
-							// update special highlighters
-							var modClass = isRoomModerator(user_id) ? ' isMod' : '';
-							var isDjing = isDj(user_id);
-							modClass += isDjing ? ' isDj' : '';
-							if (isDjing && (now - _lastUserActions[user_id] > maxDjIdleTime)) {
-								modClass += ' isIdle';
-							}
-							$this.removeClass('isMod isDj isIdle').addClass(modClass);
-	
-							// update idle time
-							var lastIdle = formatDate(_lastUserActions[user_id]);
-							var $guestIdle = $this.find('.guestIdle');
-							if (!$guestIdle.length) {
-								$name.after('<div class="guestIdle">' + lastIdle + '</div>');
-							} else {
-								$guestIdle.html(lastIdle);
+				$('#tt2_chat_box')
+					.find('.guest-list-container .guest')
+					.each(function() {
+						var $this = $(this);
+						var $name = $this.find('.guestName');
+						var username = $name.text();
+						if (typeof _usernameMappings[username] != 'undefined') {
+							var user_id = _usernameMappings[username];
+							if (typeof _lastUserActions[user_id] != 'undefined') {
+								// update special highlighters
+								var modClass = isRoomModerator(user_id) ? ' isMod' : '';
+								var isDjing = isDj(user_id);
+								modClass += isDjing ? ' isDj' : '';
+								if (isDjing && (now - _lastUserActions[user_id] > maxDjIdleTime)) {
+									modClass += ' isIdle';
+								}
+								$this.removeClass('isMod isDj isIdle').addClass(modClass);
+
+								// update idle time
+								var lastIdle = formatDate(_lastUserActions[user_id]);
+								var $guestIdle = $this.find('.guestIdle');
+								if (!$guestIdle.length) {
+									$name.after('<div class="guestIdle">' + lastIdle + '</div>');
+								} else {
+									$guestIdle.html(lastIdle);
+								}
 							}
 						}
-					}
-				});
+					})
+					// find all DJs and Supers in the list
+					.filter(function() {
+						return $(this).hasClass('isMod isDj');
+					})
+					// move to the top
+					.prependTo($('#tt2_chat_box').find('.guest-list-container .guests'));
 			}, 50);
 		}
 
@@ -1092,7 +1100,7 @@ window.TTFM_SQ = null;
 				$('#right-panel').find('form.songSearch').trigger('submit');
 				return false;
 			});
-			
+
 			// periodically check for number of users
 			setInterval(function() {
 				updateRoomUsers();
@@ -1231,7 +1239,7 @@ window.TTFM_SQ = null;
 							html += '<div class="check" title="This option toggles an audible alert noise when  any of your name aliases are mentioned anywhere in a chat message."><label><input type="checkbox" class="checkbox" name="tt2_muteAlert" id="tt2_muteAlert" value="1"' + (config.muteAlert == 1 ? ' checked="checked"' : '') + ' /> Enable Mention Alert</label></div>';
 							html += '<div class="check" title="This option is for developers. It allows you to turn on and off the console log capabilities for debugging."><label><input type="checkbox" class="checkbox" name="tt2_debugMode" id="tt2_debugMode" value="1"' + (config.debugMode == 1 ? ' checked="checked"' : '') + ' /> Enable Debug Mode</label></div>';
 							html += '</div>';
-							
+
 							if (typeof window.webkitNotifications != 'undefined') {
 								html += '<h5 class="toggleAccordion space_bottom">Chrome Notifications</h5>';
 								html += '<div class="accordion clearfix">';
@@ -1245,7 +1253,7 @@ window.TTFM_SQ = null;
 								html += '<div class="check" title="Enable notifications whenever a DJ slot is filled with the elapsed time it took to fill the slot. Used as a countermeasure for Auto DJs. When turned on, you will be notified of the elapsed time it took for a DJ slot to fill up. Anything below 500ms is fishy, especially if there was no fair warning of a DJ dropping."><label><input type="checkbox" class="checkbox" name="tt2_notification_antiautodj" id="tt2_notification_antiautodj" value="1"' + (config.notifications.antiAutoDj == 1 ? ' checked="checked"' : '') + ' /> Anti Auto DJ</label></div>';
 								html += '</div>';
 							}
-							
+
 							html += '<div class="clearfix">';
 							html += '<div class="col"><label for="tt2_name_aliases">My Aliases</label><textarea name="tt2_name_aliases" id="tt2_name_aliases">' + config.nameAliases.join('\n') + '</textarea><span class="note">This represents any strings someone may use to reference you in a chat message. It could be shorthand for your alias. Separate each with a line break.</span></div>';
 							html += '<div class="col"><label for="tt2_general_name_aliases">General Aliases</label><textarea name="tt2_general_name_aliases" id="tt2_general_name_aliases">' + config.generalNameAliases.join('\n') + '</textarea><span class="note">Any string in a chat message that may refer to everybody in the room as a whole. Separate each with a line break.</div>';
@@ -1330,7 +1338,7 @@ window.TTFM_SQ = null;
 			var $anti_idle = $options.find('#tt2_antiidle');
 			var $mute_alert = $options.find('#tt2_muteAlert');
 			var $debug_mode = $options.find('#tt2_debugMode');
-			
+
 			// notifications
 			var $notification_time = $options.find('#tt2_notification_time');
 			var $enable_notifications = $options.find('#tt2_enable_notifications');
@@ -1347,7 +1355,7 @@ window.TTFM_SQ = null;
 			var $idle_aliases = $options.find('#tt2_idle_aliases');
 			var $idle_replies = $options.find('#tt2_idle_replies');
 			var $idle_messages = $options.find('#tt2_idle_messages');
-			
+
 			// watch for change to options
 			$options.find('#updateSettings').click(function() {
 				// save all option changes
@@ -1358,7 +1366,7 @@ window.TTFM_SQ = null;
 				config.autoRespond = $auto_respond.is(':checked');
 				config.antiIdle = $anti_idle.is(':checked');
 				config.muteAlert = $mute_alert.is(':checked');
-				
+
 				// notification options
 				config.notificationTime = $notification_time.length ? parseInt($notification_time.val()) : 10;
 				config.enableNotifications = $enable_notifications.length && $enable_notifications.is(':checked');
@@ -1368,14 +1376,14 @@ window.TTFM_SQ = null;
 				config.notifications.emptyDjSlot = $enable_notification_emptyslot.length && $enable_notification_emptyslot.is(':checked');
 				config.notifications.fanChange = $enable_notification_fanchange.length && $enable_notification_fanchange.is(':checked');
 				config.notifications.antiAutoDj = $enable_notification_antiautodj.length && $enable_notification_antiautodj.is(':checked');
-				
+
 				// update textarea options
 				config.nameAliases = $name_aliases.val().split(/\n\r?/g);
 				config.generalNameAliases = $general_name_aliases.val().split(/\n\r?/g);
 				config.idleAliases = $idle_aliases.val().split(/\n\r?/g);
 				config.idleReplies = $idle_replies.val().split(/\n\r?/g);
 				config.idleMessages = $idle_messages.val().split(/\n\r?/g);
-				
+
 				_log('aliases:');
 				_log(config.nameAliases);
 
@@ -1704,7 +1712,7 @@ window.TTFM_SQ = null;
 					// create a new worker
 					var worker = new SharedWorker('https://github.com/cballou/Turntable.FM-Squared/raw/master/notifications/worker.js');
 					var incomingMsg = null;
-					
+
 					// watch for message passing
 					worker.port.addEventListener('message', function(event) {
 						if (event.data.msg !== incomingMsg) {
@@ -1713,7 +1721,7 @@ window.TTFM_SQ = null;
 							incomingMsg = null;
 						}
 					}, false);
-					
+
 					// start the shared worker connection
 					worker.start();
 				}
@@ -1817,7 +1825,7 @@ window.TTFM_SQ = null;
 
 			return false;
 		}
-		
+
 		/**
 		 * Given a user name, attempt to retrieve the user id.
 		 */
@@ -1825,10 +1833,10 @@ window.TTFM_SQ = null;
 			if (typeof _usernameMappings[username] != 'undefined') {
 				return _usernameMappings[username];
 			}
-			
+
 			return false;
-		}		
-		
+		}
+
 		/**
 		 * Return a random int between two vals.
 		 */
@@ -1974,7 +1982,7 @@ function getSimilarTracks(artist, song, album) {
 				html += '<td><a href="' + baseurl + searchUrl + '" class="btnS btnGreen" target="_blank"><span class="itunesIcon"></span> Preview &amp; Buy</a></td>';
 				//html += '<td>&nbsp;</td>';
 			}
-			
+
 			html += '<td><a href="#" class="btnS btnBlue btnSearchArtist" data-term="' + escape(item.artist.name + ' ' + item.name) + '">TT.FM Search</a></td>';
 			//if (item.artist.mbid.length) {
 			//	html += '<p><a href="#" style="display:block">View Artist Details</a>';
