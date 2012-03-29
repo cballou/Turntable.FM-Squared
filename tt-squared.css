@@ -1,13 +1,5 @@
 /* TT.FM Squared Container */
 #tt2_container { position:absolute; top: 10px; right: 10px; margin: 0; padding: 0; background: #333; color: #FFF; font-size: 12px; line-height: 18px; overflow: hidden; border-radius: 3px; }
-#tt2_container h3 { padding: 4px 10px; margin: 0; font-size: 22px; line-height: 22px; font-weight: bold; background: #9cba9e; color: #000; vertical-align: middle; overflow: hidden;
-    border-top-left-radius: 3px;
-    border-top-right-radius: 3px;
-    -moz-border-radius-topleft: 3px;
-    -moz-border-radius-topright: 3px;
-    -webkit-border-top-left-radius: 3px;
-    -webkit-border-top-right-radius: 3px;
-}
 
 #tt2_nav { list-style: none; }
 #tt2_nav li { list-style: none; float: right; display: inline; margin-right: 5px; font-size: 12px; }
@@ -31,26 +23,30 @@
 .floatleft { float: left; display: inline; }
 .floatright { float: right; display: inline; }
 
-#tt2_container h4 { padding: 4px 10px; margin-bottom: 0; font-size: 18px; line-height: 18px; font-weight: normal; background: #5C755E; color: #FFF;
-    border-bottom-left-radius: 3px;
-    border-bottom-right-radius: 3px;
-    -moz-border-radius-bottomleft: 3px;
-    -moz-border-radius-bottomright: 3px;
-    -webkit-border-bottom-left-radius: 3px;
-    -webkit-border-bottom-right-radius: 3px;
-}
-#tt2_container h5 { padding: 4px 10px; margin: 0; font-size: 14px; line-height: 14px; font-weight: bold; background: #222; }
-#tt2_container ul.stats { padding: 0 10px; }
+#tt2_container h3 { padding: 4px 10px; margin: 0; font-size: 22px; line-height: 22px; font-weight: bold; background: #9cba9e; color: #000; vertical-align: middle; overflow: hidden; border-top-left-radius: 3px; border-top-right-radius: 3px; -moz-border-radius-topleft: 3px; -moz-border-radius-topright: 3px; -webkit-border-top-left-radius: 3px; -webkit-border-top-right-radius: 3px; }
+#tt2_container h4 { padding: 4px 10px; margin-bottom: 0; font-size: 18px; line-height: 18px; font-weight: normal; background: #5C755E; color: #FFF; border-bottom-left-radius: 3px; border-bottom-right-radius: 3px; -moz-border-radius-bottomleft: 3px; -moz-border-radius-bottomright: 3px; -webkit-border-bottom-left-radius: 3px; -webkit-border-bottom-right-radius: 3px; }
+#tt2_container h5 { padding: 4px 10px; margin: 0 0 1px 0; font-size: 14px; line-height: 14px; font-weight: bold; background: #222; border-radius: 3px; -moz-border-radius: 3px; -webkit-border-radius: 3px; }
+
+/* stats */
+#tt2_container ul.stats { padding: 0 10px; list-style: none; }
 #tt2_container ul.stats li { padding: 2px 0; border-top: 1px dotted #222; }
 #tt2_container ul.stats li:first-child { border-top: none; }
 #tt2_container ul.stats li span { float: right; display: inline; text-align: right; }
 
-#tt2_container .toggleAccordion { cursor: pointer; }
+#tt2_container ul.stats ul.current_voters { width: 100%; overflow: hidden; }
+#tt2_container ul.stats ul.current_voters > li { float: left; display: inline; width: 50%; border-top: 1px dotted #222; }
+#tt2_container ul.stats ul.current_voters ul { display: block; }
+#tt2_container ul.stats ul.current_voters ul li { display: block; }
+
+
+#tt2_container .toggleAccordion { cursor: pointer; overflow: hidden; }
 #tt2_container .accordion { padding: 10px 10px 0; }
+#tt2_container .accordion .accordion { padding: 0; }
 #tt2_container .hidden { display: none; }
 #tt2_container .fullheight { overflow-x: hidden; overflow-y: auto; }
 
 #tt2_container h4.toggleAccordion:hover { background: #6C856E; }
+#tt2_container h5.toggleAccordion:hover { background: #262626; }
 
 /* cover art */
 #tt2_stats_current_coverart { overflow: hidden; padding: 10px 10px 0; }
@@ -65,13 +61,18 @@
 /* options */
 #tt2_settings .accordion div { margin-bottom: 8px; }
 #tt2_settings .accordion div.clearfix { overflow: hidden; }
-#tt2_settings .accordion div.check { float: left; display: inline; background: #222; border: 1px solid #111; padding: 2px 4px; margin: 0 8px 8px 0; min-width: 200px; }
+#tt2_settings .accordion div.check { float: left; display: inline; background: #26262B; border: 1px solid #111; padding: 2px 4px; margin: 0 8px 8px 0; min-width: 200px; border-radius: 3px; -moz-border-radius: 3px; -webkit-border-radius: 3px; }
 #tt2_settings .accordion div.col { float: left; display: inline; width: 200px; margin: 0 10px 10px 0; }
-#tt2_settings .accordion div input.checkbox { background: #fff; border: 1px solid #999; vertical-align: middle; }
-#tt2_settings .accordion div input.tiny { width: 50px; }
+#tt2_settings .accordion div.col label { font-weight: bold; }
 #tt2_settings .accordion div input,
-#tt2_settings .accordion div textarea { font-size: 11px; line-height: 11px; background: #fff; color: #222; border: 1px solid #999; margin: 0; }
-#tt2_settings .accordion div textarea { display: block; height: 72px; width: 100%; }
+#tt2_settings .accordion div textarea { font-size: 11px; line-height: 1.4em; padding: 0 2px; background: #111; color: #fff; border: 1px solid #000; margin: 0; border-radius: 3px; -moz-border-radius: 3px; -webkit-border-radius: 3px; }
+#tt2_settings .accordion div textarea { display: block; height: 72px; font-family: Verdana, Arial, sans-serif; }
+#tt2_settings .accordion div input.checkbox { background: #fff; border: 1px solid #999; vertical-align: middle; margin: 0 5px 0 0; padding: 0; }
+#tt2_settings .accordion div input.tiny { width: 25px; }
+#tt2_settings .accordion div.check input[type=text] { text-align: center; }
+#tt2_settings .accordion div.check input[type=text],
+#tt2_settings .accordion div.check textarea { display: inline-block; height: auto; background: #333; color: #fff; border: 1px solid #111; }
+#tt2_settings .accordion div.col textarea { width: 100%; padding: 2px; background: #26262B; color: #fff; }
 #tt2_settings .accordion div .note { display: block; font-size: 10px; line-height: 14px; color: #999; padding: 4px; }
 
 /* similar tracks */
@@ -281,3 +282,7 @@
 /* TT.FM overrides */
 #outer { margin: 0 !important; }
 #footer { text-align: left !important; }
+
+.floatleft { float: left; display: inline; }
+.space_right { margin-right: 10px; }
+.space_bottom { margin-bottom: 10px; }
