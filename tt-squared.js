@@ -758,14 +758,6 @@ window.TTFM_SQ = null;
 				// the voting user
 				var uid = data[0];
 
-				// increment vote counts
-				votes.votes += 1;
-				votes.user[uid].votes += 1;
-				votes.current.votes += 1;
-				if (isCurrentDj()) {
-					votes.mine.votes += 1;
-				}
-
 				// ensure we have an object to track user voting
 				if (!votes.user[uid]) {
 					votes.user[uid] = {
@@ -775,6 +767,14 @@ window.TTFM_SQ = null;
 						downvotes: 0,
 						hearts: 0
 					};
+				}
+
+				// increment vote counts
+				votes.votes += 1;
+				votes.user[uid].votes += 1;
+				votes.current.votes += 1;
+				if (isCurrentDj()) {
+					votes.mine.votes += 1;
 				}
 
 				// if an upvote was cast
@@ -796,12 +796,12 @@ window.TTFM_SQ = null;
 						votes.mine.songs[song_id].upvoters[uid] = _room.users[uid].name;
 					}
 
-					// check what type we have
-					_log('Checking downvoter');
-					_log(typeof votes.current.downvoters[uid]);
-
 					// check if they reversed their vote
 					if (typeof votes.current.downvoters[uid] != 'undefined') {
+						// remove from downvoters
+						delete votes.current.downvoters[uid];
+
+						// update votes
 						votes.user[uid].downvotes -= 1;
 						votes.user[uid].votes -= 1;
 						votes.current.downvotes -= 1;
@@ -835,6 +835,9 @@ window.TTFM_SQ = null;
 
 					// check if they reversed
 					if (typeof votes.current.upvoters[uid] != 'undefined') {
+						// remove from upvoters
+						delete votes.current.upvoters[uid];
+
 						votes.user[uid].upvotes -= 1;
 						votes.user[uid].votes -= 1;
 						votes.current.upvotes -= 1;
@@ -848,6 +851,12 @@ window.TTFM_SQ = null;
 						}
 					}
 				}
+
+				// update the user's score
+				votes.user[uid].score = 100 * (votes.user[uid].upvotes / votes.user[uid].votes).toFixed(2);
+
+				// log the vote change
+				_log(votes);
 			}
 
 			/**
@@ -857,12 +866,9 @@ window.TTFM_SQ = null;
 				// recalculate scores
 				votes.score = 100 * (votes.upvotes / votes.votes).toFixed(2);
 				votes.current.score = 100 * (votes.current.upvotes / votes.current.votes).toFixed(2);
-				votes.user[uid].score = 100 * (votes.user[uid].upvotes / votes.user[uid].votes).toFixed(2);
 				if (isCurrentDj()) {
 					votes.mine.score = 100 * (votes.mine.upvotes / votes.mine.votes).toFixed(2);
 				}
-
-				_log('Updating the counters');
 
 				// update current stats
 				$('#tt2_stats_current_upvotes').text(votes.current.upvotes);
@@ -902,8 +908,6 @@ window.TTFM_SQ = null;
 					$('#tt2_stats_current_downvoters').html(html);
 				}
 			}
-
-			_log('Performing vote updating actions.');
 
 			// perform actions
 			recordVote(e.room.metadata.votelog[0]);
@@ -1711,6 +1715,7 @@ window.TTFM_SQ = null;
 				requestNotificationPermission();
 			} else {
 				// handle web worker in chrome (via toobify.com)
+				/*
 				if ("webkitNotifications" in window) {
 					// create a new worker
 					var worker = new SharedWorker('https://github.com/cballou/Turntable.FM-Squared/raw/master/notifications/worker.js');
@@ -1728,6 +1733,7 @@ window.TTFM_SQ = null;
 					// start the shared worker connection
 					worker.start();
 				}
+				*/
 			}
 		}
 
