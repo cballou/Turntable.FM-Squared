@@ -854,6 +854,8 @@ window.TTFM_SQ = null;
 			 * Update vote counters on the stats tab.
 			 */
 			var updateCounters = function() {
+				_log('Pre counter update');
+
 				// recalculate scores
 				votes.score = 100 * (votes.upvotes / votes.votes).toFixed(2);
 				votes.current.score = 100 * (votes.current.upvotes / votes.current.votes).toFixed(2);
@@ -904,6 +906,7 @@ window.TTFM_SQ = null;
 			}
 
 			_log('Performing vote updating actions.');
+			_log(e.room.metadata.votelog);
 
 			// perform actions
 			recordVote(e.room.metadata.votelog[0]);
@@ -1711,6 +1714,7 @@ window.TTFM_SQ = null;
 				requestNotificationPermission();
 			} else {
 				// handle web worker in chrome (via toobify.com)
+				/*
 				if ("webkitNotifications" in window) {
 					// create a new worker
 					var worker = new SharedWorker('https://github.com/cballou/Turntable.FM-Squared/raw/master/notifications/worker.js');
@@ -1728,6 +1732,7 @@ window.TTFM_SQ = null;
 					// start the shared worker connection
 					worker.start();
 				}
+				*/
 			}
 		}
 
