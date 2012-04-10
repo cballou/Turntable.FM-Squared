@@ -755,9 +755,6 @@ window.TTFM_SQ = null;
 			 * Record the new vote.
 			 */
 			var recordVote = function(data) {
-				// the room users
-				var users = _room.users;
-
 				// the voting user
 				var uid = data[0];
 
@@ -783,7 +780,7 @@ window.TTFM_SQ = null;
 				// if an upvote was cast
 				if (data[1] == 'up') {
 					// add to current upvoters
-					votes.current.upvoters[uid] = users[uid].name;
+					votes.current.upvoters[uid] = _room.users[uid].name;
 					votes.current.upvotes += 1;
 
 					// add to the user's votes
@@ -796,8 +793,12 @@ window.TTFM_SQ = null;
 					if (isCurrentDj()) {
 						votes.mine.votes += 1;
 						votes.mine.upvotes += 1;
-						votes.mine.songs[song_id].upvoters[uid] = users[uid].name;
+						votes.mine.songs[song_id].upvoters[uid] = _room.users[uid].name;
 					}
+
+					// check what type we have
+					_log('Checking downvoter');
+					_log(typeof votes.current.downvoters[uid]);
 
 					// check if they reversed their vote
 					if (typeof votes.current.downvoters[uid] != 'undefined') {
@@ -816,7 +817,7 @@ window.TTFM_SQ = null;
 
 				} else {
 					// add to current downvoters list
-					votes.current.downvoters[uid] = users[uid].name;
+					votes.current.downvoters[uid] = _room.users[uid].name;
 					votes.current.downvotes += 1;
 
 					// add to the user
@@ -829,7 +830,7 @@ window.TTFM_SQ = null;
 					if (isCurrentDj()) {
 						votes.mine.votes += 1;
 						votes.mine.downvotes += 1;
-						votes.mine.songs[song_id].downvoters[uid] = users[uid].name;
+						votes.mine.songs[song_id].downvoters[uid] = _room.users[uid].name;
 					}
 
 					// check if they reversed
@@ -852,7 +853,7 @@ window.TTFM_SQ = null;
 			/**
 			 * Update vote counters on the stats tab.
 			 */
-			var updateCounters = function(data) {
+			var updateCounters = function() {
 				// recalculate scores
 				votes.score = 100 * (votes.upvotes / votes.votes).toFixed(2);
 				votes.current.score = 100 * (votes.current.upvotes / votes.current.votes).toFixed(2);
@@ -860,6 +861,8 @@ window.TTFM_SQ = null;
 				if (isCurrentDj()) {
 					votes.mine.score = 100 * (votes.mine.upvotes / votes.mine.votes).toFixed(2);
 				}
+
+				_log('Updating the counters');
 
 				// update current stats
 				$('#tt2_stats_current_upvotes').text(votes.current.upvotes);
@@ -904,7 +907,7 @@ window.TTFM_SQ = null;
 
 			// perform actions
 			recordVote(e.room.metadata.votelog[0]);
-			updateCounters(e.room.metadata);
+			updateCounters();
 			updateVotersList();
 		}
 
