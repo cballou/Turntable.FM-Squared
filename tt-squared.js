@@ -162,6 +162,8 @@ window.TTFM_SQ = null;
 				score: 0,
 				votes: 0,
 				hearts: 0,
+				upvotes: 0,
+				downvotes: 0,
 				upvoters: [],
 				downvoters: []
 			},
@@ -645,6 +647,14 @@ window.TTFM_SQ = null;
 			// increment total songs played
 			votes.totalSongs += 1;
 			$('#tt2_stats_overall_totalSongs').text(votes.totalSongs);
+
+			// reset current
+			votes.current.upvoters = [];
+			votes.current.downvoters = [];
+			votes.current.upvotes = 0;
+			votes.current.downvotes = 0;
+			votes.current.votes = 0;
+			votes.current.score = 0;
 
 			// handle purchase cover art
 			var alt = escape(song.artist) + ' - ' + escape(song.song) + ' (' + escape(song.album) + ')';
