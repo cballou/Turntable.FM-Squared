@@ -471,6 +471,10 @@ window.TTFM_SQ = null;
 		 * Reset vote counters on a new song.
 		 */
 		function resetVotes(e) {
+			if (!_room.currentSong || !_room.currentSong._id) {
+				return false;
+			}
+
 			// initially hide similar tracks
 			if (!$('#similar_tracks').is(':hidden')) {
 				$('#tt2_nav .btnS').filter(function() {
@@ -481,6 +485,8 @@ window.TTFM_SQ = null;
 			// reset current vote counter
 			votes.current.score = 0;
 			votes.current.votes = 0;
+			votes.current.upvotes = 0;
+			votes.current.downvotes = 0;
 			votes.current.hearts = 0;
 			votes.current.upvoters = [];
 			votes.current.downvoters = [];
@@ -626,73 +632,6 @@ window.TTFM_SQ = null;
 						'http://cballou.github.com/Turntable.FM-Squared'
 					);
 				}
-			}
-		}
-
-		/**
-		 * Initially display song information when app is first loaded.
-		 */
-		function initCurrentlyPlaying() {
-			if (!_room.currentSong || !_room.currentSong._id) {
-				return false;
-			}
-
-			// retrieve song data
-			var song_id = _room.currentSong._id;
-			var song = _room.currentSong.metadata;
-
-			// update the window title
-			document.title = 'TT.FM Playing: ' + song.artist + ' - "' + song.song + '" (' + song.album + ')';
-
-			// increment total songs played
-			votes.totalSongs += 1;
-			$('#tt2_stats_overall_totalSongs').text(votes.totalSongs);
-
-			// reset current
-			votes.current.upvoters = [];
-			votes.current.downvoters = [];
-			votes.current.upvotes = 0;
-			votes.current.downvotes = 0;
-			votes.current.votes = 0;
-			votes.current.score = 0;
-
-			// handle purchase cover art
-			var alt = escape(song.artist) + ' - ' + escape(song.song) + ' (' + escape(song.album) + ')';
-			var details = '<p><span>Artist:</span> <strong>' + song.artist + '</strong></p>';
-			details += '<p><span>Track:</span> <strong>' + song.song + '</strong></p>';
-			details += '<p><span>Album:</span> <strong>' + (song.album?song.album:'n/a') + '</strong></p>';
-
-			var albumArt = '';
-			if (song.coverart) {
-				albumArt += '<img src="' + song.coverart + '" class="coverart" width="150" height="150" alt="' + alt + '" />';
-			} else {
-				albumArt += '<div class="coverart" width="150" height="150" alt="' + alt + '"></div>';
-			}
-
-			$('#tt2_stats_current_coverart').find('.songinfo').css('min-width', tt2_size.width - 225);
-			$('#tt2_stats_current_coverart').find('.songinfo').html(details);
-			$('#tt2_stats_current_coverart').find('.coverart').remove();
-			$('#tt2_stats_current_coverart').prepend(albumArt);
-
-			// update current song
-			performSearch(song.artist, song.song, song.album || '');
-
-			// if this is the first time the song has been played
-			if (!votes.songs[song_id]) {
-				votes.songs[song_id] = {
-					artist: song.artist,
-					title: song.song,
-					album: song.album,
-					coverart: song.coverart,
-					plays: 1,
-					score: 0,
-					votes: 0,
-					upvoters: [],
-					downvoters: []
-				}
-			} else {
-				// add to the play counter
-				votes.songs[song_id].plays += 1;
 			}
 		}
 
@@ -1090,11 +1029,7 @@ window.TTFM_SQ = null;
 			_tt.addEventListener('message', messageListener);
 
 			// grab initial song data
-			initCurrentlyPlaying();
-
-			// log the manager
-			//_log(_room);
-			//_log(_manager);
+			resetVotes(null);
 
 			// watch for window resize
 			$(window).bind('resize', resizeWindow);
