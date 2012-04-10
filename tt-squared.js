@@ -758,13 +758,7 @@ window.TTFM_SQ = null;
 				// the voting user
 				var uid = data[0];
 
-				// increment vote counts
-				votes.votes += 1;
-				votes.user[uid].votes += 1;
-				votes.current.votes += 1;
-				if (isCurrentDj()) {
-					votes.mine.votes += 1;
-				}
+				_log('Before user votes existance check');
 
 				// ensure we have an object to track user voting
 				if (!votes.user[uid]) {
@@ -776,6 +770,17 @@ window.TTFM_SQ = null;
 						hearts: 0
 					};
 				}
+
+				// increment vote counts
+				votes.votes += 1;
+				votes.user[uid].votes += 1;
+				votes.current.votes += 1;
+				if (isCurrentDj()) {
+					votes.mine.votes += 1;
+				}
+
+				_log('Record vote data');
+				_log(data);
 
 				// if an upvote was cast
 				if (data[1] == 'up') {
