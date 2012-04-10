@@ -852,6 +852,9 @@ window.TTFM_SQ = null;
 					}
 				}
 
+				// update the user's score
+				votes.user[uid].score = 100 * (votes.user[uid].upvotes / votes.user[uid].votes).toFixed(2);
+
 				// log the vote change
 				_log(votes);
 			}
@@ -860,17 +863,12 @@ window.TTFM_SQ = null;
 			 * Update vote counters on the stats tab.
 			 */
 			var updateCounters = function() {
-				_log('Pre counter update');
-
 				// recalculate scores
 				votes.score = 100 * (votes.upvotes / votes.votes).toFixed(2);
 				votes.current.score = 100 * (votes.current.upvotes / votes.current.votes).toFixed(2);
-				votes.user[uid].score = 100 * (votes.user[uid].upvotes / votes.user[uid].votes).toFixed(2);
 				if (isCurrentDj()) {
 					votes.mine.score = 100 * (votes.mine.upvotes / votes.mine.votes).toFixed(2);
 				}
-
-				_log('Updating the counters');
 
 				// update current stats
 				$('#tt2_stats_current_upvotes').text(votes.current.upvotes);
@@ -910,9 +908,6 @@ window.TTFM_SQ = null;
 					$('#tt2_stats_current_downvoters').html(html);
 				}
 			}
-
-			_log('Performing vote updating actions.');
-			_log(e.room.metadata.votelog);
 
 			// perform actions
 			recordVote(e.room.metadata.votelog[0]);
