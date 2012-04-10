@@ -758,8 +758,6 @@ window.TTFM_SQ = null;
 				// the voting user
 				var uid = data[0];
 
-				_log('Before user votes existance check');
-
 				// ensure we have an object to track user voting
 				if (!votes.user[uid]) {
 					votes.user[uid] = {
@@ -778,9 +776,6 @@ window.TTFM_SQ = null;
 				if (isCurrentDj()) {
 					votes.mine.votes += 1;
 				}
-
-				_log('Record vote data');
-				_log(data);
 
 				// if an upvote was cast
 				if (data[1] == 'up') {
@@ -801,12 +796,12 @@ window.TTFM_SQ = null;
 						votes.mine.songs[song_id].upvoters[uid] = _room.users[uid].name;
 					}
 
-					// check what type we have
-					_log('Checking downvoter');
-					_log(typeof votes.current.downvoters[uid]);
-
 					// check if they reversed their vote
 					if (typeof votes.current.downvoters[uid] != 'undefined') {
+						// remove from downvoters
+						delete votes.current.downvoters[uid];
+
+						// update votes
 						votes.user[uid].downvotes -= 1;
 						votes.user[uid].votes -= 1;
 						votes.current.downvotes -= 1;
@@ -840,6 +835,9 @@ window.TTFM_SQ = null;
 
 					// check if they reversed
 					if (typeof votes.current.upvoters[uid] != 'undefined') {
+						// remove from upvoters
+						delete votes.current.upvoters[uid];
+
 						votes.user[uid].upvotes -= 1;
 						votes.user[uid].votes -= 1;
 						votes.current.upvotes -= 1;
@@ -853,6 +851,9 @@ window.TTFM_SQ = null;
 						}
 					}
 				}
+
+				// log the vote change
+				_log(votes);
 			}
 
 			/**
