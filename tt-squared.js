@@ -1832,23 +1832,37 @@ window.TTFM_SQ = null;
 		 * Displays the current song voters.
 		 */
 		this.displaySongVoters = function() {
+			var userinfo = false;
+			
 			html = '<div class="modal ttfmsq_modal">';
 			html += '<div class="close-x"></div>';
+			html += '<div class="modal_content">';
 			html += '<h2>Current Song Voters</h2>';
+			html += '<div class="spacer"></div>';
 			html += '<h4>Upvoters</h4>';
 			html += '<ul class="voters">';
 			for (var user_id in votes.current.upvoters) {
-				_log(getUserById(user_id));
-				html += '<li>' + votes.current.upvoters[user_id] + '</li>';
+				userinfo = getUserById(user_id);
+				if (userinfo) {
+					html += '<li><span><img src="https://s3.amazonaws.com/static.turntable.fm/roommanager_assets/avatars/' + userinfo.avatarid + '/scaled/55/headfront.png" height="20" /></span>' + votes.current.upvoters[user_id] + '</li>';
+				} else {
+					html += '<li>' + votes.current.upvoters[user_id] + '</li>';
+				}
 			}
 			html += '</ul>';
-			
+			html += '<div class="spacer"></div>';
 			html += '<h4>Downvoters</h4>';
 			html += '<ul class="voters">';
 			for (var user_id in votes.current.downvoters) {
-				html += '<li>' + votes.current.downvoters[user_id] + '</li>';
+				userinfo = getUserById(user_id);
+				if (userinfo) {
+					html += '<li><span><img src="https://s3.amazonaws.com/static.turntable.fm/roommanager_assets/avatars/' + userinfo.avatarid + '/scaled/55/headfront.png" height="20" /></span>' + votes.current.upvoters[user_id] + '</li>';
+				} else {
+					html += '<li>' + votes.current.upvoters[user_id] + '</li>';
+				}
 			}
 			html += '</ul>';
+			html += '</div>';
 			html += '</div>';
 			
 			// show the overlay
