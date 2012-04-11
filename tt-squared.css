@@ -278,8 +278,9 @@
 }
 
 /* modals */
+.ttfmsq_modal .modal_content { text-align: left; }
 .ttfmsq_modal ul { list-style: none; overflow: hidden; }
-.ttfmsq_modal ul.voters li { float: left; display: inline; margin: 0 4px 4px 0; background: #333; color: #fff; border-radius: 3px; -moz-border-radius: 3px; -webkit-border-radius: 3px;  }
+.ttfmsq_modal ul.voters li { float: left; display: inline; height: 20px; line-height: 20px; margin: 0 4px 4px 0; padding: 4px; background: #555; color: #fff; border-radius: 3px; -moz-border-radius: 3px; -webkit-border-radius: 3px; vertical-align: middle; }
 .ttfmsq_modal ul.voters li span { float: left; display: inline; margin-right: 4px; }
 
 /* icons */
