@@ -308,29 +308,7 @@ window.TTFM_SQ = null;
 		 * Watch for specific command triggers.
 		 */
 		function watchForCommands(e) {
-			/*
-			if (stringInText('/djs', e.text)) {
-				if (config.showIdleTimes) {
-					if (typeof _manager.djs != 'undefined') {
-						var msg = [];
-						for (var i in _manager.djs) {
-							if (typeof _manager.djs[i] != 'undefined') {
-								var user_id = _manager.djs[i][0];
-								if (typeof _room.users[user_id] != 'undefined') {
-									var username = _room.users[user_id].name;
-									if (typeof _lastUserActions[user_id] != 'undefined') {
-										msg.push(username + ': ' + formatDate(_lastUserActions[user_id]));
-									} else {
-										msg.push(username + ': 0:00');
-									}
-								}
-							}
-						}
-						say('-= ' + msg.join(', ') + ' =-');
-					}
-				}
-			}
-			*/
+			//if (stringInText('/djs', e.text)) { }
 		}
 
 		/**
@@ -837,31 +815,9 @@ window.TTFM_SQ = null;
 				$('#tt2_stats_mine_rating').text(votes.mine.score + '%');
 			};
 
-			/**
-			 * Update the list of voters.
-			 */
-			var updateVotersList = function() {
-				var html = [];
-				if (votes.current.upvoters) {
-					for (var i in votes.current.upvoters) {
-						html.push('<li>' + votes.current.upvoters[i] + '</li>');
-					}
-					$('#tt2_stats_current_upvoters').html(html);
-				}
-
-				html = [];
-				if (votes.current.downvoters) {
-					for (var i in votes.current.downvoters) {
-						html.push('<li>' + votes.current.downvoters[i] + '</li>');
-					}
-					$('#tt2_stats_current_downvoters').html(html);
-				}
-			}
-
 			// perform actions
 			recordVote(e.room.metadata.votelog[0]);
 			updateCounters();
-			updateVotersList();
 		}
 
 		/**
@@ -1123,14 +1079,7 @@ window.TTFM_SQ = null;
 									html += '<li>Downvotes <span id="tt2_stats_current_downvotes">0</span></li>';
 									html += '<li>Rating <span id="tt2_stats_current_rating">0</span></li>';
 									html += '<li>Hearts <span id="tt2_stats_current_hearts">0</span></li>';
-									/*
-									html += '<li>';
-									html += '<ul class="current_voters">';
-									html += '<li class="current_upvoters"><h6>Current Upvoters</h6><ul id="tt2_stats_current_upvoters"></ul></li>';
-									html += '<li class="current_downvoters"><h6>Current Downvoters</h6><ul id="tt2_stats_current_downvoters"></ul></li>';
-									html += '</ul>';
-									html += '</li>';
-									*/
+									html += '<li><a href="#" onclick="ttfmsq.displaySongVoters(); return false;">Show Votes</a></li>';
 								html += '</ul>';
 							html += '</div>';
 
@@ -1382,6 +1331,33 @@ window.TTFM_SQ = null;
 				}
 			}
 			return false;
+		}
+		
+		/**
+		 * Displays the current song voters.
+		 */
+		function displaySongVoters() {
+			html = '<div class="modal ttfmsq_modal">';
+			html += '<div class="close-x"></div>';
+			html += '<h2>Current Song Voters</h2>';
+			html += '<h4>Upvoters</h4>';
+			html += '<ul class="voters">';
+			for (var user_id in votes.current.upvoters) {
+				_log(getUserById(user_id));
+				html += '<li>' + votes.current.upvoters[user_id] + '</li>';
+			}
+			html += '</ul>';
+			
+			html += '<h4>Downvoters</h4>';
+			html += '<ul class="voters">';
+			for (var user_id in votes.current.downvoters) {
+				html += '<li>' + votes.current.downvoters[user_id] + '</li>';
+			}
+			html += '</ul>';
+			html += '</div>';
+			
+			// show the overlay
+			util.showOverlay(html);
 		}
 
 		/**
@@ -1770,14 +1746,21 @@ window.TTFM_SQ = null;
 		}
 
 		/**
+		 * Given a user id, retrieve user data.
+		 */
+		function getUserById(user_id) {
+			if (typeof _room.users[user_id] != 'undefined') {
+				return _room.users[user_id];
+			}
+			return false;
+		}
+		
+		/**
 		 * Given a user id, attempt to retrieve the user name.
 		 */
 		function getUsernameById(user_id) {
-			if (typeof _room.users[user_id] != 'undefined') {
-				return _room.users[user_id].name;
-			}
-
-			return false;
+			var user = getUserById(user_id);
+			return user !== false ? user.name : false;
 		}
 
 		/**
@@ -1787,7 +1770,6 @@ window.TTFM_SQ = null;
 			if (typeof _usernameMappings[username] != 'undefined') {
 				return _usernameMappings[username];
 			}
-
 			return false;
 		}
 

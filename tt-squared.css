@@ -275,6 +275,11 @@
     -webkit-box-shadow: 0 0 0 1px rgba(255, 115, 100, 0.4) inset;
 }
 
+/* modals */
+.ttfmsq_modal ul { list-style: none; overflow: hidden; }
+.ttfmsq_modal ul.voters li { float: left; display: inline; margin: 0 4px 4px 0; background: #333; color: #fff; border-radius: 3px; -moz-border-radius: 3px; -webkit-border-radius: 3px;  }
+.ttfmsq_modal ul.voters li span { float: left; display: inline; margin-right: 4px; }
+
 /* icons */
 #tt2_stats_current_coverart .songinfo p span.iconS, .iconS { float: none; display: inline-block; width: 16px; height: 16px; vertical-align: middle; padding-right: 4px; }
 
