@@ -1332,33 +1332,6 @@ window.TTFM_SQ = null;
 			}
 			return false;
 		}
-		
-		/**
-		 * Displays the current song voters.
-		 */
-		function displaySongVoters() {
-			html = '<div class="modal ttfmsq_modal">';
-			html += '<div class="close-x"></div>';
-			html += '<h2>Current Song Voters</h2>';
-			html += '<h4>Upvoters</h4>';
-			html += '<ul class="voters">';
-			for (var user_id in votes.current.upvoters) {
-				_log(getUserById(user_id));
-				html += '<li>' + votes.current.upvoters[user_id] + '</li>';
-			}
-			html += '</ul>';
-			
-			html += '<h4>Downvoters</h4>';
-			html += '<ul class="voters">';
-			for (var user_id in votes.current.downvoters) {
-				html += '<li>' + votes.current.downvoters[user_id] + '</li>';
-			}
-			html += '</ul>';
-			html += '</div>';
-			
-			// show the overlay
-			util.showOverlay(html);
-		}
 
 		/**
 		 * Move the chat window when the plugin is initially loaded.
@@ -1851,8 +1824,39 @@ window.TTFM_SQ = null;
 			}
 		}
 
+		//==========================================================================
+		// VIEWS AND LIGHTBOXES
+		//==========================================================================
+	
+		/**
+		 * Displays the current song voters.
+		 */
+		this.displaySongVoters = function() {
+			html = '<div class="modal ttfmsq_modal">';
+			html += '<div class="close-x"></div>';
+			html += '<h2>Current Song Voters</h2>';
+			html += '<h4>Upvoters</h4>';
+			html += '<ul class="voters">';
+			for (var user_id in votes.current.upvoters) {
+				_log(getUserById(user_id));
+				html += '<li>' + votes.current.upvoters[user_id] + '</li>';
+			}
+			html += '</ul>';
+			
+			html += '<h4>Downvoters</h4>';
+			html += '<ul class="voters">';
+			for (var user_id in votes.current.downvoters) {
+				html += '<li>' + votes.current.downvoters[user_id] + '</li>';
+			}
+			html += '</ul>';
+			html += '</div>';
+			
+			// show the overlay
+			util.showOverlay(html);
+		}		
+		
 	}
-
+	
 })();
 
 /**
