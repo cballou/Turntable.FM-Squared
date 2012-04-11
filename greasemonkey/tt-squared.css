@@ -29,6 +29,8 @@
 
 /* stats */
 #tt2_container ul.stats { padding: 0 10px; list-style: none; }
+#tt2_container ul.stats a { color: #BAFFAA; text-decoration: none; }
+#tt2_container ul.stats a:hover { text-decoration: underline; }
 #tt2_container ul.stats li { padding: 2px 0; border-top: 1px dotted #222; }
 #tt2_container ul.stats li:first-child { border-top: none; }
 #tt2_container ul.stats li span { float: right; display: inline; text-align: right; }
