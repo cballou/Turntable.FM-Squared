@@ -1835,9 +1835,9 @@ window.TTFM_SQ = null;
 			var userinfo = false;
 			
 			html = '<div class="modal ttfmsq_modal">';
-			html += '<div class="close-x"></div>';
-			html += '<div class="modal_content">';
+			html += '<div class="close-x" onclick="util.hideOverlay();"></div>';
 			html += '<h2>Current Song Voters</h2>';
+			html += '<div class="modal_content">';
 			html += '<div class="spacer"></div>';
 			html += '<h4>Upvoters</h4>';
 			html += '<ul class="voters">';
