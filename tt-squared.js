@@ -1761,7 +1761,7 @@ window.TTFM_SQ = null;
 			}
 			return false;
 		}
-		
+
 		/**
 		 * Given a user id, attempt to retrieve the user name.
 		 */
@@ -1858,7 +1858,6 @@ window.TTFM_SQ = null;
 			}
 		}
 
-<<<<<<< HEAD
 		/**
 		 * Handles sending an API call to TT.FM. Courtesty of Izzmo's AutoTT.
 		 * http://pinnacleofdestruction.net/tt/
@@ -1899,17 +1898,17 @@ window.TTFM_SQ = null;
 			});
 			return b.promise();
 		}
-=======
+
 		//==========================================================================
 		// VIEWS AND LIGHTBOXES
 		//==========================================================================
-	
+
 		/**
 		 * Displays the current song voters.
 		 */
 		this.displaySongVoters = function() {
 			var userinfo = false;
-			
+
 			html = '<div class="modal ttfmsq_modal">';
 			html += '<div class="close-x" onclick="util.hideOverlay();"></div>';
 			html += '<h2>Current Song Voters</h2>';
@@ -1940,14 +1939,13 @@ window.TTFM_SQ = null;
 			html += '</ul>';
 			html += '</div>';
 			html += '</div>';
-			
+
 			// show the overlay
 			util.showOverlay(html);
-		}		
-		
->>>>>>> 784b78d56982266fe083ddedc19e14598dd90071
+		}
+
 	}
-	
+
 })();
 
 /**
