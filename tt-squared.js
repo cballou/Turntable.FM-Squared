@@ -428,6 +428,12 @@ window.TTFM_SQ = null;
 		 * Handle auto-upvoting songs.
 		 */
 		function autoVote(ev) {
+			if (!config.autoUpvote || isCurrentDj()) {
+				clearTimeout(autoVoteTimer);
+				autoVoteTimer = null;
+				return;
+			}
+
 			if (autoVoteTimer) {
 				clearTimeout(autoVoteTimer);
 				autoVoteTimer = null;
@@ -456,28 +462,6 @@ window.TTFM_SQ = null;
 
 			}, randomDelay(5, 30));
 		}
-
-		/*
-		function autoVote(e) {
-			if (!config.autoUpvote || isCurrentDj()) {
-				return;
-			}
-
-			// get the current song data
-			var song = e.room.metadata.current_song.metadata;
-
-			// our vote decision
-			var vote = 'upvote';
-
-			// cast vote
-			setTimeout(function() {
-				// if you're djing
-				if (!isDj() || !isCurrentDj()) {
-					_manager.callback('upvote');
-				}
-			}, randomDelay(5, 30));
-		}
-		*/
 
 		/**
 		 * Reset vote counters on a new song.
@@ -815,9 +799,6 @@ window.TTFM_SQ = null;
 
 				// update the user's score
 				votes.user[uid].score = 100 * (votes.user[uid].upvotes / votes.user[uid].votes).toFixed(2);
-
-				// log the vote change
-				_log(votes);
 			}
 
 			/**
