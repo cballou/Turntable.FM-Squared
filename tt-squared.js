@@ -191,9 +191,11 @@ window.TTFM_SQ = null;
 		// the last idle response time for ourselves
 		var lastIdleResponse = new Date().getTime();
 		// settimeout for guest list update
-		var idleTimeInterval = null;
+		var idleTimeInterval;
 		// the last time a dj stepped down from the decks
-		var lastRemovedDjTime = null;
+		var lastRemovedDjTime;
+		// the auto vote timer
+		var autoVoteTimer;
 
 		/**
 		 * Function to retrieve turntable objects.
@@ -447,6 +449,37 @@ window.TTFM_SQ = null;
 		/**
 		 * Handle auto-upvoting songs.
 		 */
+		function autoVote(ev) {
+			if (autoVoteTimer) {
+				clearTimeout(autoVoteTimer);
+				autoVoteTimer = null;
+			}
+
+			// cast vote at a random delay
+			autoVoteTimer = setTimeout(function() {
+
+				// retrieve room and song data
+				var song_id = ev.room.metadata.current_song._id;
+
+				// need some safety measures
+				var f = $.sha1(_room.roomId + 'up' + song_id);
+				var d = $.sha1(Math.random() + "");
+				var e = $.sha1(Math.random() + "");
+
+				// trigger upvote
+				socket({
+					api: 'room.vote',
+					roomid: _room.roomId,
+					val: 'up',
+					vh: f,
+					th: d,
+					ph: e
+				});
+
+			}, randomDelay(5, 30));
+		}
+
+		/*
 		function autoVote(e) {
 			if (!config.autoUpvote || isCurrentDj()) {
 				return;
@@ -466,6 +499,7 @@ window.TTFM_SQ = null;
 				}
 			}, randomDelay(5, 30));
 		}
+		*/
 
 		/**
 		 * Reset vote counters on a new song.
@@ -1869,6 +1903,46 @@ window.TTFM_SQ = null;
 			}
 		}
 
+		/**
+		 * Handles sending an API call to TT.FM. Courtesty of Izzmo's AutoTT.
+		 * http://pinnacleofdestruction.net/tt/
+		 */
+		function socket(c, a) {
+			var d, b;
+
+			if (c.api == "room.now") {
+				return;
+			}
+			c.msgid = turntable.messageId;
+			turntable.messageId += 1;
+			c.clientid = turntable.clientId;
+			if (turntable.user.id && !c.userid) {
+				c.userid = turntable.user.id;
+				c.userauth = turntable.user.auth;
+			}
+			d = JSON.stringify(c);
+			if (turntable.socketVerbose) {
+				LOG(util.nowStr() + " Preparing message " + d);
+			}
+			b = $.Deferred();
+			turntable.whenSocketConnected(function () {
+				if (turntable.socketVerbose) {
+					LOG(util.nowStr() + " Sending message " + c.msgid + " to " + turntable.socket.host);
+				}
+				if (turntable.socket.transport.type == "websocket") {
+					turntable.socketLog(turntable.socket.transport.sockets[0].id + ":<" + c.msgid);
+				}
+				turntable.socket.send(d);
+				turntable.socketKeepAlive(true);
+				turntable.pendingCalls.push({
+					msgid: c.msgid,
+					handler: a,
+					deferred: b,
+					time: util.now()
+				});
+			});
+			return b.promise();
+		}
 	}
 
 })();
