@@ -191,9 +191,11 @@ window.TTFM_SQ = null;
 		// the last idle response time for ourselves
 		var lastIdleResponse = new Date().getTime();
 		// settimeout for guest list update
-		var idleTimeInterval = null;
+		var idleTimeInterval;
 		// the last time a dj stepped down from the decks
-		var lastRemovedDjTime = null;
+		var lastRemovedDjTime;
+		// the auto vote timer
+		var autoVoteTimer;
 
 		/**
 		 * Function to retrieve turntable objects.
@@ -308,29 +310,7 @@ window.TTFM_SQ = null;
 		 * Watch for specific command triggers.
 		 */
 		function watchForCommands(e) {
-			/*
-			if (stringInText('/djs', e.text)) {
-				if (config.showIdleTimes) {
-					if (typeof _manager.djs != 'undefined') {
-						var msg = [];
-						for (var i in _manager.djs) {
-							if (typeof _manager.djs[i] != 'undefined') {
-								var user_id = _manager.djs[i][0];
-								if (typeof _room.users[user_id] != 'undefined') {
-									var username = _room.users[user_id].name;
-									if (typeof _lastUserActions[user_id] != 'undefined') {
-										msg.push(username + ': ' + formatDate(_lastUserActions[user_id]));
-									} else {
-										msg.push(username + ': 0:00');
-									}
-								}
-							}
-						}
-						say('-= ' + msg.join(', ') + ' =-');
-					}
-				}
-			}
-			*/
+			//if (stringInText('/djs', e.text)) { }
 		}
 
 		/**
@@ -447,6 +427,37 @@ window.TTFM_SQ = null;
 		/**
 		 * Handle auto-upvoting songs.
 		 */
+		function autoVote(ev) {
+			if (autoVoteTimer) {
+				clearTimeout(autoVoteTimer);
+				autoVoteTimer = null;
+			}
+
+			// cast vote at a random delay
+			autoVoteTimer = setTimeout(function() {
+
+				// retrieve room and song data
+				var song_id = ev.room.metadata.current_song._id;
+
+				// need some safety measures
+				var f = $.sha1(_room.roomId + 'up' + song_id);
+				var d = $.sha1(Math.random() + "");
+				var e = $.sha1(Math.random() + "");
+
+				// trigger upvote
+				socket({
+					api: 'room.vote',
+					roomid: _room.roomId,
+					val: 'up',
+					vh: f,
+					th: d,
+					ph: e
+				});
+
+			}, randomDelay(5, 30));
+		}
+
+		/*
 		function autoVote(e) {
 			if (!config.autoUpvote || isCurrentDj()) {
 				return;
@@ -466,11 +477,16 @@ window.TTFM_SQ = null;
 				}
 			}, randomDelay(5, 30));
 		}
+		*/
 
 		/**
 		 * Reset vote counters on a new song.
 		 */
 		function resetVotes(e) {
+			if (!_room.currentSong || !_room.currentSong._id) {
+				return false;
+			}
+
 			// initially hide similar tracks
 			if (!$('#similar_tracks').is(':hidden')) {
 				$('#tt2_nav .btnS').filter(function() {
@@ -481,6 +497,8 @@ window.TTFM_SQ = null;
 			// reset current vote counter
 			votes.current.score = 0;
 			votes.current.votes = 0;
+			votes.current.upvotes = 0;
+			votes.current.downvotes = 0;
 			votes.current.hearts = 0;
 			votes.current.upvoters = [];
 			votes.current.downvoters = [];
@@ -626,73 +644,6 @@ window.TTFM_SQ = null;
 						'http://cballou.github.com/Turntable.FM-Squared'
 					);
 				}
-			}
-		}
-
-		/**
-		 * Initially display song information when app is first loaded.
-		 */
-		function initCurrentlyPlaying() {
-			if (!_room.currentSong || !_room.currentSong._id) {
-				return false;
-			}
-
-			// retrieve song data
-			var song_id = _room.currentSong._id;
-			var song = _room.currentSong.metadata;
-
-			// update the window title
-			document.title = 'TT.FM Playing: ' + song.artist + ' - "' + song.song + '" (' + song.album + ')';
-
-			// increment total songs played
-			votes.totalSongs += 1;
-			$('#tt2_stats_overall_totalSongs').text(votes.totalSongs);
-
-			// reset current
-			votes.current.upvoters = [];
-			votes.current.downvoters = [];
-			votes.current.upvotes = 0;
-			votes.current.downvotes = 0;
-			votes.current.votes = 0;
-			votes.current.score = 0;
-
-			// handle purchase cover art
-			var alt = escape(song.artist) + ' - ' + escape(song.song) + ' (' + escape(song.album) + ')';
-			var details = '<p><span>Artist:</span> <strong>' + song.artist + '</strong></p>';
-			details += '<p><span>Track:</span> <strong>' + song.song + '</strong></p>';
-			details += '<p><span>Album:</span> <strong>' + (song.album?song.album:'n/a') + '</strong></p>';
-
-			var albumArt = '';
-			if (song.coverart) {
-				albumArt += '<img src="' + song.coverart + '" class="coverart" width="150" height="150" alt="' + alt + '" />';
-			} else {
-				albumArt += '<div class="coverart" width="150" height="150" alt="' + alt + '"></div>';
-			}
-
-			$('#tt2_stats_current_coverart').find('.songinfo').css('min-width', tt2_size.width - 225);
-			$('#tt2_stats_current_coverart').find('.songinfo').html(details);
-			$('#tt2_stats_current_coverart').find('.coverart').remove();
-			$('#tt2_stats_current_coverart').prepend(albumArt);
-
-			// update current song
-			performSearch(song.artist, song.song, song.album || '');
-
-			// if this is the first time the song has been played
-			if (!votes.songs[song_id]) {
-				votes.songs[song_id] = {
-					artist: song.artist,
-					title: song.song,
-					album: song.album,
-					coverart: song.coverart,
-					plays: 1,
-					score: 0,
-					votes: 0,
-					upvoters: [],
-					downvoters: []
-				}
-			} else {
-				// add to the play counter
-				votes.songs[song_id].plays += 1;
 			}
 		}
 
@@ -898,31 +849,9 @@ window.TTFM_SQ = null;
 				$('#tt2_stats_mine_rating').text(votes.mine.score + '%');
 			};
 
-			/**
-			 * Update the list of voters.
-			 */
-			var updateVotersList = function() {
-				var html = [];
-				if (votes.current.upvoters) {
-					for (var i in votes.current.upvoters) {
-						html.push('<li>' + votes.current.upvoters[i] + '</li>');
-					}
-					$('#tt2_stats_current_upvoters').html(html);
-				}
-
-				html = [];
-				if (votes.current.downvoters) {
-					for (var i in votes.current.downvoters) {
-						html.push('<li>' + votes.current.downvoters[i] + '</li>');
-					}
-					$('#tt2_stats_current_downvoters').html(html);
-				}
-			}
-
 			// perform actions
 			recordVote(e.room.metadata.votelog[0]);
 			updateCounters();
-			updateVotersList();
 		}
 
 		/**
@@ -1090,11 +1019,7 @@ window.TTFM_SQ = null;
 			_tt.addEventListener('message', messageListener);
 
 			// grab initial song data
-			initCurrentlyPlaying();
-
-			// log the manager
-			//_log(_room);
-			//_log(_manager);
+			resetVotes(null);
 
 			// watch for window resize
 			$(window).bind('resize', resizeWindow);
@@ -1188,14 +1113,7 @@ window.TTFM_SQ = null;
 									html += '<li>Downvotes <span id="tt2_stats_current_downvotes">0</span></li>';
 									html += '<li>Rating <span id="tt2_stats_current_rating">0</span></li>';
 									html += '<li>Hearts <span id="tt2_stats_current_hearts">0</span></li>';
-									/*
-									html += '<li>';
-									html += '<ul class="current_voters">';
-									html += '<li class="current_upvoters"><h6>Current Upvoters</h6><ul id="tt2_stats_current_upvoters"></ul></li>';
-									html += '<li class="current_downvoters"><h6>Current Downvoters</h6><ul id="tt2_stats_current_downvoters"></ul></li>';
-									html += '</ul>';
-									html += '</li>';
-									*/
+									html += '<li><a href="#" onclick="ttfmsq.displaySongVoters(); return false;">Show Votes</a></li>';
 								html += '</ul>';
 							html += '</div>';
 
@@ -1835,14 +1753,21 @@ window.TTFM_SQ = null;
 		}
 
 		/**
+		 * Given a user id, retrieve user data.
+		 */
+		function getUserById(user_id) {
+			if (typeof _room.users[user_id] != 'undefined') {
+				return _room.users[user_id];
+			}
+			return false;
+		}
+
+		/**
 		 * Given a user id, attempt to retrieve the user name.
 		 */
 		function getUsernameById(user_id) {
-			if (typeof _room.users[user_id] != 'undefined') {
-				return _room.users[user_id].name;
-			}
-
-			return false;
+			var user = getUserById(user_id);
+			return user !== false ? user.name : false;
 		}
 
 		/**
@@ -1852,7 +1777,6 @@ window.TTFM_SQ = null;
 			if (typeof _usernameMappings[username] != 'undefined') {
 				return _usernameMappings[username];
 			}
-
 			return false;
 		}
 
@@ -1932,6 +1856,92 @@ window.TTFM_SQ = null;
 			if (window.console && config.debugMode) {
 				console.log(msg);
 			}
+		}
+
+		/**
+		 * Handles sending an API call to TT.FM. Courtesty of Izzmo's AutoTT.
+		 * http://pinnacleofdestruction.net/tt/
+		 */
+		function socket(c, a) {
+			var d, b;
+
+			if (c.api == "room.now") {
+				return;
+			}
+			c.msgid = turntable.messageId;
+			turntable.messageId += 1;
+			c.clientid = turntable.clientId;
+			if (turntable.user.id && !c.userid) {
+				c.userid = turntable.user.id;
+				c.userauth = turntable.user.auth;
+			}
+			d = JSON.stringify(c);
+			if (turntable.socketVerbose) {
+				LOG(util.nowStr() + " Preparing message " + d);
+			}
+			b = $.Deferred();
+			turntable.whenSocketConnected(function () {
+				if (turntable.socketVerbose) {
+					LOG(util.nowStr() + " Sending message " + c.msgid + " to " + turntable.socket.host);
+				}
+				if (turntable.socket.transport.type == "websocket") {
+					turntable.socketLog(turntable.socket.transport.sockets[0].id + ":<" + c.msgid);
+				}
+				turntable.socket.send(d);
+				turntable.socketKeepAlive(true);
+				turntable.pendingCalls.push({
+					msgid: c.msgid,
+					handler: a,
+					deferred: b,
+					time: util.now()
+				});
+			});
+			return b.promise();
+		}
+
+		//==========================================================================
+		// VIEWS AND LIGHTBOXES
+		//==========================================================================
+
+		/**
+		 * Displays the current song voters.
+		 */
+		this.displaySongVoters = function() {
+			var userinfo = false;
+
+			html = '<div class="modal ttfmsq_modal">';
+			html += '<div class="close-x" onclick="util.hideOverlay();"></div>';
+			html += '<h2>Current Song Voters</h2>';
+			html += '<div class="modal_content">';
+			html += '<div class="spacer"></div>';
+			html += '<h4>Upvoters</h4>';
+			html += '<ul class="voters">';
+			for (var user_id in votes.current.upvoters) {
+				userinfo = getUserById(user_id);
+				if (userinfo) {
+					html += '<li><span><img src="https://s3.amazonaws.com/static.turntable.fm/roommanager_assets/avatars/' + userinfo.avatarid + '/scaled/55/headfront.png" height="20" /></span>' + votes.current.upvoters[user_id] + '</li>';
+				} else {
+					html += '<li>' + votes.current.upvoters[user_id] + '</li>';
+				}
+			}
+			html += '</ul>';
+			html += '<div class="spacer"></div>';
+			html += '<h4>Downvoters</h4>';
+			html += '<ul class="voters">';
+			for (var user_id in votes.current.downvoters) {
+				userinfo = getUserById(user_id);
+				if (userinfo) {
+					html += '<li><span><img src="https://s3.amazonaws.com/static.turntable.fm/roommanager_assets/avatars/' + userinfo.avatarid + '/scaled/55/headfront.png" height="20" /></span>' + votes.current.upvoters[user_id] + '</li>';
+				} else {
+					html += '<li>' + votes.current.upvoters[user_id] + '</li>';
+				}
+			}
+			html += '</ul>';
+			html += '</div>';
+			html += '</div>';
+
+			// show the overlay
+			util.showOverlay(html);
 		}
 
 	}

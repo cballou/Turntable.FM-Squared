@@ -29,6 +29,8 @@
 
 /* stats */
 #tt2_container ul.stats { padding: 0 10px; list-style: none; }
+#tt2_container ul.stats a { color: #BAFFAA; text-decoration: none; }
+#tt2_container ul.stats a:hover { text-decoration: underline; }
 #tt2_container ul.stats li { padding: 2px 0; border-top: 1px dotted #222; }
 #tt2_container ul.stats li:first-child { border-top: none; }
 #tt2_container ul.stats li span { float: right; display: inline; text-align: right; }
@@ -274,6 +276,13 @@
     -moz-box-shadow: 0 0 0 1px rgba(255, 115, 100, 0.4) inset;
     -webkit-box-shadow: 0 0 0 1px rgba(255, 115, 100, 0.4) inset;
 }
+
+/* modals */
+.overlay .ttfmsq_modal { width: 500px !important; }
+.ttfmsq_modal .modal_content { text-align: left; max-height: 500px; overflow-y: auto; }
+.ttfmsq_modal ul { list-style: none; overflow: hidden; }
+.ttfmsq_modal ul.voters li { float: left; display: inline; height: 20px; line-height: 20px; margin: 0 4px 4px 0; padding: 4px; background: #555; color: #fff; border-radius: 3px; -moz-border-radius: 3px; -webkit-border-radius: 3px; vertical-align: middle; }
+.ttfmsq_modal ul.voters li span { float: left; display: inline; margin-right: 4px; }
 
 /* icons */
 #tt2_stats_current_coverart .songinfo p span.iconS, .iconS { float: none; display: inline-block; width: 16px; height: 16px; vertical-align: middle; padding-right: 4px; }
