@@ -1956,7 +1956,7 @@ function _log(msg) {
  * http://ws.audioscrobbler.com/2.0/?method=track.getsimilar&artist=cher&track=believe&api_key=d1b14c712954973f098a226d80d6b5c2
  */
 function getSimilarTracks(artist, song, album) {
-	var url = 'http://ws.audioscrobbler.com/2.0/?method=track.getsimilar&autocorrect=1&artist=' + encodeURIComponent(artist) + '&track=' + encodeURIComponent(song) + '&limit=25&api_key=d1b14c712954973f098a226d80d6b5c2&format=json&callback=';
+	var url = 'http://ws.audioscrobbler.com/2.0/?method=track.getsimilar&autocorrect=1&artist=' + encodeURIComponent(artist) + '&track=' + encodeURIComponent(song) + '&limit=25&api_key=d1b14c712954973f098a226d80d6b5c2&format=json&callback=?';
 	$.getJSON(url, function(data) {
 		var html = '';
 
@@ -1992,7 +1992,7 @@ function getSimilarTracks(artist, song, album) {
 				html += '<td><a href="#" class="btnS btnGreen" target="_blank"><span class="itunesIcon"></span> Preview &amp; Buy</a></td>';
 				// get buy links and change them
 				// http://www.last.fm/api/show?service=431
-				var buyUrl = 'http://ws.audioscrobbler.com/2.0/?method=track.getbuylinks&api_key=d1b14c712954973f098a226d80d6b5c2&mbid=' + item.mbid + '&country=united%20statesformat=json&callback=?';
+				var buyUrl = 'http://ws.audioscrobbler.com/2.0/?method=track.getbuylinks&api_key=d1b14c712954973f098a226d80d6b5c2&mbid=' + item.mbid + '&country=united%20states&format=json&callback=?';
 				$.getJSON(buyUrl, function(data) {
 					_log('===== LASTFM PURCHASE INFO ====');
 					_log(buyUrl);
