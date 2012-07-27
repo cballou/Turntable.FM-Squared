@@ -133,13 +133,19 @@ window.TTFM_SQ = null;
 
 		// handle config values
 		var config = lstore.get('config');
+		_log('Logging initial attempt to retrieve stored config.');
+		_log(config);
 		if (!config) {
 			config = defaults;
 			lstore.set('config', config);
+			_log('No matching stored config found, storing default.');
+			_log(config);
 		} else {
 			// merge config with defaults to ensure no missing params
 			config = $.extend({}, defaults, config);
 			lstore.set('config', config);
+			_log('Stored config found, merging with defaults.');
+			_log(config);
 		}
 
 		// stats monitoring
@@ -315,8 +321,15 @@ window.TTFM_SQ = null;
 		 * Periodically check if you get mentioned in the chat room.
 		 */
 		function watchForChatMentions(e) {
+			console.log('Chat mention');
+			console.log(e);
+			console.log('_manager.myuserid' + _manager.myuserid);
+			console.log('_room.selfId' + _room.selfId);
+			
 			// don't deal with ourselves
 			if (e.senderid && e.senderid == _manager.myuserid) {
+				return;
+			} else if (e.senderid && e.senderid == _room.selfId) {
 				return;
 			}
 
@@ -654,18 +667,17 @@ window.TTFM_SQ = null;
 				return;
 			}
 
-			var msg = '';
+			var title = 'Private Message';
 
 			// attempt to get sender by id
 			var username = getUsernameById(e.senderid);
 			if (username) {
-				msg = '<strong></strong> has sent you a private message: ';
+				title += ': ' + username;
 			}
-			msg += e.text;
 
 			sendNotification(
-				'Private Message',
-				escape(e.text),
+				title,
+				e.text,
 				'http://cballou.github.com/Turntable.FM-Squared'
 			);
 		}
@@ -1259,6 +1271,10 @@ window.TTFM_SQ = null;
 
 			// watch for change to options
 			$options.find('#updateSettings').click(function() {
+				_log('Updating settings clicked.');
+				_log('Old settings:');
+				_log(config);
+				
 				// save all option changes
 				config.debugMode = $debug_mode.is(':checked');
 				config.autoUpvote = $auto_upvote.is(':checked');
@@ -1285,8 +1301,8 @@ window.TTFM_SQ = null;
 				config.idleReplies = $idle_replies.val().split(/\n\r?/g);
 				config.idleMessages = $idle_messages.val().split(/\n\r?/g);
 
-				_log('aliases:');
-				_log(config.nameAliases);
+				_log('New settings:');
+				_log(config);
 
 				// handle trying to auto-dj
 				if (config.autoDj) {
@@ -1561,6 +1577,10 @@ window.TTFM_SQ = null;
 			}
 
 			if (html) {
+				// switch to HTML encoded values
+				title = $('<div/>').text(title).html();
+				message = $('<div/>').text(message).html();
+				
 				// fix up the URL
 				var url = html + '?title=' + encodeURIComponent(title) + '&message=' + encodeURIComponent(message);
 				n = window.webkitNotifications.createHTMLNotification(url);

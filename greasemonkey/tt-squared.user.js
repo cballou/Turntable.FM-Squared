@@ -1,16 +1,15 @@
-// <![CDATA[
 // ==UserScript==
+// @name        Turntable.FM Squared
+// @namespace   ttfm-squared-ffgm
 // @name        TT.FM Squared
 // @fullname    Turntable.FM Squared
-// @description A set of Turntable.FM tools including an improved chat UI, song analytics, auto-upvote (autobop), anti-idle, auto-respond, additional track information, and similar track listings.
-// @homepage    http://userscripts.org/scripts/show
-// @icon        https://github.com/cballou/Turntable.FM-Squared/raw/master/greasemonkey/icon128.png
-// @author      http://userscripts.org/users/441482
-// @namespace   http://userscripts.org/users/441482
-// @version     1.0.0
+// @homepage    https://github.com/cballou/Turntable.FM-Squared
+// @icon        https://github.com/cballou/Turntable.FM-Squared/raw/master/greasemonkey/icon.png
+// @author      Corey Ballou
 // @copyright   2012+, Corey Ballou (http://coreyballou.com)
 // @license     MIT license; http://opensource.org/licenses/mit-license.php
 // @run-at      document-end
+// @description A set of Turntable.FM tools including an improved chat UI, song analytics, auto-upvote (autobop), anti-idle, auto-respond, additional track information, and similar track listings.
 // @include     http://turntable.fm/*
 // @include     https://turntable.fm/*
 // @exclude     http://turntable.fm/lobby
@@ -20,68 +19,9 @@
 // @exclude     http://turntable.fm/copyright
 // @exclude     http://turntable.fm/privacy
 // @exclude     http://turntable.fm/static*
-// @match       http://turntable.fm/*
-// @resource TTFM_CSS https://raw.github.com/cballou/Turntable.FM-Squared/master/greasemonkey/tt-squared.css
+// @version     1.0.1
+// @resource    ttfmCss https://raw.github.com/cballou/Turntable.FM-Squared/master/greasemonkey/tt-squared.css
 // ==/UserScript==
 
-// USERSCRIPT METADATA
-/*
-var UserScript = {
-    name: 'TT.FM Squared',
-    id: 'ttfmsq',
-    version: '1.0.0',
-    include: [
-        'http://turntable.fm/*',
-        'https://turntable.fm/*'
-    ],
-    exclude: [
-        'http://turntable.fm/lobby',
-        'http://turntable.fm/jobs',
-        'http://turntable.fm/about',
-        'http://turntable.fm/terms',
-        'http://turntable.fm/copyright',
-        'http://turntable.fm/privacy',
-        'http://turntable.fm/static*'
-    ],
-    manifest: 'https://raw.github.com/cballou/Turntable.FM-Squared/master/greasemonkey/manifest.json',
-    codebase: 'http://userscripts.org/scripts/source/6178.user.js',
-    description: 'A set of Turntable.FM tools including an improved chat UI, song analytics, auto-upvote (autobop), anti-idle, auto-respond, additional track information, and similar track listings.',
-    copyright: '(C)2012, Corey Ballou',
-    unwrap: true
-};
-*/
-
-/**
- * Where the magic happens.
- */
-function ttSquared() {
-    var isGoogleChrome = navigator.userAgent.toLowerCase().indexOf('chrome') > -1;
-    if (isGoogleChrome) {
-        GM_xmlhttpRequest({
-            method: "GET",
-            url: "https://raw.github.com/cballou/Turntable.FM-Squared/master/greasemonkey/tt-squared.css",
-            headers: {
-              "User-Agent": "Mozilla/5.0",
-              "Accept": "text/xml"
-            },
-            onload: function(response) {
-                if (response.responseText) {
-                    GM_addStyle(response.responseText);
-                }
-            }
-        });
-    } else {
-        // inject stylesheet
-        var cssTxt = GM_getResourceText('TTFM_CSS');
-        GM_addStyle(cssTxt);
-    }
-    
-    // inject javascript
-    var s = document.createElement('script');
-    s.setAttribute('src', 'https://raw.github.com/cballou/Turntable.FM-Squared/master/tt-squared.js');
-    s.setAttribute('type', 'text/javascript');
-    (document.body || document.head || document.documentElement).appendChild(s);
-}
-
-// initialize
-ttSquared();
+GM_addStyle (GM_getResourceText ("ttfmCss") );
+document.body.appendChild(document.createElement("script")).src="https://raw.github.com/cballou/Turntable.FM-Squared/master/tt-squared.js";
