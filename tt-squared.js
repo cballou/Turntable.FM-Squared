@@ -1993,7 +1993,7 @@ function getSimilarTracks(artist, song, album) {
 				// get buy links and change them
 				// http://www.last.fm/api/show?service=431
 				//artist=' + encodeURIComponent(artist) + '&track=' + encodeURIComponent(song) + '&country=united%20states&format=json&callback=?';
-				var buyUrl = 'http://ws.audioscrobbler.com/2.0/?method=track.getbuylinks&api_key=d1b14c712954973f098a226d80d6b5c2&mbid=' + item.mbid + '&country=united%20states';
+				var buyUrl = 'http://ws.audioscrobbler.com/2.0/?method=track.getbuylinks&api_key=d1b14c712954973f098a226d80d6b5c2&mbid=' + item.mbid + '&country=united%20statesformat=json&callback=?';
 				$.getJSON(buyUrl, function(data) {
 					_log('===== LASTFM PURCHASE INFO ====');
 					_log(buyUrl);
