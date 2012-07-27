@@ -87,6 +87,7 @@
 #similar_tracks table tbody tr.alt { background: #292929; }
 #similar_tracks table tbody tr td { border: 1px solid #222; height: 32px; padding: 4px; }
 #similar_tracks table tbody tr td a { display: block; }
+#similar_tracks table tbody tr td a.btnS { display: inline-block; }
 #similar_tracks table tbody tr td img,
 #similar_tracks table tbody tr td .img { width: 32px; height: 32px; background: #222; }
 
