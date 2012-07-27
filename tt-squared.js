@@ -1969,16 +1969,7 @@ function getSimilarTracks(artist, song, album) {
 		// iterate over each similar track
 		var alt = false;
 		$.each(data.similartracks.track, function(i, item) {
-
-			// name
-			// playcount
-			// duration
-			// url
-			// artist.name
-			// artist.mbid
-			// artist.url
-			// image[size|"#text"]
-
+			// name, playcount, duration, url, artist.name, artist.mbid, artist.url, image[size|"#text"]
 			html += '<tr ' + (alt ? 'style="background-color:#292929";' : 'style="background-color:#2c2c2c";') + '>';
 			if (item.image && item.image[1] && item.image[1]['#text'].length) {
 				html += '<td><img src="' + item.image[1]['#text'] + '" height="32" width="32" /></td>';
@@ -1988,6 +1979,7 @@ function getSimilarTracks(artist, song, album) {
 			html += '<td>' + item.artist.name + '</td>';
 			html += '<td>' + item.name + '</td>';
 
+			/*
 			if (item.mbid.length) {
 				html += '<td><a href="#" class="btnS btnGreen" target="_blank"><span class="itunesIcon"></span> Preview &amp; Buy</a></td>';
 				// get buy links and change them
@@ -1998,19 +1990,21 @@ function getSimilarTracks(artist, song, album) {
 					_log(buyUrl);
 					_log(data);
 				});
-			} else {
-				var baseurl = 'http://click.linksynergy.com/fs-bin/stat?id=5PGIX6Dk9zE&offerid=146261&type=3&subid=0&tmpid=1826&RD_PARM1=';
-				var searchUrl = 'http://ax.itunes.apple.com/WebObjects/MZSearch.woa/wa/search?term=' + item.artist.name + ' ' + item.name;
-				searchUrl = encodeURIComponent(encodeURIComponent(searchUrl));
-
-				html += '<td><a href="' + baseurl + searchUrl + '" class="btnS btnGreen" target="_blank"><span class="itunesIcon"></span> Preview &amp; Buy</a></td>';
-				//html += '<td>&nbsp;</td>';
 			}
+			*/
+			var baseurl = 'http://click.linksynergy.com/fs-bin/stat?id=5PGIX6Dk9zE&offerid=146261&type=3&subid=0&tmpid=1826&RD_PARM1=';
+			var searchUrl = 'http://ax.itunes.apple.com/WebObjects/MZSearch.woa/wa/search?term=' + encodeURIComponent(item.artist.name + ' ' + item.name) + '&partnerId=30';
+			searchUrl = encodeURIComponent(encodeURIComponent(searchUrl));
 
+			html += '<td><a href="' + baseurl + searchUrl + '" class="btnS btnGreen" target="_blank"><span class="itunesIcon"></span> Preview &amp; Buy</a></td>';
 			html += '<td><a href="#" class="btnS btnBlue btnSearchArtist" data-term="' + escape(item.artist.name + ' ' + item.name) + '">TT.FM Search</a></td>';
-			//if (item.artist.mbid.length) {
-			//	html += '<p><a href="#" style="display:block">View Artist Details</a>';
-			//}
+			/*
+			if (item.mbid.length) {
+				html += '<td><a href="http://musicbrainz.com/artist/' + item.mbid + '">MusicBrainz Artist Details</a></td>';
+			} else {
+				html += '<td>&nbsp;</td>';
+			}
+			*/
 			html += '</tr>';
 			alt = !alt;
 		});
