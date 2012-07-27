@@ -1997,7 +1997,7 @@ function getSimilarTracks(artist, song, album) {
 			searchUrl = encodeURIComponent(encodeURIComponent(searchUrl));
 
 			html += '<td><a href="' + baseurl + searchUrl + '" class="btnS btnGreen" target="_blank"><span class="iconS"><img src="https://github.com/cballou/Turntable.FM-Squared/raw/master/icons/itunes-32.png" height="16" width="16" alt="Preview and Buy"></span> Preview &amp; Buy</a></td>';
-			html += '<td><a href="#" class="btnS btnBlue btnSearchArtist" data-term="' + escape(item.artist.name + ' ' + item.name) + '">TT.FM Search</a></td>';
+			html += '<td><a href="#" class="btnS btnBlue btnSearchArtist" data-term="' + item.artist.name + ' ' + item.name + '">TT.FM Search</a></td>';
 			
 			/*
 			if (item.mbid.length) {
