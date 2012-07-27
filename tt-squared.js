@@ -1013,7 +1013,7 @@ window.TTFM_SQ = null;
 			// watch for changes to DOM nodes
 			$(document).bind('DOMNodeInserted', function(event) {
 				var $node = $(event.target);
-				if ($node.hasClass('guest')) {
+				if ($node.hasClass('guest') && !$node.hasClass('isMod') && !$node.hasClass('isDj')) {
 					displayIdleTimes();
 				}
 			});
