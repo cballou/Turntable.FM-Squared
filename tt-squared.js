@@ -133,19 +133,13 @@ window.TTFM_SQ = null;
 
 		// handle config values
 		var config = lstore.get('config');
-		_log('Logging initial attempt to retrieve stored config.');
-		_log(config);
 		if (!config) {
 			config = defaults;
 			lstore.set('config', config);
-			_log('No matching stored config found, storing default.');
-			_log(config);
 		} else {
 			// merge config with defaults to ensure no missing params
 			config = $.extend({}, defaults, config);
 			lstore.set('config', config);
-			_log('Stored config found, merging with defaults.');
-			_log(config);
 		}
 
 		// stats monitoring
