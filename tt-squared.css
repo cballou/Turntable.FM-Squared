@@ -90,6 +90,8 @@
 #similar_tracks table tbody tr td a.btnS { display: inline-block; }
 #similar_tracks table tbody tr td img,
 #similar_tracks table tbody tr td .img { width: 32px; height: 32px; background: #222; }
+#similar_tracks table tbody tr td a.btnS img,
+#similar_tracks table tbody tr td a.btnS .img { width: 16px; height: 16px; background: transparent; }
 
 /* fix chat container styling */
 #tt2_chat_box { position: relative; }
