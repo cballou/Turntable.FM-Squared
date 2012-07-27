@@ -133,13 +133,19 @@ window.TTFM_SQ = null;
 
 		// handle config values
 		var config = lstore.get('config');
+		_log('Logging initial attempt to retrieve stored config.');
+		_log(config);
 		if (!config) {
 			config = defaults;
 			lstore.set('config', config);
+			_log('No matching stored config found, storing default.');
+			_log(config);
 		} else {
 			// merge config with defaults to ensure no missing params
 			config = $.extend({}, defaults, config);
 			lstore.set('config', config);
+			_log('Stored config found, merging with defaults.');
+			_log(config);
 		}
 
 		// stats monitoring
@@ -318,7 +324,7 @@ window.TTFM_SQ = null;
 		 */
 		function watchForChatMentions(e) {
 			// don't deal with ourselves
-			if (e.senderid && e.senderid == _manager.myuserid) {
+			if (e.userid && e.userid == _manager.myuserid) {
 				return;
 			}
 
@@ -672,18 +678,17 @@ window.TTFM_SQ = null;
 				return;
 			}
 
-			var msg = '';
+			var title = 'Private Message';
 
 			// attempt to get sender by id
-			var username = getUsernameById(e.senderid);
+			var username = getUsernameById(e.userid);
 			if (username) {
-				msg = '<strong></strong> has sent you a private message: ';
+				title += ': ' + username;
 			}
-			msg += e.text;
 
 			sendNotification(
-				'Private Message',
-				escape(e.text),
+				title,
+				e.text,
 				'http://cballou.github.com/Turntable.FM-Squared'
 			);
 		}
@@ -1177,8 +1182,8 @@ window.TTFM_SQ = null;
 							html += '</div>';
 
 							html += '<div class="clearfix">';
-							html += '<div class="col"><label for="tt2_idle_replies">Idle Replies</label><textarea name="tt2_idle_replies" id="tt2_idle_replies">' + config.idleReplies.join('\n') + '</textarea><span class="note">Auto reply messages when someone mentions your name. You can use <em>{{NICKNAME}}</em> to fill in their name. Separate each with a line break.</span></div>';
-							html += '<div class="col"><label for="tt2_idle_messages">Idle Messages</label><textarea name="tt2_idle_messages" id="tt2_idle_messages">' + config.idleMessages.join('\n') + '</textarea><span class="note">If you are DJing and have been AFK too long, one of these messages will be sent at random. Separate each with a line break.</span></div>';
+							html += '<div class="col col-2"><label for="tt2_idle_replies">Idle Replies</label><textarea name="tt2_idle_replies" id="tt2_idle_replies">' + config.idleReplies.join('\n') + '</textarea><span class="note">Auto reply messages when someone mentions your name. You can use <em>{{NICKNAME}}</em> to fill in their name. Separate each with a line break.</span></div>';
+							html += '<div class="col col-2"><label for="tt2_idle_messages">Idle Messages</label><textarea name="tt2_idle_messages" id="tt2_idle_messages">' + config.idleMessages.join('\n') + '</textarea><span class="note">If you are DJing and have been AFK too long, one of these messages will be sent at random. Separate each with a line break.</span></div>';
 							html += '</div>';
 
 							html += '<div><button type="button" name="updateSettings" id="updateSettings" class="btnS btnBlack" name="Save Changes">Save Changes</button></div>'
@@ -1274,6 +1279,10 @@ window.TTFM_SQ = null;
 
 			// watch for change to options
 			$options.find('#updateSettings').click(function() {
+				_log('Updating settings clicked.');
+				_log('Old settings:');
+				_log(config);
+				
 				// save all option changes
 				config.debugMode = $debug_mode.is(':checked');
 				config.autoUpvote = $auto_upvote.is(':checked');
@@ -1300,8 +1309,8 @@ window.TTFM_SQ = null;
 				config.idleReplies = $idle_replies.val().split(/\n\r?/g);
 				config.idleMessages = $idle_messages.val().split(/\n\r?/g);
 
-				_log('aliases:');
-				_log(config.nameAliases);
+				_log('New settings:');
+				_log(config);
 
 				// handle trying to auto-dj
 				if (config.autoDj) {
@@ -1576,6 +1585,10 @@ window.TTFM_SQ = null;
 			}
 
 			if (html) {
+				// switch to HTML encoded values
+				title = $('<div/>').text(title).html();
+				message = $('<div/>').text(message).html();
+				
 				// fix up the URL
 				var url = html + '?title=' + encodeURIComponent(title) + '&message=' + encodeURIComponent(message);
 				n = window.webkitNotifications.createHTMLNotification(url);
@@ -1943,7 +1956,7 @@ function _log(msg) {
  * http://ws.audioscrobbler.com/2.0/?method=track.getsimilar&artist=cher&track=believe&api_key=d1b14c712954973f098a226d80d6b5c2
  */
 function getSimilarTracks(artist, song, album) {
-	var url = 'http://ws.audioscrobbler.com/2.0/?method=track.getsimilar&autocorrect=1&artist=' + encodeURIComponent(artist) + '&track=' + encodeURIComponent(song) + '&api_key=d1b14c712954973f098a226d80d6b5c2&format=json&callback=?';
+	var url = 'http://ws.audioscrobbler.com/2.0/?method=track.getsimilar&autocorrect=1&artist=' + encodeURIComponent(artist) + '&track=' + encodeURIComponent(song) + '&limit=25&api_key=d1b14c712954973f098a226d80d6b5c2&format=json&callback=?';
 	$.getJSON(url, function(data) {
 		var html = '';
 
@@ -1956,16 +1969,7 @@ function getSimilarTracks(artist, song, album) {
 		// iterate over each similar track
 		var alt = false;
 		$.each(data.similartracks.track, function(i, item) {
-
-			// name
-			// playcount
-			// duration
-			// url
-			// artist.name
-			// artist.mbid
-			// artist.url
-			// image[size|"#text"]
-
+			// name, playcount, duration, url, artist.name, artist.mbid, artist.url, image[size|"#text"]
 			html += '<tr ' + (alt ? 'style="background-color:#292929";' : 'style="background-color:#2c2c2c";') + '>';
 			if (item.image && item.image[1] && item.image[1]['#text'].length) {
 				html += '<td><img src="' + item.image[1]['#text'] + '" height="32" width="32" /></td>';
@@ -1975,28 +1979,33 @@ function getSimilarTracks(artist, song, album) {
 			html += '<td>' + item.artist.name + '</td>';
 			html += '<td>' + item.name + '</td>';
 
+			/*
 			if (item.mbid.length) {
 				html += '<td><a href="#" class="btnS btnGreen" target="_blank"><span class="itunesIcon"></span> Preview &amp; Buy</a></td>';
 				// get buy links and change them
 				// http://www.last.fm/api/show?service=431
-				var buyUrl = 'http://ws.audioscrobbler.com/2.0/?method=track.getbuylinks&artist=' + encodeURIComponent(artist) + '&track=' + encodeURIComponent(song) + '&api_key=d1b14c712954973f098a226d80d6b5c2&format=json&callback=?';
+				var buyUrl = 'http://ws.audioscrobbler.com/2.0/?method=track.getbuylinks&api_key=d1b14c712954973f098a226d80d6b5c2&mbid=' + item.mbid + '&country=united%20states&format=json&callback=?';
 				$.getJSON(buyUrl, function(data) {
 					_log('===== LASTFM PURCHASE INFO ====');
+					_log(buyUrl);
 					_log(data);
 				});
-			} else {
-				var baseurl = 'http://click.linksynergy.com/fs-bin/stat?id=5PGIX6Dk9zE&offerid=146261&type=3&subid=0&tmpid=1826&RD_PARM1=';
-				var searchUrl = 'http://ax.itunes.apple.com/WebObjects/MZSearch.woa/wa/search?term=' + item.artist.name + ' ' + item.name;
-				searchUrl = encodeURIComponent(encodeURIComponent(searchUrl));
-
-				html += '<td><a href="' + baseurl + searchUrl + '" class="btnS btnGreen" target="_blank"><span class="itunesIcon"></span> Preview &amp; Buy</a></td>';
-				//html += '<td>&nbsp;</td>';
 			}
+			*/
+			var baseurl = 'http://click.linksynergy.com/fs-bin/stat?id=5PGIX6Dk9zE&offerid=146261&type=3&subid=0&tmpid=1826&RD_PARM1=';
+			var searchUrl = 'http://ax.itunes.apple.com/WebObjects/MZSearch.woa/wa/search?term=' + encodeURIComponent(item.artist.name + ' ' + item.name) + '&partnerId=30';
+			searchUrl = encodeURIComponent(encodeURIComponent(searchUrl));
 
+			html += '<td><a href="' + baseurl + searchUrl + '" class="btnS btnGreen" target="_blank"><span class="iconS"><img src="https://github.com/cballou/Turntable.FM-Squared/raw/master/icons/itunes-32.png" height="16" width="16" alt="Preview and Buy"></span> Preview &amp; Buy</a></td>';
 			html += '<td><a href="#" class="btnS btnBlue btnSearchArtist" data-term="' + escape(item.artist.name + ' ' + item.name) + '">TT.FM Search</a></td>';
-			//if (item.artist.mbid.length) {
-			//	html += '<p><a href="#" style="display:block">View Artist Details</a>';
-			//}
+			
+			/*
+			if (item.mbid.length) {
+				html += '<td><a href="http://musicbrainz.com/artist/' + item.mbid + '">MusicBrainz Artist Details</a></td>';
+			} else {
+				html += '<td>&nbsp;</td>';
+			}
+			*/
 			html += '</tr>';
 			alt = !alt;
 		});

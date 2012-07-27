@@ -20,8 +20,8 @@
 // @exclude     http://turntable.fm/privacy
 // @exclude     http://turntable.fm/static*
 // @version     1.0.1
-// @resource      myCustomCss https://raw.github.com/cballou/Turntable.FM-Squared/master/greasemonkey/tt-squared.css
+// @resource    ttfmCss https://raw.github.com/cballou/Turntable.FM-Squared/master/greasemonkey/tt-squared.css
 // ==/UserScript==
 
-GM_addStyle (GM_getResourceText ("myCustomCss") );
+GM_addStyle (GM_getResourceText ("ttfmCss") );
 document.body.appendChild(document.createElement("script")).src="https://raw.github.com/cballou/Turntable.FM-Squared/master/tt-squared.js";
