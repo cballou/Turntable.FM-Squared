@@ -323,15 +323,8 @@ window.TTFM_SQ = null;
 		 * Periodically check if you get mentioned in the chat room.
 		 */
 		function watchForChatMentions(e) {
-			console.log('Chat mention');
-			console.log(e);
-			console.log('_manager.myuserid' + _manager.myuserid);
-			console.log('_room.selfId' + _room.selfId);
-			
 			// don't deal with ourselves
-			if (e.senderid && e.senderid == _manager.myuserid) {
-				return;
-			} else if (e.senderid && e.senderid == _room.selfId) {
+			if (e.userid && e.userid == _manager.myuserid) {
 				return;
 			}
 
@@ -688,7 +681,7 @@ window.TTFM_SQ = null;
 			var title = 'Private Message';
 
 			// attempt to get sender by id
-			var username = getUsernameById(e.senderid);
+			var username = getUsernameById(e.userid);
 			if (username) {
 				title += ': ' + username;
 			}
