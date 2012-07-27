@@ -1189,8 +1189,8 @@ window.TTFM_SQ = null;
 							html += '</div>';
 
 							html += '<div class="clearfix">';
-							html += '<div class="col"><label for="tt2_idle_replies">Idle Replies</label><textarea name="tt2_idle_replies" id="tt2_idle_replies">' + config.idleReplies.join('\n') + '</textarea><span class="note">Auto reply messages when someone mentions your name. You can use <em>{{NICKNAME}}</em> to fill in their name. Separate each with a line break.</span></div>';
-							html += '<div class="col"><label for="tt2_idle_messages">Idle Messages</label><textarea name="tt2_idle_messages" id="tt2_idle_messages">' + config.idleMessages.join('\n') + '</textarea><span class="note">If you are DJing and have been AFK too long, one of these messages will be sent at random. Separate each with a line break.</span></div>';
+							html += '<div class="col col-2"><label for="tt2_idle_replies">Idle Replies</label><textarea name="tt2_idle_replies" id="tt2_idle_replies">' + config.idleReplies.join('\n') + '</textarea><span class="note">Auto reply messages when someone mentions your name. You can use <em>{{NICKNAME}}</em> to fill in their name. Separate each with a line break.</span></div>';
+							html += '<div class="col col-2"><label for="tt2_idle_messages">Idle Messages</label><textarea name="tt2_idle_messages" id="tt2_idle_messages">' + config.idleMessages.join('\n') + '</textarea><span class="note">If you are DJing and have been AFK too long, one of these messages will be sent at random. Separate each with a line break.</span></div>';
 							html += '</div>';
 
 							html += '<div><button type="button" name="updateSettings" id="updateSettings" class="btnS btnBlack" name="Save Changes">Save Changes</button></div>'
@@ -2002,6 +2002,7 @@ function getSimilarTracks(artist, song, album) {
 				var buyUrl = 'http://ws.audioscrobbler.com/2.0/?method=track.getbuylinks&artist=' + encodeURIComponent(artist) + '&track=' + encodeURIComponent(song) + '&api_key=d1b14c712954973f098a226d80d6b5c2&format=json&callback=?';
 				$.getJSON(buyUrl, function(data) {
 					_log('===== LASTFM PURCHASE INFO ====');
+					_log(buyUrl);
 					_log(data);
 				});
 			} else {
