@@ -191,9 +191,11 @@ window.TTFM_SQ = null;
 		// the last idle response time for ourselves
 		var lastIdleResponse = new Date().getTime();
 		// settimeout for guest list update
-		var idleTimeInterval = null;
+		var idleTimeInterval;
 		// the last time a dj stepped down from the decks
-		var lastRemovedDjTime = null;
+		var lastRemovedDjTime;
+		// the auto vote timer
+		var autoVoteTimer;
 
 		/**
 		 * Function to retrieve turntable objects.
@@ -425,23 +427,39 @@ window.TTFM_SQ = null;
 		/**
 		 * Handle auto-upvoting songs.
 		 */
-		function autoVote(e) {
+		function autoVote(ev) {
 			if (!config.autoUpvote || isCurrentDj()) {
+				clearTimeout(autoVoteTimer);
+				autoVoteTimer = null;
 				return;
 			}
 
-			// get the current song data
-			var song = e.room.metadata.current_song.metadata;
+			if (autoVoteTimer) {
+				clearTimeout(autoVoteTimer);
+				autoVoteTimer = null;
+			}
 
-			// our vote decision
-			var vote = 'upvote';
+			// cast vote at a random delay
+			autoVoteTimer = setTimeout(function() {
 
-			// cast vote
-			setTimeout(function() {
-				// if you're djing
-				if (!isDj() || !isCurrentDj()) {
-					_manager.callback('upvote');
-				}
+				// retrieve room and song data
+				var song_id = ev.room.metadata.current_song._id;
+
+				// need some safety measures
+				var f = $.sha1(_room.roomId + 'up' + song_id);
+				var d = $.sha1(Math.random() + "");
+				var e = $.sha1(Math.random() + "");
+
+				// trigger upvote
+				socket({
+					api: 'room.vote',
+					roomid: _room.roomId,
+					val: 'up',
+					vh: f,
+					th: d,
+					ph: e
+				});
+
 			}, randomDelay(5, 30));
 		}
 
@@ -781,9 +799,6 @@ window.TTFM_SQ = null;
 
 				// update the user's score
 				votes.user[uid].score = 100 * (votes.user[uid].upvotes / votes.user[uid].votes).toFixed(2);
-
-				// log the vote change
-				_log(votes);
 			}
 
 			/**
@@ -1727,7 +1742,7 @@ window.TTFM_SQ = null;
 			}
 			return false;
 		}
-		
+
 		/**
 		 * Given a user id, attempt to retrieve the user name.
 		 */
@@ -1824,16 +1839,57 @@ window.TTFM_SQ = null;
 			}
 		}
 
+		/**
+		 * Handles sending an API call to TT.FM. Courtesty of Izzmo's AutoTT.
+		 * http://pinnacleofdestruction.net/tt/
+		 */
+		function socket(c, a) {
+			var d, b;
+
+			if (c.api == "room.now") {
+				return;
+			}
+			c.msgid = turntable.messageId;
+			turntable.messageId += 1;
+			c.clientid = turntable.clientId;
+			if (turntable.user.id && !c.userid) {
+				c.userid = turntable.user.id;
+				c.userauth = turntable.user.auth;
+			}
+			d = JSON.stringify(c);
+			if (turntable.socketVerbose) {
+				LOG(util.nowStr() + " Preparing message " + d);
+			}
+			b = $.Deferred();
+			turntable.whenSocketConnected(function () {
+				if (turntable.socketVerbose) {
+					LOG(util.nowStr() + " Sending message " + c.msgid + " to " + turntable.socket.host);
+				}
+				if (turntable.socket.transport.type == "websocket") {
+					turntable.socketLog(turntable.socket.transport.sockets[0].id + ":<" + c.msgid);
+				}
+				turntable.socket.send(d);
+				turntable.socketKeepAlive(true);
+				turntable.pendingCalls.push({
+					msgid: c.msgid,
+					handler: a,
+					deferred: b,
+					time: util.now()
+				});
+			});
+			return b.promise();
+		}
+
 		//==========================================================================
 		// VIEWS AND LIGHTBOXES
 		//==========================================================================
-	
+
 		/**
 		 * Displays the current song voters.
 		 */
 		this.displaySongVoters = function() {
 			var userinfo = false;
-			
+
 			html = '<div class="modal ttfmsq_modal">';
 			html += '<div class="close-x" onclick="util.hideOverlay();"></div>';
 			html += '<h2>Current Song Voters</h2>';
@@ -1864,13 +1920,13 @@ window.TTFM_SQ = null;
 			html += '</ul>';
 			html += '</div>';
 			html += '</div>';
-			
+
 			// show the overlay
 			util.showOverlay(html);
-		}		
-		
+		}
+
 	}
-	
+
 })();
 
 /**
