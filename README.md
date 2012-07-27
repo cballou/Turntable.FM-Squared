@@ -78,6 +78,7 @@ Screenshots
 Change Log
 ==========
 
+* 2012-07-27 - Potentially fixed config persistance problems. Fixed issues with auto responder. Fixed PayPal form. Fixed some styling. Fixed affiliate linking for similar tracks.
 * 2012-03-23 - Added to the Chrome store. Available at https://chrome.google.com/webstore/detail/ldipemodldjfgcejcgpehbnocimlllhn
 * 2012-03-22 - Added new instructions for Chrome extension installation. Created a new package for easier Chrome install. 
 * 2012-03-20 - Made the extension fully functional as a Firefox Greasemonkey script. Styling functional in Firefox. Fixed chat window resizing.

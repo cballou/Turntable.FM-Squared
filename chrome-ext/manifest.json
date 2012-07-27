@@ -1,6 +1,6 @@
 {
   "name": "Turntable.FM Squared",
-  "version": "1.0",
+  "version": "1.2.0",
   "description": "Improved chat UI, song stats, auto-upvote, auto-dj, anti-idle, auto-respond, additional track information, similar tracks, and more.",
   "browser_action": {
     "default_title": "TT.FM Squared",
