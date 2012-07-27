@@ -766,6 +766,10 @@ window.TTFM_SQ = null;
 					}
 
 				} else {
+					_log('Downvote');
+					_log(uid);
+					_log(_room.users[uid]);
+					
 					// add to current downvoters list
 					votes.current.downvoters[uid] = _room.users[uid].name;
 					votes.current.downvotes += 1;
