@@ -1925,9 +1925,9 @@ window.TTFM_SQ = null;
 			for (var user_id in votes.current.downvoters) {
 				userinfo = getUserById(user_id);
 				if (userinfo) {
-					html += '<li><span><img src="https://s3.amazonaws.com/static.turntable.fm/roommanager_assets/avatars/' + userinfo.avatarid + '/scaled/55/headfront.png" height="20" /></span>' + votes.current.upvoters[user_id] + '</li>';
+					html += '<li><span><img src="https://s3.amazonaws.com/static.turntable.fm/roommanager_assets/avatars/' + userinfo.avatarid + '/scaled/55/headfront.png" height="20" /></span>' + votes.current.downvoters[user_id] + '</li>';
 				} else {
-					html += '<li>' + votes.current.upvoters[user_id] + '</li>';
+					html += '<li>' + votes.current.downvoters[user_id] + '</li>';
 				}
 			}
 			html += '</ul>';
