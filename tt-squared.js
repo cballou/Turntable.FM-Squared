@@ -1050,7 +1050,7 @@ window.TTFM_SQ = null;
 			lstore.set('config', config);
 			
 			// indicate save
-			var $text = $('<span><em>Saved!</em></span>');
+			var $text = $('<span style="padding-left: 5px; color: #030"><em>Saved!</em></span>');
 			$('#updateSettings').after($text);
 			setTimeout(function() {
 				$text.remove();
