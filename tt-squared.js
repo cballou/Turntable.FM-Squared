@@ -1956,7 +1956,7 @@ function _log(msg) {
  * http://ws.audioscrobbler.com/2.0/?method=track.getsimilar&artist=cher&track=believe&api_key=d1b14c712954973f098a226d80d6b5c2
  */
 function getSimilarTracks(artist, song, album) {
-	var url = 'http://ws.audioscrobbler.com/2.0/?method=track.getsimilar&autocorrect=1&artist=' + encodeURIComponent(artist) + '&track=' + encodeURIComponent(song) + '&limit=25&api_key=d1b14c712954973f098a226d80d6b5c2&format=json&callback=?';
+	var url = 'http://ws.audioscrobbler.com/2.0/?method=track.getsimilar&autocorrect=1&artist=' + encodeURIComponent(artist) + '&track=' + encodeURIComponent(song) + '&limit=25&api_key=d1b14c712954973f098a226d80d6b5c2&format=json&callback=';
 	$.getJSON(url, function(data) {
 		var html = '';
 
