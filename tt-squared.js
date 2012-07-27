@@ -1996,8 +1996,9 @@ function getSimilarTracks(artist, song, album) {
 			var searchUrl = 'http://ax.itunes.apple.com/WebObjects/MZSearch.woa/wa/search?term=' + encodeURIComponent(item.artist.name + ' ' + item.name) + '&partnerId=30';
 			searchUrl = encodeURIComponent(encodeURIComponent(searchUrl));
 
-			html += '<td><a href="' + baseurl + searchUrl + '" class="btnS btnGreen" target="_blank"><span class="itunesIcon"></span> Preview &amp; Buy</a></td>';
+			html += '<td><a href="' + baseurl + searchUrl + '" class="btnS btnGreen" target="_blank"><span class="iconS"><img src="https://github.com/cballou/Turntable.FM-Squared/raw/master/icons/itunes-32.png" height="16" width="16" alt="Preview and Buy"></span> Preview &amp; Buy</a></td>';
 			html += '<td><a href="#" class="btnS btnBlue btnSearchArtist" data-term="' + escape(item.artist.name + ' ' + item.name) + '">TT.FM Search</a></td>';
+			
 			/*
 			if (item.mbid.length) {
 				html += '<td><a href="http://musicbrainz.com/artist/' + item.mbid + '">MusicBrainz Artist Details</a></td>';
