@@ -299,5 +299,5 @@
 #footer { text-align: left !important; }
 
 .floatleft { float: left; display: inline; }
-.space_right { margin-right: 10px; }
-.space_bottom { margin-bottom: 10px; }
+.space_right { margin-right: 10px !important; }
+.space_bottom { margin-bottom: 10px !important; }

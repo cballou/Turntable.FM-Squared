@@ -1053,9 +1053,14 @@ window.TTFM_SQ = null;
 		 * Update settings by using localstorage.
 		 */
 		function updateSettings() {
-			_log('Updating settings.');
-			_log(config);
 			lstore.set('config', config);
+			
+			// indicate save
+			var $text = $('<span><em>Saved!</em></span>');
+			$('#updateSettings').after($text);
+			setTimeout(function() {
+				$text.remove();
+			}, 1000);
 		}
 
 		/**
@@ -1153,7 +1158,7 @@ window.TTFM_SQ = null;
 						html += '<div class="fullheight">';
 
 							html += '<div class="clearfix">';
-							html += '<div class="check" title="Auto upvote allows you to automatically upvote every song that gets played. Your avatar will start head bopping after a random time from song start."><label><input type="checkbox" class="checkbox" name="tt2_autoupvote" id="tt2_autoupvote" value="1" checked="checked" /> Auto Upvote</label></div>';
+							html += '<div class="check" title="Auto upvote allows you to automatically upvote every song that gets played. Your avatar will start head bopping after a random time from song start."><label><input type="checkbox" class="checkbox" name="tt2_autoupvote" id="tt2_autoupvote" value="1"' + (config.autoUpvote == 1 ? ' checked="checked"' : '') + ' /> Auto Upvote</label></div>';
 							html += '<div class="check" title="Auto DJ is frowned upon. Use with caution, you will get banned from rooms. Use this to attempt to claim an empty DJ slot when it opens. You can adjust the number of milliseconds to wait before attempting to grab the open slot."><label><input type="checkbox" class="checkbox" name="tt2_autodj" id="tt2_autodj" value="1"' + (config.autoDj == 1 ? ' checked="checked"' : '') + ' /> Auto DJ</label> <input type="text" name="tt2_autodj_timeout" id="tt2_autodj_timeout" class="tiny" maxlength="4" value="' + parseInt(config.autoDjTimeout) + '" /> ms</div>';
 							html += '<div class="check" title="Anti Idle is intended to aid in tricking Turntable.FM into believing you are still active on the site."><label><input type="checkbox" class="checkbox" name="tt2_antiidle" id="tt2_antiidle" value="1"' + (config.antiIdle == 1 ? ' checked="checked"' : '') + ' /> Anti Idle</label></div>';
 							html += '<div class="check" title="Auto respond is an addition to anti-idle. When someone mentions your name or an alias as well as an idle alias (both configurable below), this feature triggers an automatic response."><label><input type="checkbox" class="checkbox" name="tt2_autorespond" id="tt2_autorespond" value="1"' + (config.autoRespond == 1 ? ' checked="checked"' : '') + ' /> Auto Respond</label></div>';
@@ -1279,10 +1284,6 @@ window.TTFM_SQ = null;
 
 			// watch for change to options
 			$options.find('#updateSettings').click(function() {
-				_log('Updating settings clicked.');
-				_log('Old settings:');
-				_log(config);
-				
 				// save all option changes
 				config.debugMode = $debug_mode.is(':checked');
 				config.autoUpvote = $auto_upvote.is(':checked');
@@ -1308,9 +1309,6 @@ window.TTFM_SQ = null;
 				config.idleAliases = $idle_aliases.val().split(/\n\r?/g);
 				config.idleReplies = $idle_replies.val().split(/\n\r?/g);
 				config.idleMessages = $idle_messages.val().split(/\n\r?/g);
-
-				_log('New settings:');
-				_log(config);
 
 				// handle trying to auto-dj
 				if (config.autoDj) {
