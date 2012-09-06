@@ -1730,11 +1730,17 @@ window.TTFM_SQ = null;
 			}
 		}
 
-		// send a message
+		/**
+		 * Send a message and then revert back to the old text.
+		 */
 		function say(msg) {
-			var $chatForm = $(_room.nodes.chatForm)
-			$chatForm.find('input').val(msg)
-			$chatForm.submit()
+			var $chatForm = $(_room.nodes.chatForm),
+				$input = $chatForm.find('input'),
+				oldMsg = $input.val();
+
+			$input.val(msg);
+			$chatForm.submit();
+			$input.val(oldMsg);
 		}
 
 		/**
