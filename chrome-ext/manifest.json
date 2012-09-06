@@ -36,5 +36,10 @@
     "notifications",
     "http://turntable.fm/*",
     "https://raw.github.com/cballou/Turntable.FM-Squared/*"
-  ]
+  ],
+  "web_accessible_resources": [
+    "tt-squared.css",
+    "tt-squared.js"
+  ],
+  "content_security_policy": "script-src 'self' https://raw.github.com; object-src 'self'"
 }
