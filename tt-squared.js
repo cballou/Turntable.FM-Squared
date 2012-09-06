@@ -1354,6 +1354,11 @@ window.TTFM_SQ = null;
 		 */
 		function moveChatWindow() {
 			// get the chat container sizing
+			var $rightpanel = $('#right-panel');
+			
+
+			
+			
 			var $chat_container = $('#right-panel').find('.chat-container');
 			var $guest_container = $('#right-panel').find('.guest-list-container');
 			var chat_height = $chat_container.height();
@@ -1380,6 +1385,10 @@ window.TTFM_SQ = null;
 			// move the chat container
 			$chat_container.appendTo($('#tt2_chat_box'));
 
+			// fix the playlist height
+			$('#playlist').height($rightpanel.height());
+			
+			/*
 			// fix songlist height within queue
 			$('#right-panel').find('.queueView .songlist').css('height', songlist_height + chat_height);
 			$('#right-panel').find('.searchView .songlist').css('height', songlist_height + chat_height);
@@ -1387,6 +1396,7 @@ window.TTFM_SQ = null;
 
 			// set container height to full
 			$('#right-panel').find('.playlist-container').css('height', queue_height + chat_height + title_height);
+			*/
 
 			// fix chat window size
 			var tt2_playing_size = {
